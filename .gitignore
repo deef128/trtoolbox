@@ -1,0 +1,8 @@
+# ignore pycache
+*.pyc
+
+# ignore vscode
+.vscode
+
+# ignore pycharm
+.idea
