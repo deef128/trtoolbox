@@ -1,0 +1,187 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>trtoolbox.mysvd &#8212; Time-Resolved Toolbox  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for trtoolbox.mysvd</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">svd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<div class="viewcode-block" id="Results"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mysvd.Results">[docs]</a><span class="k">class</span> <span class="nc">Results</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Object containing fit results.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : np.array</span>
+<span class="sd">        Data matrix subjected to fitting.</span>
+<span class="sd">    U : np.array</span>
+<span class="sd">        U matrix. Represents abstract spectra</span>
+<span class="sd">    s : np.array</span>
+<span class="sd">        Singular values.</span>
+<span class="sd">    VT: np.array</span>
+<span class="sd">        Transposed V matrix. Represents abstract time traces.</span>
+<span class="sd">    n : int</span>
+<span class="sd">        Number of singular components used for data reconstruction.</span>
+<span class="sd">    svddata : np.array</span>
+<span class="sd">        Reconstructed data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># def __init__(self):</span>
+    <span class="c1">#     self.U = []</span>
+    <span class="c1">#     self.s = []</span>
+    <span class="c1">#     self.VT = []</span>
+    <span class="c1">#     self.n = 0</span>
+    <span class="c1">#     self.svddata = []</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="dosvd"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mysvd.dosvd">[docs]</a><span class="k">def</span> <span class="nf">dosvd</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Simple wrapper for the *scipy.linalg.svd()* function.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : np.array</span>
+<span class="sd">        Data matrix subjected to SVD. Assuming *m x n* with m as frequency</span>
+<span class="sd">        and n as time. But it is actually not important.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    u : np.array</span>
+<span class="sd">        U matrix. Represents abstract spectra</span>
+<span class="sd">    s : np.array</span>
+<span class="sd">        Singular values.</span>
+<span class="sd">    vt: np.array</span>
+<span class="sd">        Transposed V matrix. Represents abstract time traces.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">u</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">vt</span> <span class="o">=</span> <span class="n">svd</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">u</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">vt</span></div>
+
+
+<div class="viewcode-block" id="reconstruct"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mysvd.reconstruct">[docs]</a><span class="k">def</span> <span class="nf">reconstruct</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Reconstructs data with n singular components.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : np.array</span>
+<span class="sd">        Data matrix subjected to SVD. Assuming *m x n* with m as frequency</span>
+<span class="sd">        and n as time. But it is actually not important.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    res : *mysvd.results()*</span>
+<span class="sd">        Results object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">u</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">vt</span> <span class="o">=</span> <span class="n">svd</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s1">&#39;How many singular values?&#39;</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+    <span class="c1"># create m x n singular values matrix</span>
+    <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">u</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vt</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="n">sigma</span><span class="p">[:</span><span class="n">s</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">:</span><span class="n">s</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+    <span class="c1"># reconstruct data</span>
+    <span class="n">svddata</span> <span class="o">=</span> <span class="n">u</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="n">n</span><span class="p">]</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">sigma</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">n</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">vt</span><span class="p">))</span>
+
+    <span class="n">res</span> <span class="o">=</span> <span class="n">Results</span><span class="p">()</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">u</span> <span class="o">=</span> <span class="n">u</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="n">s</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">vt</span> <span class="o">=</span> <span class="n">vt</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">n</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">svddata</span> <span class="o">=</span> <span class="n">svddata</span>
+
+    <span class="k">return</span> <span class="n">res</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Time-Resolved Toolbox</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, David Ehrenberg.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

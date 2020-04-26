@@ -1,0 +1,256 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>trtoolbox.mytik &#8212; Time-Resolved Toolbox  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for trtoolbox.mytik</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">svd</span>
+<span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="kn">import</span> <span class="n">medfilt</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">interp1d</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">least_squares</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">minimize</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<div class="viewcode-block" id="gentaus"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mytik.gentaus">[docs]</a><span class="k">def</span> <span class="nf">gentaus</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="n">taus</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">t1</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">t2</span><span class="p">),</span> <span class="n">n</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">taus</span></div>
+
+<div class="viewcode-block" id="genD"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mytik.genD">[docs]</a><span class="k">def</span> <span class="nf">genD</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">taus</span><span class="p">):</span>
+    <span class="n">D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">time</span><span class="p">)[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">len</span><span class="p">(</span><span class="n">taus</span><span class="p">)])</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">taus</span><span class="p">)):</span>
+        <span class="n">D</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">time</span><span class="o">/</span><span class="n">taus</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">D</span></div>
+
+<div class="viewcode-block" id="genL"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mytik.genL">[docs]</a><span class="k">def</span> <span class="nf">genL</span><span class="p">(</span><span class="n">D</span><span class="p">):</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">D</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">D</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">L</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:],</span> <span class="o">-</span><span class="n">b</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">L</span></div>
+
+<div class="viewcode-block" id="genAlphas"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mytik.genAlphas">[docs]</a><span class="k">def</span> <span class="nf">genAlphas</span><span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="c1">#alphas = np.linspace(a1, a2, n)</span>
+    <span class="n">alphas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">a1</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">a2</span><span class="p">),</span> <span class="n">n</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">a1</span> <span class="o">&gt;</span> <span class="mf">1e-2</span> <span class="p">:</span>
+        <span class="n">alphas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">alphas</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mf">1e-5</span><span class="p">,</span> <span class="mf">1e-4</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">a2</span> <span class="o">&lt;</span> <span class="mi">10</span> <span class="p">:</span>
+        <span class="n">alphas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">alphas</span><span class="p">,</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">100</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">alphas</span></div>
+
+<div class="viewcode-block" id="inversesvd"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mytik.inversesvd">[docs]</a><span class="k">def</span> <span class="nf">inversesvd</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="n">U</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">VT</span> <span class="o">=</span> <span class="n">svd</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">full_matrices</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    
+    <span class="c1"># create m x n singular values matrix</span>
+    <span class="c1"># sigma = np.zeros((U.shape[0], VT.shape[0]))</span>
+    <span class="c1"># sigma[:s.shape[0], :s.shape[0]] = np.diag(s)</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">s</span>
+    <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">k</span> <span class="k">else</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">))])</span>
+    <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span>
+    
+    <span class="n">UT</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">U</span><span class="p">)</span>
+    <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">VT</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">V</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">UT</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="tik"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mytik.tik">[docs]</a><span class="k">def</span> <span class="nf">tik</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="n">genL</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">alpha</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">D_aug</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">D</span><span class="p">,</span> <span class="n">alpha</span><span class="o">**</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">L</span><span class="p">))</span>
+        <span class="n">A_aug</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">data</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">len</span><span class="p">(</span><span class="n">L</span><span class="p">)]</span> <span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">D_aug</span> <span class="o">=</span> <span class="n">D</span>
+        <span class="n">A_aug</span> <span class="o">=</span> <span class="n">data</span>
+    
+    <span class="n">D_tilde</span> <span class="o">=</span> <span class="n">inversesvd</span><span class="p">(</span><span class="n">D_aug</span><span class="p">)</span>
+    <span class="n">x_k</span> <span class="o">=</span> <span class="n">D_tilde</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">A_aug</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">x_k</span></div>
+
+<div class="viewcode-block" id="tiks"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mytik.tiks">[docs]</a><span class="k">def</span> <span class="nf">tiks</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="n">alphas</span> <span class="o">=</span> <span class="n">genAlphas</span><span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    
+    <span class="n">x_ks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">D</span><span class="p">)[</span><span class="mi">1</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">data</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">len</span><span class="p">(</span><span class="n">alphas</span><span class="p">)]</span> <span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">alpha</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">alphas</span><span class="p">):</span>
+        <span class="n">x_k</span> <span class="o">=</span> <span class="n">tik</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+        <span class="n">x_ks</span><span class="p">[:,:,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_k</span>
+        
+    <span class="k">return</span> <span class="n">x_ks</span></div>
+
+<div class="viewcode-block" id="calc_lcurve"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mytik.calc_lcurve">[docs]</a><span class="k">def</span> <span class="nf">calc_lcurve</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">x_ks</span><span class="p">):</span>
+    <span class="n">lcurve</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">x_ks</span><span class="p">)[</span><span class="mi">2</span><span class="p">],</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">x_ks</span><span class="p">)[</span><span class="mi">2</span><span class="p">]):</span>
+        <span class="n">lcurve</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span> <span class="p">(</span><span class="n">D</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">x_ks</span><span class="p">[:,:,</span><span class="n">i</span><span class="p">])</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">data</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span> <span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">lcurve</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span> <span class="p">(</span><span class="n">L</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">x_ks</span><span class="p">[:,:,</span><span class="n">i</span><span class="p">]))</span><span class="o">**</span><span class="mi">2</span> <span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">lcurve</span></div>
+
+<div class="viewcode-block" id="tik_lstsq"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mytik.tik_lstsq">[docs]</a><span class="k">def</span> <span class="nf">tik_lstsq</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="n">genL</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">data</span>
+    <span class="n">x_ini</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="n">D</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+    
+    <span class="k">if</span> <span class="n">alpha</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">D_aug</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">D</span><span class="p">,</span> <span class="n">alpha</span><span class="o">**</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">L</span><span class="p">))</span>
+        <span class="n">A_aug</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">data</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">len</span><span class="p">(</span><span class="n">L</span><span class="p">)]</span> <span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">D_aug</span> <span class="o">=</span> <span class="n">D</span>
+        <span class="n">A_aug</span> <span class="o">=</span> <span class="n">data</span>
+    
+    <span class="c1">#res = minimize(func_min, x_ini.flatten(), args=(D, A, L, alpha, D.shape[1]))</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span><span class="n">D_aug</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">A_aug</span><span class="p">),</span> <span class="n">rcond</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">res</span></div>
+        
+
+
+
+<span class="c1">#############################################</span>
+<span class="c1"># Functions for lcruve curverature</span>
+<span class="c1"># (currently not working!)</span>
+<span class="c1">#############################################</span>
+
+<div class="viewcode-block" id="calc_k"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mytik.calc_k">[docs]</a><span class="k">def</span> <span class="nf">calc_k</span><span class="p">(</span><span class="n">lcurve</span><span class="p">,</span> <span class="n">alphas</span><span class="p">):</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">alphas</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">medfilt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">lcurve</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">medfilt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">lcurve</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">x_new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1000</span><span class="p">)</span>
+    <span class="c1">#da = np.gradient(a)</span>
+    <span class="n">da</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">x_new</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;cubic&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">();</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_new</span><span class="p">,</span> <span class="n">f</span><span class="p">(</span><span class="n">x_new</span><span class="p">))</span>
+    <span class="n">dx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">gradient</span><span class="p">(</span><span class="n">x_new</span><span class="p">)</span>
+    <span class="n">dy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">gradient</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">x_new</span><span class="p">))</span>
+    <span class="n">dx2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">gradient</span><span class="p">(</span><span class="n">dx</span><span class="p">)</span>
+    <span class="n">dy2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">gradient</span><span class="p">(</span><span class="n">dy</span><span class="p">)</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">dx</span><span class="o">*</span><span class="n">dy2</span> <span class="o">-</span> <span class="n">dx2</span><span class="o">*</span><span class="n">dy</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">dx</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">dy</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="mf">1.5</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">k</span></div>
+
+<div class="viewcode-block" id="calc_k_angle"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mytik.calc_k_angle">[docs]</a><span class="k">def</span> <span class="nf">calc_k_angle</span><span class="p">(</span><span class="n">lcurve</span><span class="p">,</span> <span class="n">alphas</span><span class="p">):</span>
+    <span class="c1">#x = medfilt(np.log10(lcurve[:,0]), 7)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">lcurve</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">lcurve</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">::</span><span class="mi">10</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">::</span><span class="mi">10</span><span class="p">],</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;cubic&#39;</span><span class="p">)</span>
+    <span class="n">npoints</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="n">x_espaced</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">10</span><span class="p">],</span> <span class="n">npoints</span><span class="p">)</span>
+    <span class="n">xy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">([</span><span class="n">x_espaced</span><span class="p">,</span> <span class="n">f</span><span class="p">(</span><span class="n">x_espaced</span><span class="p">)])</span>
+    
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">();</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xy</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">xy</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+    
+    <span class="n">angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">npoints</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">npoints</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">max_diff</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">knee</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">npoints</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">xy</span><span class="p">[</span><span class="n">i</span><span class="p">,:]</span><span class="o">-</span><span class="n">xy</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,:]</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">xy</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,:]</span><span class="o">-</span><span class="n">xy</span><span class="p">[</span><span class="n">i</span><span class="p">,:]</span>
+        <span class="n">angle</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">w</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">w</span><span class="p">)))</span>
+        
+        <span class="n">a</span> <span class="o">=</span> <span class="n">angle</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">a1</span> <span class="o">=</span> <span class="n">angle</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">d1</span> <span class="o">=</span> <span class="n">a1</span> <span class="o">-</span> <span class="n">a</span>
+        <span class="n">a2</span> <span class="o">=</span> <span class="n">angle</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">d2</span> <span class="o">=</span> <span class="n">a2</span> <span class="o">-</span> <span class="n">a</span>
+        
+        <span class="n">diff</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">d1</span> <span class="o">+</span> <span class="n">d2</span>
+        <span class="k">if</span> <span class="n">diff</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">max_diff</span><span class="p">:</span>
+            <span class="n">max_diff</span> <span class="o">=</span> <span class="n">diff</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">knee</span> <span class="o">=</span> <span class="n">lcurve</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,:]</span>
+    
+    <span class="k">return</span> <span class="n">angle</span><span class="p">,</span> <span class="n">diff</span><span class="p">,</span> <span class="n">knee</span></div>
+            
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Time-Resolved Toolbox</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, David Ehrenberg.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

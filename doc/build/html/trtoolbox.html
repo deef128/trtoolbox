@@ -1,0 +1,717 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>trtoolbox package &#8212; Time-Resolved Toolbox  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="trtoolbox-package">
+<h1>trtoolbox package<a class="headerlink" href="#trtoolbox-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-trtoolbox.myglobalfit">
+<span id="trtoolbox-myglobalfit-module"></span><h2>trtoolbox.myglobalfit module<a class="headerlink" href="#module-trtoolbox.myglobalfit" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="trtoolbox.myglobalfit.calculate_estimate">
+<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">calculate_estimate</code><span class="sig-paren">(</span><em class="sig-param">das</em>, <em class="sig-param">data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#calculate_estimate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.calculate_estimate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes contributions of DAS in the raw data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>das</strong> (<em>np.array</em>) – DAS</p></li>
+<li><p><strong>data</strong> (<em>np.array</em>) – Data matrix.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>est</strong> – Contributions of the individual DAS.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.myglobalfit.calculate_fitdata">
+<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">calculate_fitdata</code><span class="sig-paren">(</span><em class="sig-param">ks</em>, <em class="sig-param">time</em>, <em class="sig-param">data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#calculate_fitdata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.calculate_fitdata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the final fitted dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ks</strong> (<em>np.array</em>) – Rate constants</p></li>
+<li><p><strong>time</strong> (<em>np.array</em>) – Time array.</p></li>
+<li><p><strong>data</strong> (<em>np.array</em>) – Data matrix.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>fitdata</strong> – Fitted dataset.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.myglobalfit.calculate_sigma">
+<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">calculate_sigma</code><span class="sig-paren">(</span><em class="sig-param">res</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#calculate_sigma"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.calculate_sigma" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the variance of the optimized parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>res</strong> (<em>scipy.optimize.OptimizeResult</em>) – Results object obtained with least squares.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>var</strong> – Variance of the parameters.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.myglobalfit.create_das">
+<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">create_das</code><span class="sig-paren">(</span><em class="sig-param">profile</em>, <em class="sig-param">data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#create_das"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.create_das" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtains decay associated spectra.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>profile</strong> (<em>np.array</em>) – Concentration profile matrix</p></li>
+<li><p><strong>data</strong> (<em>np.array</em>) – Data matrix.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>das</strong> – Decay associated spectra</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.myglobalfit.create_profile">
+<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">create_profile</code><span class="sig-paren">(</span><em class="sig-param">time</em>, <em class="sig-param">ks</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#create_profile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.create_profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes a concentration profile according to the <em>model()</em> function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time</strong> (<em>np.array</em>) – Time array.</p></li>
+<li><p><strong>ks</strong> (<em>np.array</em>) – Decay rate constants for each species.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>profile</strong> – Concentration profile matrix.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.myglobalfit.create_tr">
+<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">create_tr</code><span class="sig-paren">(</span><em class="sig-param">par</em>, <em class="sig-param">time</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#create_tr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.create_tr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function returning exponential time traces for a given set of parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>par</strong> (<em>np.array</em>) – Parameter matrix. Last column contains rate constants. Remaining columns are prefactors (rate constants x SVD components)</p></li>
+<li><p><strong>time</strong> (<em>np.array</em>) – Time array.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>profile</strong> – Concentration profile matrix.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.myglobalfit.doglobalfit">
+<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">doglobalfit</code><span class="sig-paren">(</span><em class="sig-param">time</em>, <em class="sig-param">wn</em>, <em class="sig-param">data</em>, <em class="sig-param">tcs</em>, <em class="sig-param">method='svd'</em>, <em class="sig-param">svds=5</em>, <em class="sig-param">offset=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#doglobalfit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.doglobalfit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper for global fit routine.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time</strong> (<em>np.array</em>) – Time array.</p></li>
+<li><p><strong>wn</strong> (<em>np.array</em>) – Frequency array.</p></li>
+<li><p><strong>data</strong> (<em>np.array</em>) – Raw data matrix.</p></li>
+<li><p><strong>tcs</strong> (<em>np.array</em>) – Initial time constants</p></li>
+<li><p><strong>method</strong> (<em>np.array</em>) – Method for global fitting.
+<em>raw</em> for fitting the residuals of fitted data and input data,
+<em>est</em> for fitting the residuals between concentration profile and contributions of DAS,
+<em>svd</em> for fitting the SVD time traces (default).</p></li>
+<li><p><strong>svd</strong> (<em>int</em>) – Number of SVD components to be fitted. Default: 5</p></li>
+<li><p><strong>offset</strong> (<em>boolean</em>) – Considering the last spectrum to be an offset. Default: False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>gf_res</strong> – Results objects.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><em>myglobalfit.results()</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.myglobalfit.model">
+<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">model</code><span class="sig-paren">(</span><em class="sig-param">S</em>, <em class="sig-param">time</em>, <em class="sig-param">ks</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an array of differential equations according to a unidirectional sequential exponential model.
+S[0]/dt = -k0*S[0]
+S[1]/dt = k0*S[0] - k1*S[1]
+S[2]/dt = k1*S[1] - k2*S[2]
+and so on</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>S</strong> (<em>np.array</em>) – Starting concentrations for each species.</p></li>
+<li><p><strong>time</strong> (<em>np.array</em>) – Time array.</p></li>
+<li><p><strong>ks</strong> (<em>np.array</em>) – Decay rate constants for each species.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>arr</strong> – Array containing the differential equations.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.myglobalfit.opt_func_est">
+<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">opt_func_est</code><span class="sig-paren">(</span><em class="sig-param">ks</em>, <em class="sig-param">time</em>, <em class="sig-param">data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#opt_func_est"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.opt_func_est" title="Permalink to this definition">¶</a></dt>
+<dd><p>Optimization function for residuals of concentration profile and estimated contributions of DAS
+:param ks: Rate constants
+:type ks: np.array
+:param time: Time array.
+:type time: np.array
+:param data: Data matrix.
+:type data: np.array</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>R</strong> – Flattened array of residuals.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.myglobalfit.opt_func_raw">
+<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">opt_func_raw</code><span class="sig-paren">(</span><em class="sig-param">ks</em>, <em class="sig-param">time</em>, <em class="sig-param">data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#opt_func_raw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.opt_func_raw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Optimization function for residuals of fitted data - input data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ks</strong> (<em>np.array</em>) – Rate constants</p></li>
+<li><p><strong>time</strong> (<em>np.array</em>) – Time array.</p></li>
+<li><p><strong>data</strong> (<em>np.array</em>) – Data matrix.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>R</strong> – Flattened array of residuals.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.myglobalfit.opt_func_svd">
+<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">opt_func_svd</code><span class="sig-paren">(</span><em class="sig-param">par</em>, <em class="sig-param">time</em>, <em class="sig-param">data</em>, <em class="sig-param">svdtraces</em>, <em class="sig-param">nb_exps</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#opt_func_svd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.opt_func_svd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Optimization function for residuals of SVD abstract time traces - fitted traces.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>par</strong> (<em>np.array</em>) – Flattened parameter array</p></li>
+<li><p><strong>time</strong> (<em>np.array</em>) – Time array.</p></li>
+<li><p><strong>data</strong> (<em>np.array</em>) – Data matrix.</p></li>
+<li><p><strong>svdtraces</strong> (<em>np.array</em>) – SVD traces</p></li>
+<li><p><strong>nb_exps</strong> (<em>int</em>) – Number of exponential decay processes. Needed for reshaping the flattened paramater array</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>R</strong> – Flattened array of residuals.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="trtoolbox.myglobalfit.results">
+<em class="property">class </em><code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">results</code><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Object containing fit results.</p>
+<dl class="attribute">
+<dt id="trtoolbox.myglobalfit.results.data">
+<code class="sig-name descname">data</code><a class="headerlink" href="#trtoolbox.myglobalfit.results.data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Data matrix subjected to fitting.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.myglobalfit.results.time">
+<code class="sig-name descname">time</code><a class="headerlink" href="#trtoolbox.myglobalfit.results.time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.myglobalfit.results.wn">
+<code class="sig-name descname">wn</code><a class="headerlink" href="#trtoolbox.myglobalfit.results.wn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wavenumber array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.myglobalfit.results.offset">
+<code class="sig-name descname">offset</code><a class="headerlink" href="#trtoolbox.myglobalfit.results.offset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default is <em>‘no’</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.myglobalfit.results.spectral_offset">
+<code class="sig-name descname">spectral_offset</code><a class="headerlink" href="#trtoolbox.myglobalfit.results.spectral_offset" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>optional if offset was chosen</em></p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.myglobalfit.results.method">
+<code class="sig-name descname">method</code><a class="headerlink" href="#trtoolbox.myglobalfit.results.method" title="Permalink to this definition">¶</a></dt>
+<dd><p>Chosen method (default is <em>‘svd’</em>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.myglobalfit.results.ks">
+<code class="sig-name descname">ks</code><a class="headerlink" href="#trtoolbox.myglobalfit.results.ks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rate constants obtained by fitting.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.myglobalfit.results.var">
+<code class="sig-name descname">var</code><a class="headerlink" href="#trtoolbox.myglobalfit.results.var" title="Permalink to this definition">¶</a></dt>
+<dd><p>Variance of the rate constants.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.myglobalfit.results.tcs">
+<code class="sig-name descname">tcs</code><a class="headerlink" href="#trtoolbox.myglobalfit.results.tcs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time constants obtained by fitting.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.myglobalfit.results.das">
+<code class="sig-name descname">das</code><a class="headerlink" href="#trtoolbox.myglobalfit.results.das" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decay associated spectra.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.myglobalfit.results.profile">
+<code class="sig-name descname">profile</code><a class="headerlink" href="#trtoolbox.myglobalfit.results.profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Concentration profile determined by <em>ks</em></p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.myglobalfit.results.estimates">
+<code class="sig-name descname">estimates</code><a class="headerlink" href="#trtoolbox.myglobalfit.results.estimates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Contribution of <em>das</em> to the dataset for each datapoint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.myglobalfit.results.fitdata">
+<code class="sig-name descname">fitdata</code><a class="headerlink" href="#trtoolbox.myglobalfit.results.fitdata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fitted dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.myglobalfit.results.fittraces">
+<code class="sig-name descname">fittraces</code><a class="headerlink" href="#trtoolbox.myglobalfit.results.fittraces" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>optional if method=’svd’ was chosen</em>. Fitted abstract time traces.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="trtoolbox.myglobalfit.results.print_results">
+<code class="sig-name descname">print_results</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#results.print_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.results.print_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints time constants.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trtoolbox.myglobalfit.results.show_results">
+<code class="sig-name descname">show_results</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#results.show_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.results.show_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots the concentration profile, DAS, fitted data and fitted abstract time traces if method=’svd’ was chosen.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-trtoolbox.mysvd">
+<span id="trtoolbox-mysvd-module"></span><h2>trtoolbox.mysvd module<a class="headerlink" href="#module-trtoolbox.mysvd" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="trtoolbox.mysvd.Results">
+<em class="property">class </em><code class="sig-prename descclassname">trtoolbox.mysvd.</code><code class="sig-name descname">Results</code><a class="reference internal" href="_modules/trtoolbox/mysvd.html#Results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.Results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Object containing fit results.</p>
+<dl class="attribute">
+<dt id="trtoolbox.mysvd.Results.data">
+<code class="sig-name descname">data</code><a class="headerlink" href="#trtoolbox.mysvd.Results.data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Data matrix subjected to fitting.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.mysvd.Results.U">
+<code class="sig-name descname">U</code><a class="headerlink" href="#trtoolbox.mysvd.Results.U" title="Permalink to this definition">¶</a></dt>
+<dd><p>U matrix. Represents abstract spectra</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.mysvd.Results.s">
+<code class="sig-name descname">s</code><a class="headerlink" href="#trtoolbox.mysvd.Results.s" title="Permalink to this definition">¶</a></dt>
+<dd><p>Singular values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.mysvd.Results.VT">
+<code class="sig-name descname">VT</code><a class="headerlink" href="#trtoolbox.mysvd.Results.VT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transposed V matrix. Represents abstract time traces.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.mysvd.Results.n">
+<code class="sig-name descname">n</code><a class="headerlink" href="#trtoolbox.mysvd.Results.n" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of singular components used for data reconstruction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.mysvd.Results.svddata">
+<code class="sig-name descname">svddata</code><a class="headerlink" href="#trtoolbox.mysvd.Results.svddata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstructed data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.mysvd.dosvd">
+<code class="sig-prename descclassname">trtoolbox.mysvd.</code><code class="sig-name descname">dosvd</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mysvd.html#dosvd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.dosvd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simple wrapper for the <em>scipy.linalg.svd()</em> function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>np.array</em>) – Data matrix subjected to SVD. Assuming <em>m x n</em> with m as frequency
+and n as time. But it is actually not important.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>u</strong> (<em>np.array</em>) – U matrix. Represents abstract spectra</p></li>
+<li><p><strong>s</strong> (<em>np.array</em>) – Singular values.</p></li>
+<li><p><strong>vt</strong> (<em>np.array</em>) – Transposed V matrix. Represents abstract time traces.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.mysvd.reconstruct">
+<code class="sig-prename descclassname">trtoolbox.mysvd.</code><code class="sig-name descname">reconstruct</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">n=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mysvd.html#reconstruct"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.reconstruct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstructs data with n singular components.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>np.array</em>) – Data matrix subjected to SVD. Assuming <em>m x n</em> with m as frequency
+and n as time. But it is actually not important.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>res</strong> – Results object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><em>mysvd.results()</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-trtoolbox.mytik">
+<span id="trtoolbox-mytik-module"></span><h2>trtoolbox.mytik module<a class="headerlink" href="#module-trtoolbox.mytik" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="trtoolbox.mytik.calc_k">
+<code class="sig-prename descclassname">trtoolbox.mytik.</code><code class="sig-name descname">calc_k</code><span class="sig-paren">(</span><em class="sig-param">lcurve</em>, <em class="sig-param">alphas</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mytik.html#calc_k"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mytik.calc_k" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.mytik.calc_k_angle">
+<code class="sig-prename descclassname">trtoolbox.mytik.</code><code class="sig-name descname">calc_k_angle</code><span class="sig-paren">(</span><em class="sig-param">lcurve</em>, <em class="sig-param">alphas</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mytik.html#calc_k_angle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mytik.calc_k_angle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.mytik.calc_lcurve">
+<code class="sig-prename descclassname">trtoolbox.mytik.</code><code class="sig-name descname">calc_lcurve</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">D</em>, <em class="sig-param">L</em>, <em class="sig-param">x_ks</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mytik.html#calc_lcurve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mytik.calc_lcurve" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.mytik.genAlphas">
+<code class="sig-prename descclassname">trtoolbox.mytik.</code><code class="sig-name descname">genAlphas</code><span class="sig-paren">(</span><em class="sig-param">a1</em>, <em class="sig-param">a2</em>, <em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mytik.html#genAlphas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mytik.genAlphas" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.mytik.genD">
+<code class="sig-prename descclassname">trtoolbox.mytik.</code><code class="sig-name descname">genD</code><span class="sig-paren">(</span><em class="sig-param">time</em>, <em class="sig-param">taus</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mytik.html#genD"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mytik.genD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.mytik.genL">
+<code class="sig-prename descclassname">trtoolbox.mytik.</code><code class="sig-name descname">genL</code><span class="sig-paren">(</span><em class="sig-param">D</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mytik.html#genL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mytik.genL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.mytik.gentaus">
+<code class="sig-prename descclassname">trtoolbox.mytik.</code><code class="sig-name descname">gentaus</code><span class="sig-paren">(</span><em class="sig-param">t1</em>, <em class="sig-param">t2</em>, <em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mytik.html#gentaus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mytik.gentaus" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.mytik.inversesvd">
+<code class="sig-prename descclassname">trtoolbox.mytik.</code><code class="sig-name descname">inversesvd</code><span class="sig-paren">(</span><em class="sig-param">D</em>, <em class="sig-param">k=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mytik.html#inversesvd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mytik.inversesvd" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.mytik.tik">
+<code class="sig-prename descclassname">trtoolbox.mytik.</code><code class="sig-name descname">tik</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">D</em>, <em class="sig-param">alpha</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mytik.html#tik"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mytik.tik" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.mytik.tik_lstsq">
+<code class="sig-prename descclassname">trtoolbox.mytik.</code><code class="sig-name descname">tik_lstsq</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">D</em>, <em class="sig-param">alpha</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mytik.html#tik_lstsq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mytik.tik_lstsq" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.mytik.tiks">
+<code class="sig-prename descclassname">trtoolbox.mytik.</code><code class="sig-name descname">tiks</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">D</em>, <em class="sig-param">a1</em>, <em class="sig-param">a2</em>, <em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mytik.html#tiks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mytik.tiks" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-trtoolbox.mytsvd">
+<span id="trtoolbox-mytsvd-module"></span><h2>trtoolbox.mytsvd module<a class="headerlink" href="#module-trtoolbox.mytsvd" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="trtoolbox.mytsvd.genD">
+<code class="sig-prename descclassname">trtoolbox.mytsvd.</code><code class="sig-name descname">genD</code><span class="sig-paren">(</span><em class="sig-param">time</em>, <em class="sig-param">taus</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mytsvd.html#genD"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mytsvd.genD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.mytsvd.genDd">
+<code class="sig-prename descclassname">trtoolbox.mytsvd.</code><code class="sig-name descname">genDd</code><span class="sig-paren">(</span><em class="sig-param">time</em>, <em class="sig-param">taus</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mytsvd.html#genDd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mytsvd.genDd" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.mytsvd.gentaus">
+<code class="sig-prename descclassname">trtoolbox.mytsvd.</code><code class="sig-name descname">gentaus</code><span class="sig-paren">(</span><em class="sig-param">t1</em>, <em class="sig-param">t2</em>, <em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mytsvd.html#gentaus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mytsvd.gentaus" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.mytsvd.inversesvd">
+<code class="sig-prename descclassname">trtoolbox.mytsvd.</code><code class="sig-name descname">inversesvd</code><span class="sig-paren">(</span><em class="sig-param">D</em>, <em class="sig-param">k</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mytsvd.html#inversesvd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mytsvd.inversesvd" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.mytsvd.tsvd">
+<code class="sig-prename descclassname">trtoolbox.mytsvd.</code><code class="sig-name descname">tsvd</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">D</em>, <em class="sig-param">k</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mytsvd.html#tsvd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mytsvd.tsvd" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-trtoolbox">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-trtoolbox" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Time-Resolved Toolbox</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, David Ehrenberg.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/trtoolbox.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
