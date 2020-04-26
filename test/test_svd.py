@@ -10,7 +10,7 @@ class TestSVD(unittest.TestCase):
         cls.data = np.loadtxt('./data/data.dat', delimiter=',')
 
     def test_dosvd(self):
-        u, s, vt = mysvd.dosvd(self.data)
+        u, s, vt = mysvd.wrapper_svd(self.data)
         # checking dimensions
         self.assertEqual(u.shape[0], self.data.shape[0])
         self.assertEqual(s.shape[0], self.data.shape[0])
