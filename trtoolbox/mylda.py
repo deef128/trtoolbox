@@ -4,8 +4,42 @@ from scipy.linalg import svd
 # from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
 
+# TODO: make nice results plots with sliders
 
 class Results:
+    """ Object containing fit results.
+
+    Attributes
+    ----------
+    data : np.array
+        Data matrix subjected to fitting.
+    time : np.array
+        Time array
+    wn : np.array
+        Frequency array.
+    taus: np.array
+        Time constants used for constructing D-matrix.
+    dmatrix : np.array
+        D-matrix.
+    alphas : np.array
+        Used alpha values for computation (tik method).
+    lmatrix : np.array
+        L-matrix (tik method).
+    k : int
+        Used SVD Components (tsvd method).
+    method : string
+        Used method (tik or tsvd).
+    x_k : np.array
+        Resulting exponential pre-factors.
+    wn_name : str
+        Name of the frequency unit (default: wavenumber).
+    wn_unit : str
+        Frequency unit (default cm^{-1}).
+    t_name : str
+        Time name (default: time).
+    time_uni : str
+        Time uni (default: s).
+    """
 
     def __init__(self):
         self.data = np.array([])
@@ -15,6 +49,7 @@ class Results:
         self.dmatrix = np.array([])
         self.alphas = np.array([])
         self.lmatrix = np.array([])
+        self.lcruve = np.array([])
         self.k = None
         self.method = ''
         self.x_k = np.array([])
@@ -23,13 +58,35 @@ class Results:
         self.time_name = 'time'
         self.time_unit = 's'
 
-    def plotlda(self, alpha=-1):
+    def plotlda(self, index_alpha=-1, alpha=-1):
+        """ Plots a nice looking heatmap.
+
+        Parameters
+        ----------
+        index_alpha : int
+            Plot for specified alpha at index.
+        alpha : float
+            Plot for the closest alpha as specified.
+
+        Returns
+        -------
+        nothing
+        """
+
+        if self.x_k.size == 0:
+            print('First start a LDA.')
+            return
         plt.figure()
+        # check for used method
         if len(self.x_k.shape) == 3:
-            if alpha == -1:
-                alpha = int(np.ceil(self.alphas.size/2))
-            x_k = self.x_k[:, :, alpha]
-            title = 'LDA map at alpha = %f' % (self.alphas[alpha])
+            if index_alpha == -1 and alpha == -1:
+                # if no alpha is specified take the middle of the alpha array
+                index_alpha = int(np.ceil(self.alphas.size/2))
+            elif alpha != -1:
+                # search for closest alpha value
+                index_alpha = (np.abs(self.alphas - alpha)).argmin()
+            x_k = self.x_k[:, :, index_alpha]
+            title = 'LDA map at alpha = %f' % (self.alphas[index_alpha])
         else:
             x_k = self.x_k
             title = 'LDA map using TSVD'
@@ -46,11 +103,43 @@ class Results:
 
 
 def gen_taus(t1, t2, n):
+    """ Generates logarihmic spaced time constants.
+
+    Parameters
+    ----------
+    t1 : float
+        Bottom limit.
+    t2 : float
+        Upper limit.
+    n : int
+        Number of time constants.
+
+    Returns
+    -------
+    taus : np.array
+        Generated time constants.
+    """
+
     taus = np.logspace(np.log10(t1), np.log10(t2), n)
     return taus
 
 
 def gen_dmatrix(time, taus):
+    """ Generates D-matrix.
+
+    Parameters
+    ----------
+    time : np.array
+        Time array.
+    taus : np.array
+        Time constants array
+
+    Returns
+    -------
+    dmatrix : np.array
+        D-matrix
+    """
+
     dmatrix = np.zeros([time.size, taus.size])
     for i in range(len(taus)):
         dmatrix[:, i] = (np.exp(-time/taus[i])).reshape(-1)
@@ -58,6 +147,19 @@ def gen_dmatrix(time, taus):
 
 
 def gen_lmatrix(dmatrix):
+    """ Generates L-matrix
+
+    Parameters
+    ----------
+    damtrix : np.array
+        D-matrix
+
+    Returns
+    -------
+    lamtrix : np.array
+        L-matrix
+    """
+
     lmatrix = np.identity(np.shape(dmatrix)[1])
     b = np.ones(np.shape(dmatrix)[1])
     np.fill_diagonal(lmatrix[:, 1:], -b)
@@ -65,6 +167,25 @@ def gen_lmatrix(dmatrix):
 
 
 def gen_alphas(a1, a2, n):
+    """ Generates logarihmic spaced alpha values.
+    Adds [1e-5, 1e-4, 1e-3, 1e-2] and [10, 40, 70, 100]
+    for a better visualization of the L-curve.
+
+    Parameters
+    ----------
+    a1 : float
+        Bottom limit.
+    a2 : float
+        Upper limit.
+    n : int
+        Number of alpha values.
+
+    Returns
+    -------
+    alphas : np.array
+        Generated alpha values.
+    """
+
     # alphas = np.linspace(a1, a2, n)
     alphas = np.logspace(np.log10(a1), np.log10(a2), n)
 
@@ -75,10 +196,10 @@ def gen_alphas(a1, a2, n):
     return alphas
 
 
-def inversesvd(dmatrix, k=0):
+def inversesvd(dmatrix, k=-1):
     u, s, vt = svd(dmatrix, full_matrices=False)
 
-    if k == 0:
+    if k == -1:
         k = len(s)
 
     s = 1/s
@@ -108,9 +229,7 @@ def tik(data, dmatrix, alpha):
     return x_k
 
 
-def tiks(data, dmatrix, a1, a2, n):
-    alphas = gen_alphas(a1, a2, n)
-
+def tiks(data, dmatrix, alphas):
     x_ks = np.empty([np.shape(dmatrix)[1], np.shape(data)[0], len(alphas)])
     for i, alpha in enumerate(alphas):
         x_k = tik(data, dmatrix, alpha)
@@ -160,22 +279,22 @@ def dolda(
         anum=100,
         method='tik',
         k=5,
-        prompt='no'):
+        prompt=False):
 
-    if prompt == 'no':
+    if prompt is False:
         if not tlimits:
             tlimits = [time[0], time[-1]]
-    elif prompt == 'yes':
+    elif prompt is True:
         method = input('Which method (tik or tsvd)? ')
-        if method == tik:
-            t1 = int(input('Bottom limit for time constants: '))
-            t2 = int(input('Upper limit for time constants: '))
+        if method == 'tik':
+            t1 = float(input('Bottom limit for time constants: '))
+            t2 = float(input('Upper limit for time constants: '))
             tlimits = [t1, t2]
             tnum = int(input('Number of time constants: '))
-            a1 = int(input('Bottom limit for alpha values: '))
-            a2 = int(input('Upper limit for alpha values: '))
+            a1 = float(input('Bottom limit for alpha values: '))
+            a2 = float(input('Upper limit for alpha values: '))
             alimits = [a1, a2]
-            anum = int(input('Number of alpha values'))
+            anum = int(input('Number of alpha values: '))
         elif method == 'tsvd':
             k = int(input('How many singular values? '))
 
@@ -191,7 +310,9 @@ def dolda(
     res.method = method
     if method == 'tik':
         res.alphas = gen_alphas(alimits[0], alimits[1], anum)
-        x_k = tiks(data, dmatrix, alimits[0], alimits[1], anum)
+        x_k = tiks(data, dmatrix, res.alphas)
+        res.lmatrix = gen_lmatrix(dmatrix)
+        res.lcurve = calc_lcurve(data, dmatrix, res.lmatrix, x_k)
     elif method == 'tsvd':
         res.k = k
         x_k = tsvd(data, dmatrix, k)

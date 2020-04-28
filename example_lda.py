@@ -9,5 +9,5 @@ time = np.loadtxt('./data/time.dat', delimiter=',')
 
 res = mylda.dolda(data, time, wn, tlimits=[1e-6, 1e-1])
 print(res.x_k.shape)
-res.plotlda()
+res.plotlda(alpha=0.9)
 plt.show()
