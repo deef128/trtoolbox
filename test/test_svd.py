@@ -11,6 +11,8 @@ class TestSVD(unittest.TestCase):
         cls.data = np.loadtxt('./data/data.dat', delimiter=',')
         cls.wn = np.loadtxt('./data/wavenumbers.dat', delimiter=',')
         cls.time = np.loadtxt('./data/time.dat', delimiter=',')
+        # prevents plt.show() from blocking execution
+        plt.ion()
 
     def test_wrapper_svd(self):
         u, s, vt = mysvd.wrapper_svd(self.data)

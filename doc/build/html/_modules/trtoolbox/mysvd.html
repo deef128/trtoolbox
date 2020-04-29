@@ -33,6 +33,8 @@
   <h1>Source code for trtoolbox.mysvd</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">svd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">trtoolbox.plothelper</span> <span class="kn">import</span> <span class="n">PlotHelper</span>
 
 
 <div class="viewcode-block" id="Results"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mysvd.Results">[docs]</a><span class="k">class</span> <span class="nc">Results</span><span class="p">:</span>
@@ -40,29 +42,148 @@
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
+<span class="sd">    type : str</span>
+<span class="sd">        Results object type.</span>
 <span class="sd">    data : np.array</span>
 <span class="sd">        Data matrix subjected to fitting.</span>
-<span class="sd">    U : np.array</span>
+<span class="sd">    u : np.array</span>
 <span class="sd">        U matrix. Represents abstract spectra</span>
 <span class="sd">    s : np.array</span>
 <span class="sd">        Singular values.</span>
-<span class="sd">    VT: np.array</span>
+<span class="sd">    vt: np.array</span>
 <span class="sd">        Transposed V matrix. Represents abstract time traces.</span>
 <span class="sd">    n : int</span>
 <span class="sd">        Number of singular components used for data reconstruction.</span>
 <span class="sd">    svddata : np.array</span>
 <span class="sd">        Reconstructed data.</span>
+<span class="sd">    wn : np.array</span>
+<span class="sd">        Frequency array.</span>
+<span class="sd">    wn_name : str</span>
+<span class="sd">        Name of the frequency unit (default: wavenumber).</span>
+<span class="sd">    wn_unit : str</span>
+<span class="sd">        Frequency unit (default cm^{-1}).</span>
+<span class="sd">    time : np.array</span>
+<span class="sd">        Time array.</span>
+<span class="sd">    t_name : str</span>
+<span class="sd">        Time name (default: time).</span>
+<span class="sd">    time_uni : str</span>
+<span class="sd">        Time uni (default: s).</span>
+<span class="sd">    __phelper : mysvd.PlotHelper</span>
+<span class="sd">        Plot helper class for interactive plots.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># def __init__(self):</span>
-    <span class="c1">#     self.U = []</span>
-    <span class="c1">#     self.s = []</span>
-    <span class="c1">#     self.VT = []</span>
-    <span class="c1">#     self.n = 0</span>
-    <span class="c1">#     self.svddata = []</span>
-    <span class="k">pass</span></div>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="s1">&#39;svd&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">svddata</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_name</span> <span class="o">=</span> <span class="s1">&#39;time&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_unit</span> <span class="o">=</span> <span class="s1">&#39;s&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wn_name</span> <span class="o">=</span> <span class="s1">&#39;wavenumber&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wn_unit</span> <span class="o">=</span> <span class="s1">&#39;cm^{-1}&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__phelper</span> <span class="o">=</span> <span class="n">PlotHelper</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Results.plotdata"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mysvd.Results.plotdata">[docs]</a>    <span class="k">def</span> <span class="nf">plotdata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">newfig</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Plots a nice looking heatmap of the raw data.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        nothing</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__phelper</span><span class="o">.</span><span class="n">plot_heatmap</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wn</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Original Data&#39;</span><span class="p">,</span> <span class="n">newfig</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wn_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wn_unit</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_unit</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Results.plotsvddata"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mysvd.Results.plotsvddata">[docs]</a>    <span class="k">def</span> <span class="nf">plotsvddata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Plots a nice looking heatmap of the reconstructed data.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        nothing</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">nstr</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Reconstructed data using &#39;</span> <span class="o">+</span> <span class="n">nstr</span> <span class="o">+</span> <span class="s1">&#39; components&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__phelper</span><span class="o">.</span><span class="n">plot_heatmap</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">svddata</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wn</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">newfig</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wn_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wn_unit</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_unit</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Results.plot_traces"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mysvd.Results.plot_traces">[docs]</a>    <span class="k">def</span> <span class="nf">plot_traces</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Plots interactive time traces.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        nothing</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__phelper</span><span class="o">.</span><span class="n">plot_traces</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__phelper</span> <span class="o">=</span> <span class="n">PlotHelper</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__phelper</span> <span class="o">=</span> <span class="n">PlotHelper</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Results.plot_spectra"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mysvd.Results.plot_spectra">[docs]</a>    <span class="k">def</span> <span class="nf">plot_spectra</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Plots interactive spectra.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        nothing</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__phelper</span><span class="o">.</span><span class="n">plot_spectra</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__phelper</span> <span class="o">=</span> <span class="n">PlotHelper</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__phelper</span> <span class="o">=</span> <span class="n">PlotHelper</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Results.plot_results"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mysvd.Results.plot_results">[docs]</a>    <span class="k">def</span> <span class="nf">plot_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Plots heatmaps of original and SVD data,</span>
+<span class="sd">        interactive time traces and spectra.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        nothing</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># original data</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">top</span><span class="o">=</span><span class="mf">0.925</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="mf">0.075</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__phelper</span><span class="o">.</span><span class="n">plot_heatmap</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wn</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Original Data&#39;</span><span class="p">,</span> <span class="n">newfig</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wn_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wn_unit</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_unit</span><span class="p">))</span>
+
+        <span class="c1"># svd data</span>
+        <span class="n">nstr</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Reconstructed data using &#39;</span> <span class="o">+</span> <span class="n">nstr</span> <span class="o">+</span> <span class="s1">&#39; components&#39;</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__phelper</span><span class="o">.</span><span class="n">plot_heatmap</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">svddata</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wn</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">newfig</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wn_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wn_unit</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_unit</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__phelper</span><span class="o">.</span><span class="n">plot_traces</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__phelper</span><span class="o">.</span><span class="n">plot_spectra</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="c1"># important for variable inspection in spyder!</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__phelper</span> <span class="o">=</span> <span class="n">PlotHelper</span><span class="p">()</span></div></div>
 
 
-<div class="viewcode-block" id="dosvd"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mysvd.dosvd">[docs]</a><span class="k">def</span> <span class="nf">dosvd</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<div class="viewcode-block" id="wrapper_svd"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mysvd.wrapper_svd">[docs]</a><span class="k">def</span> <span class="nf">wrapper_svd</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Simple wrapper for the *scipy.linalg.svd()* function.</span>
 
 <span class="sd">    Parameters</span>
@@ -85,7 +206,72 @@
     <span class="k">return</span> <span class="n">u</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">vt</span></div>
 
 
-<div class="viewcode-block" id="reconstruct"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mysvd.reconstruct">[docs]</a><span class="k">def</span> <span class="nf">reconstruct</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<div class="viewcode-block" id="show_svs"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mysvd.show_svs">[docs]</a><span class="k">def</span> <span class="nf">show_svs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">wn</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Plots singular values.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : np.array</span>
+<span class="sd">        Data matrix subjected to SVD. Assuming *m x n* with m as frequency</span>
+<span class="sd">        and n as time. But it is actually not important.</span>
+<span class="sd">    time : np.array</span>
+<span class="sd">        Time array.</span>
+<span class="sd">    wn : np.array</span>
+<span class="sd">        Frequency array.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    nothing</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># ensuring that time spans columns</span>
+    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">time</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">u</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">vt</span> <span class="o">=</span> <span class="n">svd</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">eig</span> <span class="o">=</span> <span class="n">s</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">s</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">num</span> <span class="o">=</span> <span class="mi">15</span>
+    <span class="n">numlist</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">num</span><span class="p">))</span>
+    <span class="n">varlimits</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.985</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">,</span> <span class="mf">0.995</span><span class="p">]</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;First </span><span class="si">%i</span><span class="s1"> singular values&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">num</span><span class="p">))</span>
+    <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">numlist</span><span class="p">,</span> <span class="n">s</span><span class="p">[:</span><span class="n">num</span><span class="p">],</span> <span class="s1">&#39;o-&#39;</span><span class="p">)</span>
+    <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Singular values&#39;</span><span class="p">)</span>
+    <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;|s|&#39;</span><span class="p">)</span>
+    <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">numlist</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">eig</span><span class="p">[:</span><span class="n">num</span><span class="p">])</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;o-&#39;</span><span class="p">)</span>
+    <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Cummulative variance explained&#39;</span><span class="p">)</span>
+    <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;variance explained / %&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">limit</span> <span class="ow">in</span> <span class="n">varlimits</span><span class="p">:</span>
+        <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">numlist</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">num</span><span class="p">)</span><span class="o">*</span><span class="n">limit</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;--&#39;</span><span class="p">)</span>
+        <span class="n">svs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">eig</span><span class="p">[:</span><span class="n">num</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="n">limit</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s1">&#39;</span><span class="si">%.1f</span><span class="s1"> </span><span class="si">%%</span><span class="s1"> variance explained by </span><span class="si">%i</span><span class="s1"> singular values&#39;</span>
+            <span class="o">%</span> <span class="p">(</span><span class="n">limit</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span> <span class="n">svs</span><span class="p">))</span>
+
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Abstract spectra&#39;</span><span class="p">)</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="n">axs</span><span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">i</span><span class="o">-</span><span class="n">offset</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wn</span><span class="p">,</span> <span class="n">u</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])</span>
+
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Abstract time traces&#39;</span><span class="p">)</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="n">axs</span><span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">i</span><span class="o">-</span><span class="n">offset</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">vt</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:])</span>
+        <span class="n">axs</span><span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">i</span><span class="o">-</span><span class="n">offset</span><span class="p">]</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="reconstruct"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mysvd.reconstruct">[docs]</a><span class="k">def</span> <span class="nf">reconstruct</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Reconstructs data with n singular components.</span>
 
 <span class="sd">    Parameters</span>
@@ -93,6 +279,10 @@
 <span class="sd">    data : np.array</span>
 <span class="sd">        Data matrix subjected to SVD. Assuming *m x n* with m as frequency</span>
 <span class="sd">        and n as time. But it is actually not important.</span>
+<span class="sd">    n : int, list or np.array</span>
+<span class="sd">        Number of used SVD components.</span>
+<span class="sd">        If a list or array is provided, non pythonic way of numbering is used.</span>
+<span class="sd">        Meaning first component equals 1.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -101,16 +291,20 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">u</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">vt</span> <span class="o">=</span> <span class="n">svd</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">n</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s1">&#39;How many singular values?&#39;</span><span class="p">)</span>
-        <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">==</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">nlist</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">nlist</span> <span class="o">=</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span>
+    <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="n">nlist</span> <span class="o">=</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span>
 
     <span class="c1"># create m x n singular values matrix</span>
     <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">u</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vt</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
     <span class="n">sigma</span><span class="p">[:</span><span class="n">s</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">:</span><span class="n">s</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
 
     <span class="c1"># reconstruct data</span>
-    <span class="n">svddata</span> <span class="o">=</span> <span class="n">u</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="n">n</span><span class="p">]</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">sigma</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">n</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">vt</span><span class="p">))</span>
+    <span class="n">svddata</span> <span class="o">=</span> <span class="n">u</span><span class="p">[:,</span> <span class="n">nlist</span><span class="p">]</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">sigma</span><span class="p">[</span><span class="n">nlist</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">vt</span><span class="p">))</span>
 
     <span class="n">res</span> <span class="o">=</span> <span class="n">Results</span><span class="p">()</span>
     <span class="n">res</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
@@ -120,6 +314,52 @@
     <span class="n">res</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">n</span>
     <span class="n">res</span><span class="o">.</span><span class="n">svddata</span> <span class="o">=</span> <span class="n">svddata</span>
 
+    <span class="k">return</span> <span class="n">res</span></div>
+
+
+<div class="viewcode-block" id="dosvd"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mysvd.dosvd">[docs]</a><span class="k">def</span> <span class="nf">dosvd</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">wn</span><span class="p">,</span> <span class="n">n</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Wrapper for inspecting SVD components with reconstruction.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : np.array</span>
+<span class="sd">        Data matrix subjected to SVD. Assuming *m x n* with m as frequency</span>
+<span class="sd">        and n as time. But it is actually not important.</span>
+<span class="sd">    time : np.array</span>
+<span class="sd">        Time array.</span>
+<span class="sd">    wn : np.array</span>
+<span class="sd">        Frequency array.</span>
+<span class="sd">    n : int, list or np.array</span>
+<span class="sd">        Number of used SVD components.</span>
+<span class="sd">        If a list or array is provided, non pythonic way of numbering is used.</span>
+<span class="sd">        Meaning first component equals 1.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    res : *mysvd.results()*</span>
+<span class="sd">        Results object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># ensuring that time spans columns</span>
+    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">time</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="c1"># prevents plt.show() from blocking execution</span>
+    <span class="c1"># plt.ion()</span>
+    <span class="n">show_svs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">wn</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">==</span> <span class="nb">int</span> <span class="ow">and</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s1">&#39;How many singular values? &#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">n</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">n</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Wrong input&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">reconstruct</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">time</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">wn</span> <span class="o">=</span> <span class="n">wn</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">plot_results</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">res</span></div>
 </pre></div>
 

@@ -1,7 +1,7 @@
 from scipy.linalg import svd
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.widgets import Slider
+from trtoolbox.plothelper import PlotHelper
 
 
 class Results:
@@ -9,6 +9,8 @@ class Results:
 
     Attributes
     ----------
+    type : str
+        Results object type.
     data : np.array
         Data matrix subjected to fitting.
     u : np.array
@@ -21,9 +23,24 @@ class Results:
         Number of singular components used for data reconstruction.
     svddata : np.array
         Reconstructed data.
+    wn : np.array
+        Frequency array.
+    wn_name : str
+        Name of the frequency unit (default: wavenumber).
+    wn_unit : str
+        Frequency unit (default cm^{-1}).
+    time : np.array
+        Time array.
+    t_name : str
+        Time name (default: time).
+    time_uni : str
+        Time uni (default: s).
+    __phelper : mysvd.PlotHelper
+        Plot helper class for interactive plots.
     """
 
     def __init__(self):
+        self.type = 'svd'
         self.data = np.array([])
         self.u = np.array([])
         self.s = np.array([])
@@ -36,68 +53,25 @@ class Results:
         self.wn = np.array([])
         self.wn_name = 'wavenumber'
         self.wn_unit = 'cm^{-1}'
+        self.__phelper = PlotHelper()
 
-    def __plot_heatmap(self, data, title='data'):
-        """ Plots a nice looking heatmap.
-
-        Parameters
-        ----------
-        data : np.array
-            Data matrix subjected to SVD. Assuming *m x n* with m as frequency
-            and n as time. But it is actually not important.
-        title : np.array
-            Title of plot. Default *data*.
-
-        Returns
-        -------
-        nothing
-        """
-
-        plt.figure()
-        # ensuring that time spans columns
-        if data.shape[1] != self.time.size:
-            data = np.transpose(data)
-
-        if self.time.size == 0 or self.wn.size == 0:
-            plt.pcolormesh(data, cmap='jet', shading='gouraud')
-        else:
-            plt.pcolormesh(
-                self.time,
-                self.wn,
-                data,
-                cmap='jet',
-                shading='gouraud')
-        plt.xscale('log')
-        plt.ylabel('%s / %s' % (self.wn_name, self.wn_unit))
-        plt.xlabel('%s / %s' % (self.time_name, self.time_unit))
-        plt.title(title)
-        # plt.show()
-
-    def plotdata(self):
+    def plotdata(self, newfig=True):
         """ Plots a nice looking heatmap of the raw data.
 
-        Parameters
-        ----------
-        data : np.array
-            Data matrix subjected to SVD. Assuming *m x n* with m as frequency
-            and n as time. But it is actually not important.
-
         Returns
         -------
         nothing
         """
 
-        self.__plot_heatmap(self.data, title='Original Data')
+        self.__phelper.plot_heatmap(
+            self.data, self.time, self.wn,
+            title='Original Data', newfig=False)
+        plt.ylabel('%s / %s' % (self.wn_name, self.wn_unit))
+        plt.xlabel('%s / %s' % (self.time_name, self.time_unit))
+        plt.show()
 
-    # TODO: slider version
     def plotsvddata(self):
         """ Plots a nice looking heatmap of the reconstructed data.
-
-        Parameters
-        ----------
-        data : np.array
-            Data matrix subjected to SVD. Assuming *m x n* with m as frequency
-            and n as time. But it is actually not important.
 
         Returns
         -------
@@ -106,41 +80,74 @@ class Results:
 
         nstr = str(self.n)
         title = 'Reconstructed data using ' + nstr + ' components'
-        self.__plot_heatmap(self.svddata, title=title)
+        self.__phelper.plot_heatmap(
+            self.svddata, self.time, self.wn,
+            title=title, newfig=False)
+        plt.ylabel('%s / %s' % (self.wn_name, self.wn_unit))
+        plt.xlabel('%s / %s' % (self.time_name, self.time_unit))
 
-        fig = plt.figure()
-        fig.suptitle('Time traces\nblue: Raw, red: SVD')
-        ax = fig.add_subplot(111)
-        plt.subplots_adjust(bottom=0.2)
-        l1, = plt.plot(self.time, self.data[0, :])
-        l2, = plt.plot(self.time, self.svddata[0, :])
-        plt.xscale('log')
-        ax.margins(x=0)
+    def plot_traces(self):
+        """ Plots interactive time traces.
 
-        axcolor = 'lightgoldenrodyellow'
-        axfreq = plt.axes([0.175, 0.05, 0.65, 0.03], facecolor=axcolor)
-        sfreq = Slider(
-            axfreq, 'Freq',
-            np.min(self.wn),
-            np.max(self.wn),
-            valinit=self.wn[0],
-            valstep=abs(self.wn[1]-self.wn[0])
-            )
+        Returns
+        -------
+        nothing
+        """
 
-        def update(val):
-            val = sfreq.val
-            ind = np.where(self.wn == val)[0][0]
-            # ax.cla()
-            # ax.plot(self.time, self.data[ind, :])
-            l1.set_ydata(self.data[ind, :])
-            l2.set_ydata(self.svddata[ind, :])
-            ymin = min(self.data[ind, :])
-            ymax = max(self.data[ind, :])
-            sc = 1.1
-            ax.set_ylim(ymin*sc, ymax*sc)
-
-        sfreq.on_changed(update)
+        self.__phelper.plot_traces(self)
+        self.__phelper = PlotHelper()
         plt.show()
+        self.__phelper = PlotHelper()
+
+    def plot_spectra(self):
+        """ Plots interactive spectra.
+
+        Returns
+        -------
+        nothing
+        """
+
+        self.__phelper.plot_spectra(self)
+        self.__phelper = PlotHelper()
+        plt.show()
+        self.__phelper = PlotHelper()
+
+    def plot_results(self):
+        """ Plots heatmaps of original and SVD data,
+        interactive time traces and spectra.
+
+        Returns
+        -------
+        nothing
+        """
+
+        # original data
+        _, axs = plt.subplots(2, 1)
+        plt.subplots_adjust(top=0.925)
+        plt.subplots_adjust(bottom=0.075)
+        plt.sca(axs[0])
+        self.__phelper.plot_heatmap(
+            self.data, self.time, self.wn,
+            title='Original Data', newfig=False)
+        plt.ylabel('%s / %s' % (self.wn_name, self.wn_unit))
+        plt.xlabel('%s / %s' % (self.time_name, self.time_unit))
+
+        # svd data
+        nstr = str(self.n)
+        title = 'Reconstructed data using ' + nstr + ' components'
+        plt.sca(axs[1])
+        self.__phelper.plot_heatmap(
+            self.svddata, self.time, self.wn,
+            title=title, newfig=False)
+        plt.ylabel('%s / %s' % (self.wn_name, self.wn_unit))
+        plt.xlabel('%s / %s' % (self.time_name, self.time_unit))
+
+        self.__phelper.plot_traces(self)
+        self.__phelper.plot_spectra(self)
+
+        plt.show()
+        # important for variable inspection in spyder!
+        self.__phelper = PlotHelper()
 
 
 def wrapper_svd(data):
@@ -228,6 +235,7 @@ def show_svs(data, time, wn):
             offset = 4
         axs[r, i-offset].plot(time.T, vt[i, :])
         axs[r, i-offset].set_xscale('log')
+    plt.show()
 
 
 def reconstruct(data, n):
@@ -303,7 +311,8 @@ def dosvd(data, time, wn, n=-1):
     if data.shape[1] != time.size:
         data = np.transpose(data)
 
-    plt.ion()
+    # prevents plt.show() from blocking execution
+    # plt.ion()
     show_svs(data, time, wn)
     if type(n) == int and n <= 0:
         n = input('How many singular values? ')
@@ -317,7 +326,5 @@ def dosvd(data, time, wn, n=-1):
     res = reconstruct(data, n)
     res.time = time
     res.wn = wn
-    res.plotdata()
-    res.plotsvddata()
-    plt.show()
+    res.plot_results()
     return res

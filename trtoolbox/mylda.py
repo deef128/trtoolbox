@@ -1,16 +1,17 @@
 import numpy as np
 from scipy.linalg import svd
-# from scipy.signal import medfilt
-# from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
+from trtoolbox.plothelper import PlotHelper
 
-# TODO: make nice results plots with sliders
 
+# TODO: finish plot functions and include option for sq. model
 class Results:
     """ Object containing fit results.
 
     Attributes
     ----------
+    type : str
+        Results object type.
     data : np.array
         Data matrix subjected to fitting.
     time : np.array
@@ -31,6 +32,8 @@ class Results:
         Used method (tik or tsvd).
     x_k : np.array
         Resulting exponential pre-factors.
+    fitdata : np.array
+        Constructed data (dmatrix.dot(x_k))
     wn_name : str
         Name of the frequency unit (default: wavenumber).
     wn_unit : str
@@ -42,6 +45,7 @@ class Results:
     """
 
     def __init__(self):
+        self.type = 'lda'
         self.data = np.array([])
         self.time = np.array([])
         self.wn = np.array([])
@@ -53,10 +57,29 @@ class Results:
         self.k = None
         self.method = ''
         self.x_k = np.array([])
+        self.fitdata = np.array([])
         self.wn_name = 'wavenumber'
         self.wn_unit = 'cm^{-1}'
         self.time_name = 'time'
         self.time_unit = 's'
+        self.__phelper = PlotHelper()
+
+    def get_xk(self, index_alpha=-1, alpha=-1):
+        # check for used method
+        if len(self.x_k.shape) == 3:
+            if index_alpha == -1 and alpha == -1:
+                # if no alpha is specified take the middle of the alpha array
+                index_alpha = int(np.ceil(self.alphas.size/2))
+            elif alpha != -1:
+                # search for closest alpha value
+                index_alpha = (np.abs(self.alphas - alpha)).argmin()
+            x_k = self.x_k[:, :, index_alpha]
+            title = 'LDA map at alpha = %f' % (self.alphas[index_alpha])
+        else:
+            x_k = self.x_k
+            title = 'LDA map using TSVD'
+
+        return x_k, title
 
     def plotlda(self, index_alpha=-1, alpha=-1):
         """ Plots a nice looking heatmap.
@@ -76,30 +99,61 @@ class Results:
         if self.x_k.size == 0:
             print('First start a LDA.')
             return
+        x_k, title = self.get_xk(index_alpha, alpha)
+
         plt.figure()
-        # check for used method
-        if len(self.x_k.shape) == 3:
-            if index_alpha == -1 and alpha == -1:
-                # if no alpha is specified take the middle of the alpha array
-                index_alpha = int(np.ceil(self.alphas.size/2))
-            elif alpha != -1:
-                # search for closest alpha value
-                index_alpha = (np.abs(self.alphas - alpha)).argmin()
-            x_k = self.x_k[:, :, index_alpha]
-            title = 'LDA map at alpha = %f' % (self.alphas[index_alpha])
-        else:
-            x_k = self.x_k
-            title = 'LDA map using TSVD'
-        plt.pcolormesh(
-            np.transpose(self.taus),
-            self.wn,
-            np.transpose(x_k),
-            cmap='jet',
-            shading='gouraud')
-        plt.xscale('log')
+        self.__phelper.plot_heatmap(
+            x_k, self.taus, self.wn,
+            title=title, newfig=False)
+        plt.ylabel('%s / %s' % (self.wn_name, self.wn_unit))
+        plt.xlabel('%s / %s' % ('tau', self.time_unit))
+        plt.title(title)
+        plt.show()
+
+    def plot_results(self, index_alpha=-1, alpha=-1):
+        if self.x_k.size == 0:
+            print('First start a LDA.')
+            return
+        x_k, title = self.get_xk(index_alpha, alpha)
+        # using same routine for all modules
+        self.svddata = np.transpose(self.dmatrix.dot(x_k))
+
+        # lda map
+        plt.figure()
+        self.__phelper.plot_heatmap(
+            x_k, self.taus, self.wn,
+            title=title, newfig=False)
+        plt.ylabel('%s / %s' % (self.wn_name, self.wn_unit))
+        plt.xlabel('%s / %s' % ('tau', self.time_unit))
+        plt.title(title)
+
+        # original data
+        _, axs = plt.subplots(2, 1)
+        plt.subplots_adjust(top=0.925)
+        plt.subplots_adjust(bottom=0.075)
+        plt.sca(axs[0])
+        self.__phelper.plot_heatmap(
+            self.data, self.time, self.wn,
+            title='Original Data', newfig=False)
         plt.ylabel('%s / %s' % (self.wn_name, self.wn_unit))
         plt.xlabel('%s / %s' % (self.time_name, self.time_unit))
-        plt.title(title)
+
+        # lda data
+        plt.sca(axs[1])
+        self.__phelper.plot_heatmap(
+            self.svddata, self.time, self.wn,
+            title=title, newfig=False)
+        plt.ylabel('%s / %s' % (self.wn_name, self.wn_unit))
+        plt.xlabel('%s / %s' % (self.time_name, self.time_unit))
+
+        self.__phelper.plot_traces(self)
+        self.__phelper.plot_spectra(self)
+
+        plt.show()
+        # important for variable inspection in spyder!
+        self.__phelper = PlotHelper()
+        # deletes temporary attribute
+        delattr(self, 'svddata')
 
 
 def gen_taus(t1, t2, n):
@@ -124,7 +178,7 @@ def gen_taus(t1, t2, n):
     return taus
 
 
-def gen_dmatrix(time, taus):
+def gen_dmatrix(time, taus, seqmodel=False):
     """ Generates D-matrix.
 
     Parameters
@@ -143,6 +197,9 @@ def gen_dmatrix(time, taus):
     dmatrix = np.zeros([time.size, taus.size])
     for i in range(len(taus)):
         dmatrix[:, i] = (np.exp(-time/taus[i])).reshape(-1)
+        if i > 0 and seqmodel is True:
+            dmatrix[:, i] = \
+                (-1*dmatrix[:, i-1] + np.exp(-time/taus[i])).reshape(-1)
     return dmatrix
 
 
@@ -313,9 +370,14 @@ def dolda(
         x_k = tiks(data, dmatrix, res.alphas)
         res.lmatrix = gen_lmatrix(dmatrix)
         res.lcurve = calc_lcurve(data, dmatrix, res.lmatrix, x_k)
+        fitdata = np.empty(data.shape + (np.shape(x_k)[2], ))
+        for i in range(np.shape(x_k)[2]):
+            fitdata[:, :, i] = np.transpose(dmatrix.dot(x_k[:, :, i]))
+        res.fitdata = fitdata
     elif method == 'tsvd':
         res.k = k
         x_k = tsvd(data, dmatrix, k)
+        res.fitdata = np.transpose(dmatrix.dot(x_k))
 
     res.x_k = x_k
     return res

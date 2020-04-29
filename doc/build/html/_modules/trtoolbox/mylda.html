@@ -1,0 +1,537 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>trtoolbox.mylda &#8212; Time-Resolved Toolbox  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for trtoolbox.mylda</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">svd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">trtoolbox.plothelper</span> <span class="kn">import</span> <span class="n">PlotHelper</span>
+
+
+<span class="c1"># TODO: finish plot functions and include option for sq. model</span>
+<div class="viewcode-block" id="Results"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mylda.Results">[docs]</a><span class="k">class</span> <span class="nc">Results</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Object containing fit results.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    type : str</span>
+<span class="sd">        Results object type.</span>
+<span class="sd">    data : np.array</span>
+<span class="sd">        Data matrix subjected to fitting.</span>
+<span class="sd">    time : np.array</span>
+<span class="sd">        Time array</span>
+<span class="sd">    wn : np.array</span>
+<span class="sd">        Frequency array.</span>
+<span class="sd">    taus: np.array</span>
+<span class="sd">        Time constants used for constructing D-matrix.</span>
+<span class="sd">    dmatrix : np.array</span>
+<span class="sd">        D-matrix.</span>
+<span class="sd">    alphas : np.array</span>
+<span class="sd">        Used alpha values for computation (tik method).</span>
+<span class="sd">    lmatrix : np.array</span>
+<span class="sd">        L-matrix (tik method).</span>
+<span class="sd">    k : int</span>
+<span class="sd">        Used SVD Components (tsvd method).</span>
+<span class="sd">    method : string</span>
+<span class="sd">        Used method (tik or tsvd).</span>
+<span class="sd">    x_k : np.array</span>
+<span class="sd">        Resulting exponential pre-factors.</span>
+<span class="sd">    fitdata : np.array</span>
+<span class="sd">        Constructed data (dmatrix.dot(x_k))</span>
+<span class="sd">    wn_name : str</span>
+<span class="sd">        Name of the frequency unit (default: wavenumber).</span>
+<span class="sd">    wn_unit : str</span>
+<span class="sd">        Frequency unit (default cm^{-1}).</span>
+<span class="sd">    t_name : str</span>
+<span class="sd">        Time name (default: time).</span>
+<span class="sd">    time_uni : str</span>
+<span class="sd">        Time uni (default: s).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="s1">&#39;lda&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">taus</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dmatrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alphas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lmatrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lcruve</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fitdata</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wn_name</span> <span class="o">=</span> <span class="s1">&#39;wavenumber&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wn_unit</span> <span class="o">=</span> <span class="s1">&#39;cm^{-1}&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_name</span> <span class="o">=</span> <span class="s1">&#39;time&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_unit</span> <span class="o">=</span> <span class="s1">&#39;s&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__phelper</span> <span class="o">=</span> <span class="n">PlotHelper</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Results.get_xk"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mylda.Results.get_xk">[docs]</a>    <span class="k">def</span> <span class="nf">get_xk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index_alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="c1"># check for used method</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_k</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">index_alpha</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">alpha</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="c1"># if no alpha is specified take the middle of the alpha array</span>
+                <span class="n">index_alpha</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alphas</span><span class="o">.</span><span class="n">size</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">alpha</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="c1"># search for closest alpha value</span>
+                <span class="n">index_alpha</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alphas</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">))</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
+            <span class="n">x_k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_k</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">index_alpha</span><span class="p">]</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;LDA map at alpha = </span><span class="si">%f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alphas</span><span class="p">[</span><span class="n">index_alpha</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x_k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_k</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;LDA map using TSVD&#39;</span>
+
+        <span class="k">return</span> <span class="n">x_k</span><span class="p">,</span> <span class="n">title</span></div>
+
+<div class="viewcode-block" id="Results.plotlda"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mylda.Results.plotlda">[docs]</a>    <span class="k">def</span> <span class="nf">plotlda</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index_alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Plots a nice looking heatmap.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        index_alpha : int</span>
+<span class="sd">            Plot for specified alpha at index.</span>
+<span class="sd">        alpha : float</span>
+<span class="sd">            Plot for the closest alpha as specified.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        nothing</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_k</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;First start a LDA.&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="n">x_k</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_xk</span><span class="p">(</span><span class="n">index_alpha</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__phelper</span><span class="o">.</span><span class="n">plot_heatmap</span><span class="p">(</span>
+            <span class="n">x_k</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">taus</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wn</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">newfig</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wn_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wn_unit</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="s1">&#39;tau&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_unit</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Results.plot_results"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mylda.Results.plot_results">[docs]</a>    <span class="k">def</span> <span class="nf">plot_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index_alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_k</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;First start a LDA.&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="n">x_k</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_xk</span><span class="p">(</span><span class="n">index_alpha</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+        <span class="c1"># using same routine for all modules</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">svddata</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dmatrix</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">x_k</span><span class="p">))</span>
+
+        <span class="c1"># lda map</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__phelper</span><span class="o">.</span><span class="n">plot_heatmap</span><span class="p">(</span>
+            <span class="n">x_k</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">taus</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wn</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">newfig</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wn_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wn_unit</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="s1">&#39;tau&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_unit</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+
+        <span class="c1"># original data</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">top</span><span class="o">=</span><span class="mf">0.925</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="mf">0.075</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__phelper</span><span class="o">.</span><span class="n">plot_heatmap</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wn</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Original Data&#39;</span><span class="p">,</span> <span class="n">newfig</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wn_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wn_unit</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_unit</span><span class="p">))</span>
+
+        <span class="c1"># lda data</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__phelper</span><span class="o">.</span><span class="n">plot_heatmap</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">svddata</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wn</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">newfig</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wn_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wn_unit</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_unit</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__phelper</span><span class="o">.</span><span class="n">plot_traces</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__phelper</span><span class="o">.</span><span class="n">plot_spectra</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="c1"># important for variable inspection in spyder!</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__phelper</span> <span class="o">=</span> <span class="n">PlotHelper</span><span class="p">()</span>
+        <span class="c1"># deletes temporary attribute</span>
+        <span class="nb">delattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;svddata&#39;</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="gen_taus"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mylda.gen_taus">[docs]</a><span class="k">def</span> <span class="nf">gen_taus</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Generates logarihmic spaced time constants.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    t1 : float</span>
+<span class="sd">        Bottom limit.</span>
+<span class="sd">    t2 : float</span>
+<span class="sd">        Upper limit.</span>
+<span class="sd">    n : int</span>
+<span class="sd">        Number of time constants.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    taus : np.array</span>
+<span class="sd">        Generated time constants.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">taus</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">t1</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">t2</span><span class="p">),</span> <span class="n">n</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">taus</span></div>
+
+
+<div class="viewcode-block" id="gen_dmatrix"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mylda.gen_dmatrix">[docs]</a><span class="k">def</span> <span class="nf">gen_dmatrix</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">taus</span><span class="p">,</span> <span class="n">seqmodel</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Generates D-matrix.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    time : np.array</span>
+<span class="sd">        Time array.</span>
+<span class="sd">    taus : np.array</span>
+<span class="sd">        Time constants array</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dmatrix : np.array</span>
+<span class="sd">        D-matrix</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">dmatrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">time</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">taus</span><span class="o">.</span><span class="n">size</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">taus</span><span class="p">)):</span>
+        <span class="n">dmatrix</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">time</span><span class="o">/</span><span class="n">taus</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">seqmodel</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">dmatrix</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">dmatrix</span><span class="p">[:,</span> <span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">time</span><span class="o">/</span><span class="n">taus</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">dmatrix</span></div>
+
+
+<div class="viewcode-block" id="gen_lmatrix"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mylda.gen_lmatrix">[docs]</a><span class="k">def</span> <span class="nf">gen_lmatrix</span><span class="p">(</span><span class="n">dmatrix</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Generates L-matrix</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    damtrix : np.array</span>
+<span class="sd">        D-matrix</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    lamtrix : np.array</span>
+<span class="sd">        L-matrix</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">lmatrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">dmatrix</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">dmatrix</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">lmatrix</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:],</span> <span class="o">-</span><span class="n">b</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">lmatrix</span></div>
+
+
+<div class="viewcode-block" id="gen_alphas"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mylda.gen_alphas">[docs]</a><span class="k">def</span> <span class="nf">gen_alphas</span><span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Generates logarihmic spaced alpha values.</span>
+<span class="sd">    Adds [1e-5, 1e-4, 1e-3, 1e-2] and [10, 40, 70, 100]</span>
+<span class="sd">    for a better visualization of the L-curve.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    a1 : float</span>
+<span class="sd">        Bottom limit.</span>
+<span class="sd">    a2 : float</span>
+<span class="sd">        Upper limit.</span>
+<span class="sd">    n : int</span>
+<span class="sd">        Number of alpha values.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    alphas : np.array</span>
+<span class="sd">        Generated alpha values.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># alphas = np.linspace(a1, a2, n)</span>
+    <span class="n">alphas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">a1</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">a2</span><span class="p">),</span> <span class="n">n</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">a1</span> <span class="o">&gt;</span> <span class="mf">1e-2</span><span class="p">:</span>
+        <span class="n">alphas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">alphas</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mf">1e-5</span><span class="p">,</span> <span class="mf">1e-4</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">a2</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
+        <span class="n">alphas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">alphas</span><span class="p">,</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">100</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">alphas</span></div>
+
+
+<div class="viewcode-block" id="inversesvd"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mylda.inversesvd">[docs]</a><span class="k">def</span> <span class="nf">inversesvd</span><span class="p">(</span><span class="n">dmatrix</span><span class="p">,</span> <span class="n">k</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">u</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">vt</span> <span class="o">=</span> <span class="n">svd</span><span class="p">(</span><span class="n">dmatrix</span><span class="p">,</span> <span class="n">full_matrices</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+    <span class="n">s</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">s</span>
+    <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">k</span> <span class="k">else</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">))])</span>
+    <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span>
+
+    <span class="n">ut</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">vt</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">v</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">ut</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="tik"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mylda.tik">[docs]</a><span class="k">def</span> <span class="nf">tik</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dmatrix</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>
+    <span class="n">lamtrix</span> <span class="o">=</span> <span class="n">gen_lmatrix</span><span class="p">(</span><span class="n">dmatrix</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">alpha</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">d_aug</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">dmatrix</span><span class="p">,</span> <span class="n">alpha</span><span class="o">**</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">lamtrix</span><span class="p">))</span>
+        <span class="n">a_aug</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">data</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">len</span><span class="p">(</span><span class="n">lamtrix</span><span class="p">)])),</span>
+            <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">d_aug</span> <span class="o">=</span> <span class="n">dmatrix</span>
+        <span class="n">a_aug</span> <span class="o">=</span> <span class="n">data</span>
+
+    <span class="n">d_tilde</span> <span class="o">=</span> <span class="n">inversesvd</span><span class="p">(</span><span class="n">d_aug</span><span class="p">)</span>
+    <span class="n">x_k</span> <span class="o">=</span> <span class="n">d_tilde</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">a_aug</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">x_k</span></div>
+
+
+<div class="viewcode-block" id="tiks"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mylda.tiks">[docs]</a><span class="k">def</span> <span class="nf">tiks</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dmatrix</span><span class="p">,</span> <span class="n">alphas</span><span class="p">):</span>
+    <span class="n">x_ks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">dmatrix</span><span class="p">)[</span><span class="mi">1</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">data</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">len</span><span class="p">(</span><span class="n">alphas</span><span class="p">)])</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">alpha</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">alphas</span><span class="p">):</span>
+        <span class="n">x_k</span> <span class="o">=</span> <span class="n">tik</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dmatrix</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+        <span class="n">x_ks</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_k</span>
+
+    <span class="k">return</span> <span class="n">x_ks</span></div>
+
+
+<div class="viewcode-block" id="calc_lcurve"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mylda.calc_lcurve">[docs]</a><span class="k">def</span> <span class="nf">calc_lcurve</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dmatrix</span><span class="p">,</span> <span class="n">lmatrix</span><span class="p">,</span> <span class="n">x_ks</span><span class="p">):</span>
+    <span class="n">lcurve</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">x_ks</span><span class="p">)[</span><span class="mi">2</span><span class="p">],</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">x_ks</span><span class="p">)[</span><span class="mi">2</span><span class="p">]):</span>
+        <span class="n">lcurve</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">dmatrix</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">x_ks</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">])</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">data</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">lcurve</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">lmatrix</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">x_ks</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">]))</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">lcurve</span></div>
+
+
+<div class="viewcode-block" id="tik_lstsq"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mylda.tik_lstsq">[docs]</a><span class="k">def</span> <span class="nf">tik_lstsq</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dmatrix</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>
+    <span class="n">lmatrix</span> <span class="o">=</span> <span class="n">gen_lmatrix</span><span class="p">(</span><span class="n">dmatrix</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">alpha</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">d_aug</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">dmatrix</span><span class="p">,</span> <span class="n">alpha</span><span class="o">**</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">lmatrix</span><span class="p">))</span>
+        <span class="n">a_aug</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">data</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">len</span><span class="p">(</span><span class="n">lmatrix</span><span class="p">)])),</span>
+            <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">d_aug</span> <span class="o">=</span> <span class="n">dmatrix</span>
+        <span class="n">a_aug</span> <span class="o">=</span> <span class="n">data</span>
+
+    <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span><span class="n">d_aug</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">a_aug</span><span class="p">),</span> <span class="n">rcond</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">res</span></div>
+
+
+<div class="viewcode-block" id="tsvd"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mylda.tsvd">[docs]</a><span class="k">def</span> <span class="nf">tsvd</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dmatrix</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+    <span class="n">d_tilde</span> <span class="o">=</span> <span class="n">inversesvd</span><span class="p">(</span><span class="n">dmatrix</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+    <span class="n">x_k</span> <span class="o">=</span> <span class="n">d_tilde</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">x_k</span></div>
+
+
+<div class="viewcode-block" id="dolda"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mylda.dolda">[docs]</a><span class="k">def</span> <span class="nf">dolda</span><span class="p">(</span>
+        <span class="n">data</span><span class="p">,</span>
+        <span class="n">time</span><span class="p">,</span>
+        <span class="n">wn</span><span class="p">,</span>
+        <span class="n">tlimits</span><span class="o">=</span><span class="p">[],</span>
+        <span class="n">tnum</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">alimits</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+        <span class="n">anum</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">method</span><span class="o">=</span><span class="s1">&#39;tik&#39;</span><span class="p">,</span>
+        <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="n">prompt</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="n">prompt</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">tlimits</span><span class="p">:</span>
+            <span class="n">tlimits</span> <span class="o">=</span> <span class="p">[</span><span class="n">time</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">time</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="k">elif</span> <span class="n">prompt</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">method</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s1">&#39;Which method (tik or tsvd)? &#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;tik&#39;</span><span class="p">:</span>
+            <span class="n">t1</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s1">&#39;Bottom limit for time constants: &#39;</span><span class="p">))</span>
+            <span class="n">t2</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s1">&#39;Upper limit for time constants: &#39;</span><span class="p">))</span>
+            <span class="n">tlimits</span> <span class="o">=</span> <span class="p">[</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">]</span>
+            <span class="n">tnum</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s1">&#39;Number of time constants: &#39;</span><span class="p">))</span>
+            <span class="n">a1</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s1">&#39;Bottom limit for alpha values: &#39;</span><span class="p">))</span>
+            <span class="n">a2</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s1">&#39;Upper limit for alpha values: &#39;</span><span class="p">))</span>
+            <span class="n">alimits</span> <span class="o">=</span> <span class="p">[</span><span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">]</span>
+            <span class="n">anum</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s1">&#39;Number of alpha values: &#39;</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;tsvd&#39;</span><span class="p">:</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s1">&#39;How many singular values? &#39;</span><span class="p">))</span>
+
+    <span class="n">taus</span> <span class="o">=</span> <span class="n">gen_taus</span><span class="p">(</span><span class="n">tlimits</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">tlimits</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">tnum</span><span class="p">)</span>
+    <span class="n">dmatrix</span> <span class="o">=</span> <span class="n">gen_dmatrix</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">taus</span><span class="p">)</span>
+
+    <span class="n">res</span> <span class="o">=</span> <span class="n">Results</span><span class="p">()</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">time</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">wn</span> <span class="o">=</span> <span class="n">wn</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">taus</span> <span class="o">=</span> <span class="n">taus</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">dmatrix</span> <span class="o">=</span> <span class="n">dmatrix</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="n">method</span>
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;tik&#39;</span><span class="p">:</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">alphas</span> <span class="o">=</span> <span class="n">gen_alphas</span><span class="p">(</span><span class="n">alimits</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">alimits</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">anum</span><span class="p">)</span>
+        <span class="n">x_k</span> <span class="o">=</span> <span class="n">tiks</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dmatrix</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">alphas</span><span class="p">)</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">lmatrix</span> <span class="o">=</span> <span class="n">gen_lmatrix</span><span class="p">(</span><span class="n">dmatrix</span><span class="p">)</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">lcurve</span> <span class="o">=</span> <span class="n">calc_lcurve</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dmatrix</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">lmatrix</span><span class="p">,</span> <span class="n">x_k</span><span class="p">)</span>
+        <span class="n">fitdata</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span> <span class="o">+</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">x_k</span><span class="p">)[</span><span class="mi">2</span><span class="p">],</span> <span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">x_k</span><span class="p">)[</span><span class="mi">2</span><span class="p">]):</span>
+            <span class="n">fitdata</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">dmatrix</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">x_k</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">]))</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">fitdata</span> <span class="o">=</span> <span class="n">fitdata</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;tsvd&#39;</span><span class="p">:</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="n">k</span>
+        <span class="n">x_k</span> <span class="o">=</span> <span class="n">tsvd</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dmatrix</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">fitdata</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">dmatrix</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">x_k</span><span class="p">))</span>
+
+    <span class="n">res</span><span class="o">.</span><span class="n">x_k</span> <span class="o">=</span> <span class="n">x_k</span>
+    <span class="k">return</span> <span class="n">res</span></div>
+
+
+<span class="c1">#############################################</span>
+<span class="c1"># Functions for lcruve curverature</span>
+<span class="c1"># (currently not working!)</span>
+<span class="c1">#############################################</span>
+
+<span class="c1"># def calc_k(lcurve, alphas):</span>
+<span class="c1">#     a = alphas[4:-4]</span>
+<span class="c1">#     x = medfilt(np.log10(lcurve[3:-3,0]))</span>
+<span class="c1">#     y = medfilt(np.log10(lcurve[3:-3,1]))</span>
+<span class="c1">#     x = x[1:-1]</span>
+<span class="c1">#     y = y[1:-1]</span>
+<span class="c1">#     x_new = np.linspace(x[1], x[-1], 1000)</span>
+<span class="c1">#     #da = np.gradient(a)</span>
+<span class="c1">#     da = np.arange(x_new.size)</span>
+<span class="c1">#     f = interp1d(x, y, kind=&#39;cubic&#39;)</span>
+<span class="c1">#     plt.figure(); plt.plot(x_new, f(x_new))</span>
+<span class="c1">#     dx = np.gradient(x_new)</span>
+<span class="c1">#     dy = np.gradient(f(x_new))</span>
+<span class="c1">#     dx2 = np.gradient(dx)</span>
+<span class="c1">#     dy2 = np.gradient(dy)</span>
+<span class="c1">#     k = 2*(dx*dy2 - dx2*dy) / (dx**2 + dy**2)**(1.5)</span>
+<span class="c1">#     return k</span>
+
+<span class="c1"># def calc_k_angle(lcurve, alphas):</span>
+<span class="c1">#     #x = medfilt(np.log10(lcurve[:,0]), 7)</span>
+<span class="c1">#     x = np.log(lcurve[:,0])</span>
+<span class="c1">#     y = np.log(lcurve[:,1])</span>
+<span class="c1">#     f = interp1d(x[0::10], y[0::10], kind=&#39;cubic&#39;)</span>
+<span class="c1">#     npoints = 100</span>
+<span class="c1">#     x_espaced = np.linspace(x[0], x[-10], npoints)</span>
+<span class="c1">#     xy = np.transpose([x_espaced, f(x_espaced)])</span>
+
+<span class="c1">#     plt.figure(); plt.plot(xy[:,0], xy[:,1])</span>
+
+<span class="c1">#     angle = np.zeros([npoints, 1])</span>
+<span class="c1">#     diff = np.zeros([npoints, 1])</span>
+<span class="c1">#     max_diff = 0</span>
+<span class="c1">#     knee = 0</span>
+<span class="c1">#     for i in range(1,npoints-1):</span>
+<span class="c1">#         v = xy[i,:]-xy[i-1,:]</span>
+<span class="c1">#         w = xy[i+1,:]-xy[i,:]</span>
+<span class="c1">#         angle[i] = np.arccos(v.dot(w)/(np.linalg.norm(v)*np.linalg.norm(w)))</span>
+
+<span class="c1">#         a = angle[i-1]</span>
+<span class="c1">#         a1 = angle[i-2]</span>
+<span class="c1">#         d1 = a1 - a</span>
+<span class="c1">#         a2 = angle[i]</span>
+<span class="c1">#         d2 = a2 - a</span>
+
+<span class="c1">#         diff[i] = d1 + d2</span>
+<span class="c1">#         if diff[i] &gt; max_diff:</span>
+<span class="c1">#             max_diff = diff[i]</span>
+<span class="c1">#             knee = lcurve[i-1,:]</span>
+
+<span class="c1">#     return angle, diff, knee</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Time-Resolved Toolbox</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, David Ehrenberg.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

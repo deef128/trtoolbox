@@ -12,6 +12,14 @@ trtoolbox.myglobalfit module
    :undoc-members:
    :show-inheritance:
 
+trtoolbox.mylda module
+----------------------
+
+.. automodule:: trtoolbox.mylda
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 trtoolbox.mysvd module
 ----------------------
 
@@ -20,18 +28,10 @@ trtoolbox.mysvd module
    :undoc-members:
    :show-inheritance:
 
-trtoolbox.mytik module
-----------------------
+trtoolbox.plothelper module
+---------------------------
 
-.. automodule:: trtoolbox.mytik
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-trtoolbox.mytsvd module
------------------------
-
-.. automodule:: trtoolbox.mytsvd
+.. automodule:: trtoolbox.plothelper
    :members:
    :undoc-members:
    :show-inheritance:

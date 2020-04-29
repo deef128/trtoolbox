@@ -446,6 +446,338 @@ and so on</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-trtoolbox.mylda">
+<span id="trtoolbox-mylda-module"></span><h2>trtoolbox.mylda module<a class="headerlink" href="#module-trtoolbox.mylda" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="trtoolbox.mylda.Results">
+<em class="property">class </em><code class="sig-prename descclassname">trtoolbox.mylda.</code><code class="sig-name descname">Results</code><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Object containing fit results.</p>
+<dl class="attribute">
+<dt id="trtoolbox.mylda.Results.type">
+<code class="sig-name descname">type</code><a class="headerlink" href="#trtoolbox.mylda.Results.type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Results object type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.mylda.Results.data">
+<code class="sig-name descname">data</code><a class="headerlink" href="#trtoolbox.mylda.Results.data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Data matrix subjected to fitting.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.mylda.Results.time">
+<code class="sig-name descname">time</code><a class="headerlink" href="#trtoolbox.mylda.Results.time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time array</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.mylda.Results.wn">
+<code class="sig-name descname">wn</code><a class="headerlink" href="#trtoolbox.mylda.Results.wn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Frequency array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.mylda.Results.taus">
+<code class="sig-name descname">taus</code><a class="headerlink" href="#trtoolbox.mylda.Results.taus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time constants used for constructing D-matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.mylda.Results.dmatrix">
+<code class="sig-name descname">dmatrix</code><a class="headerlink" href="#trtoolbox.mylda.Results.dmatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>D-matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.mylda.Results.alphas">
+<code class="sig-name descname">alphas</code><a class="headerlink" href="#trtoolbox.mylda.Results.alphas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used alpha values for computation (tik method).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.mylda.Results.lmatrix">
+<code class="sig-name descname">lmatrix</code><a class="headerlink" href="#trtoolbox.mylda.Results.lmatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>L-matrix (tik method).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.mylda.Results.k">
+<code class="sig-name descname">k</code><a class="headerlink" href="#trtoolbox.mylda.Results.k" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used SVD Components (tsvd method).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.mylda.Results.method">
+<code class="sig-name descname">method</code><a class="headerlink" href="#trtoolbox.mylda.Results.method" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used method (tik or tsvd).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.mylda.Results.x_k">
+<code class="sig-name descname">x_k</code><a class="headerlink" href="#trtoolbox.mylda.Results.x_k" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resulting exponential pre-factors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.mylda.Results.fitdata">
+<code class="sig-name descname">fitdata</code><a class="headerlink" href="#trtoolbox.mylda.Results.fitdata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructed data (dmatrix.dot(x_k))</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.mylda.Results.wn_name">
+<code class="sig-name descname">wn_name</code><a class="headerlink" href="#trtoolbox.mylda.Results.wn_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of the frequency unit (default: wavenumber).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.mylda.Results.wn_unit">
+<code class="sig-name descname">wn_unit</code><a class="headerlink" href="#trtoolbox.mylda.Results.wn_unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Frequency unit (default cm^{-1}).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.mylda.Results.t_name">
+<code class="sig-name descname">t_name</code><a class="headerlink" href="#trtoolbox.mylda.Results.t_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time name (default: time).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.mylda.Results.time_uni">
+<code class="sig-name descname">time_uni</code><a class="headerlink" href="#trtoolbox.mylda.Results.time_uni" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time uni (default: s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="trtoolbox.mylda.Results.get_xk">
+<code class="sig-name descname">get_xk</code><span class="sig-paren">(</span><em class="sig-param">index_alpha=-1</em>, <em class="sig-param">alpha=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.get_xk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.get_xk" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="trtoolbox.mylda.Results.plot_results">
+<code class="sig-name descname">plot_results</code><span class="sig-paren">(</span><em class="sig-param">index_alpha=-1</em>, <em class="sig-param">alpha=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.plot_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.plot_results" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="trtoolbox.mylda.Results.plotlda">
+<code class="sig-name descname">plotlda</code><span class="sig-paren">(</span><em class="sig-param">index_alpha=-1</em>, <em class="sig-param">alpha=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.plotlda"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.plotlda" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots a nice looking heatmap.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index_alpha</strong> (<em>int</em>) – Plot for specified alpha at index.</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – Plot for the closest alpha as specified.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.mylda.calc_lcurve">
+<code class="sig-prename descclassname">trtoolbox.mylda.</code><code class="sig-name descname">calc_lcurve</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">dmatrix</em>, <em class="sig-param">lmatrix</em>, <em class="sig-param">x_ks</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#calc_lcurve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.calc_lcurve" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.mylda.dolda">
+<code class="sig-prename descclassname">trtoolbox.mylda.</code><code class="sig-name descname">dolda</code><span class="sig-paren">(</span><em class="sig-param">data, time, wn, tlimits=[], tnum=100, alimits=[0.1, 5], anum=100, method='tik', k=5, prompt=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#dolda"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.dolda" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.mylda.gen_alphas">
+<code class="sig-prename descclassname">trtoolbox.mylda.</code><code class="sig-name descname">gen_alphas</code><span class="sig-paren">(</span><em class="sig-param">a1</em>, <em class="sig-param">a2</em>, <em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#gen_alphas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.gen_alphas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates logarihmic spaced alpha values.
+Adds [1e-5, 1e-4, 1e-3, 1e-2] and [10, 40, 70, 100]
+for a better visualization of the L-curve.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a1</strong> (<em>float</em>) – Bottom limit.</p></li>
+<li><p><strong>a2</strong> (<em>float</em>) – Upper limit.</p></li>
+<li><p><strong>n</strong> (<em>int</em>) – Number of alpha values.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>alphas</strong> – Generated alpha values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.mylda.gen_dmatrix">
+<code class="sig-prename descclassname">trtoolbox.mylda.</code><code class="sig-name descname">gen_dmatrix</code><span class="sig-paren">(</span><em class="sig-param">time</em>, <em class="sig-param">taus</em>, <em class="sig-param">seqmodel=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#gen_dmatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.gen_dmatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates D-matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time</strong> (<em>np.array</em>) – Time array.</p></li>
+<li><p><strong>taus</strong> (<em>np.array</em>) – Time constants array</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>dmatrix</strong> – D-matrix</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.mylda.gen_lmatrix">
+<code class="sig-prename descclassname">trtoolbox.mylda.</code><code class="sig-name descname">gen_lmatrix</code><span class="sig-paren">(</span><em class="sig-param">dmatrix</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#gen_lmatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.gen_lmatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates L-matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>damtrix</strong> (<em>np.array</em>) – D-matrix</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>lamtrix</strong> – L-matrix</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.mylda.gen_taus">
+<code class="sig-prename descclassname">trtoolbox.mylda.</code><code class="sig-name descname">gen_taus</code><span class="sig-paren">(</span><em class="sig-param">t1</em>, <em class="sig-param">t2</em>, <em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#gen_taus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.gen_taus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates logarihmic spaced time constants.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t1</strong> (<em>float</em>) – Bottom limit.</p></li>
+<li><p><strong>t2</strong> (<em>float</em>) – Upper limit.</p></li>
+<li><p><strong>n</strong> (<em>int</em>) – Number of time constants.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>taus</strong> – Generated time constants.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.mylda.inversesvd">
+<code class="sig-prename descclassname">trtoolbox.mylda.</code><code class="sig-name descname">inversesvd</code><span class="sig-paren">(</span><em class="sig-param">dmatrix</em>, <em class="sig-param">k=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#inversesvd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.inversesvd" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.mylda.tik">
+<code class="sig-prename descclassname">trtoolbox.mylda.</code><code class="sig-name descname">tik</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">dmatrix</em>, <em class="sig-param">alpha</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#tik"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.tik" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.mylda.tik_lstsq">
+<code class="sig-prename descclassname">trtoolbox.mylda.</code><code class="sig-name descname">tik_lstsq</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">dmatrix</em>, <em class="sig-param">alpha</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#tik_lstsq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.tik_lstsq" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.mylda.tiks">
+<code class="sig-prename descclassname">trtoolbox.mylda.</code><code class="sig-name descname">tiks</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">dmatrix</em>, <em class="sig-param">alphas</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#tiks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.tiks" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.mylda.tsvd">
+<code class="sig-prename descclassname">trtoolbox.mylda.</code><code class="sig-name descname">tsvd</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">dmatrix</em>, <em class="sig-param">k</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#tsvd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.tsvd" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
 <div class="section" id="module-trtoolbox.mysvd">
 <span id="trtoolbox-mysvd-module"></span><h2>trtoolbox.mysvd module<a class="headerlink" href="#module-trtoolbox.mysvd" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
@@ -453,6 +785,17 @@ and so on</p>
 <em class="property">class </em><code class="sig-prename descclassname">trtoolbox.mysvd.</code><code class="sig-name descname">Results</code><a class="reference internal" href="_modules/trtoolbox/mysvd.html#Results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.Results" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Object containing fit results.</p>
+<dl class="attribute">
+<dt id="trtoolbox.mysvd.Results.type">
+<code class="sig-name descname">type</code><a class="headerlink" href="#trtoolbox.mysvd.Results.type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Results object type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="trtoolbox.mysvd.Results.data">
 <code class="sig-name descname">data</code><a class="headerlink" href="#trtoolbox.mysvd.Results.data" title="Permalink to this definition">¶</a></dt>
@@ -465,8 +808,8 @@ and so on</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="trtoolbox.mysvd.Results.U">
-<code class="sig-name descname">U</code><a class="headerlink" href="#trtoolbox.mysvd.Results.U" title="Permalink to this definition">¶</a></dt>
+<dt id="trtoolbox.mysvd.Results.u">
+<code class="sig-name descname">u</code><a class="headerlink" href="#trtoolbox.mysvd.Results.u" title="Permalink to this definition">¶</a></dt>
 <dd><p>U matrix. Represents abstract spectra</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -487,8 +830,8 @@ and so on</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="trtoolbox.mysvd.Results.VT">
-<code class="sig-name descname">VT</code><a class="headerlink" href="#trtoolbox.mysvd.Results.VT" title="Permalink to this definition">¶</a></dt>
+<dt id="trtoolbox.mysvd.Results.vt">
+<code class="sig-name descname">vt</code><a class="headerlink" href="#trtoolbox.mysvd.Results.vt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transposed V matrix. Represents abstract time traces.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -519,11 +862,229 @@ and so on</p>
 </dl>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="trtoolbox.mysvd.Results.wn">
+<code class="sig-name descname">wn</code><a class="headerlink" href="#trtoolbox.mysvd.Results.wn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Frequency array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.mysvd.Results.wn_name">
+<code class="sig-name descname">wn_name</code><a class="headerlink" href="#trtoolbox.mysvd.Results.wn_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of the frequency unit (default: wavenumber).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.mysvd.Results.wn_unit">
+<code class="sig-name descname">wn_unit</code><a class="headerlink" href="#trtoolbox.mysvd.Results.wn_unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Frequency unit (default cm^{-1}).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.mysvd.Results.time">
+<code class="sig-name descname">time</code><a class="headerlink" href="#trtoolbox.mysvd.Results.time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.mysvd.Results.t_name">
+<code class="sig-name descname">t_name</code><a class="headerlink" href="#trtoolbox.mysvd.Results.t_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time name (default: time).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.mysvd.Results.time_uni">
+<code class="sig-name descname">time_uni</code><a class="headerlink" href="#trtoolbox.mysvd.Results.time_uni" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time uni (default: s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trtoolbox.mysvd.Results.__phelper">
+<code class="sig-name descname">__phelper</code><a class="headerlink" href="#trtoolbox.mysvd.Results.__phelper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot helper class for interactive plots.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>mysvd.PlotHelper</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="trtoolbox.mysvd.Results.plot_results">
+<code class="sig-name descname">plot_results</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mysvd.html#Results.plot_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.Results.plot_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots heatmaps of original and SVD data,
+interactive time traces and spectra.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="trtoolbox.mysvd.Results.plot_spectra">
+<code class="sig-name descname">plot_spectra</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mysvd.html#Results.plot_spectra"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.Results.plot_spectra" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots interactive spectra.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="trtoolbox.mysvd.Results.plot_traces">
+<code class="sig-name descname">plot_traces</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mysvd.html#Results.plot_traces"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.Results.plot_traces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots interactive time traces.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="trtoolbox.mysvd.Results.plotdata">
+<code class="sig-name descname">plotdata</code><span class="sig-paren">(</span><em class="sig-param">newfig=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mysvd.html#Results.plotdata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.Results.plotdata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots a nice looking heatmap of the raw data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="trtoolbox.mysvd.Results.plotsvddata">
+<code class="sig-name descname">plotsvddata</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mysvd.html#Results.plotsvddata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.Results.plotsvddata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots a nice looking heatmap of the reconstructed data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="function">
 <dt id="trtoolbox.mysvd.dosvd">
-<code class="sig-prename descclassname">trtoolbox.mysvd.</code><code class="sig-name descname">dosvd</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mysvd.html#dosvd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.dosvd" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.mysvd.</code><code class="sig-name descname">dosvd</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">time</em>, <em class="sig-param">wn</em>, <em class="sig-param">n=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mysvd.html#dosvd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.dosvd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper for inspecting SVD components with reconstruction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>np.array</em>) – Data matrix subjected to SVD. Assuming <em>m x n</em> with m as frequency
+and n as time. But it is actually not important.</p></li>
+<li><p><strong>time</strong> (<em>np.array</em>) – Time array.</p></li>
+<li><p><strong>wn</strong> (<em>np.array</em>) – Frequency array.</p></li>
+<li><p><strong>n</strong> (<em>int</em><em>, </em><em>list</em><em> or </em><em>np.array</em>) – Number of used SVD components.
+If a list or array is provided, non pythonic way of numbering is used.
+Meaning first component equals 1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>res</strong> – Results object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><em>mysvd.results()</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.mysvd.reconstruct">
+<code class="sig-prename descclassname">trtoolbox.mysvd.</code><code class="sig-name descname">reconstruct</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mysvd.html#reconstruct"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.reconstruct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstructs data with n singular components.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>np.array</em>) – Data matrix subjected to SVD. Assuming <em>m x n</em> with m as frequency
+and n as time. But it is actually not important.</p></li>
+<li><p><strong>n</strong> (<em>int</em><em>, </em><em>list</em><em> or </em><em>np.array</em>) – Number of used SVD components.
+If a list or array is provided, non pythonic way of numbering is used.
+Meaning first component equals 1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>res</strong> – Results object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><em>mysvd.results()</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.mysvd.show_svs">
+<code class="sig-prename descclassname">trtoolbox.mysvd.</code><code class="sig-name descname">show_svs</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">time</em>, <em class="sig-param">wn</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mysvd.html#show_svs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.show_svs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots singular values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>np.array</em>) – Data matrix subjected to SVD. Assuming <em>m x n</em> with m as frequency
+and n as time. But it is actually not important.</p></li>
+<li><p><strong>time</strong> (<em>np.array</em>) – Time array.</p></li>
+<li><p><strong>wn</strong> (<em>np.array</em>) – Frequency array.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="trtoolbox.mysvd.wrapper_svd">
+<code class="sig-prename descclassname">trtoolbox.mysvd.</code><code class="sig-name descname">wrapper_svd</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mysvd.html#wrapper_svd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.wrapper_svd" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simple wrapper for the <em>scipy.linalg.svd()</em> function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -541,109 +1102,205 @@ and n as time. But it is actually not important.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="trtoolbox.mysvd.reconstruct">
-<code class="sig-prename descclassname">trtoolbox.mysvd.</code><code class="sig-name descname">reconstruct</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">n=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mysvd.html#reconstruct"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.reconstruct" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reconstructs data with n singular components.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>data</strong> (<em>np.array</em>) – Data matrix subjected to SVD. Assuming <em>m x n</em> with m as frequency
-and n as time. But it is actually not important.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>res</strong> – Results object.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><em>mysvd.results()</em></p>
+</div>
+<div class="section" id="module-trtoolbox.plothelper">
+<span id="trtoolbox-plothelper-module"></span><h2>trtoolbox.plothelper module<a class="headerlink" href="#module-trtoolbox.plothelper" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="trtoolbox.plothelper.PlotHelper">
+<em class="property">class </em><code class="sig-prename descclassname">trtoolbox.plothelper.</code><code class="sig-name descname">PlotHelper</code><a class="reference internal" href="_modules/trtoolbox/plothelper.html#PlotHelper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Object for interactive plotting. This class ensures that
+all the matplotlib objects are kept referenced which ensures
+proper function of the sliders.</p>
+<dl class="attribute">
+<dt id="trtoolbox.plothelper.PlotHelper.fig_traces">
+<code class="sig-name descname">fig_traces</code><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.fig_traces" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>matplotlib.figure.Figure</p>
 </dd>
 </dl>
 </dd></dl>
 
-</div>
-<div class="section" id="module-trtoolbox.mytik">
-<span id="trtoolbox-mytik-module"></span><h2>trtoolbox.mytik module<a class="headerlink" href="#module-trtoolbox.mytik" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="trtoolbox.mytik.calc_k">
-<code class="sig-prename descclassname">trtoolbox.mytik.</code><code class="sig-name descname">calc_k</code><span class="sig-paren">(</span><em class="sig-param">lcurve</em>, <em class="sig-param">alphas</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mytik.html#calc_k"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mytik.calc_k" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dl class="attribute">
+<dt id="trtoolbox.plothelper.PlotHelper.ax_traces">
+<code class="sig-name descname">ax_traces</code><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.ax_traces" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>matplotlib.axes.Axes</p>
+</dd>
+</dl>
+</dd></dl>
 
-<dl class="function">
-<dt id="trtoolbox.mytik.calc_k_angle">
-<code class="sig-prename descclassname">trtoolbox.mytik.</code><code class="sig-name descname">calc_k_angle</code><span class="sig-paren">(</span><em class="sig-param">lcurve</em>, <em class="sig-param">alphas</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mytik.html#calc_k_angle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mytik.calc_k_angle" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dl class="attribute">
+<dt id="trtoolbox.plothelper.PlotHelper.l1_traces">
+<code class="sig-name descname">l1_traces</code><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.l1_traces" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>matplotlib.lines.Line2D</p>
+</dd>
+</dl>
+</dd></dl>
 
-<dl class="function">
-<dt id="trtoolbox.mytik.calc_lcurve">
-<code class="sig-prename descclassname">trtoolbox.mytik.</code><code class="sig-name descname">calc_lcurve</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">D</em>, <em class="sig-param">L</em>, <em class="sig-param">x_ks</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mytik.html#calc_lcurve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mytik.calc_lcurve" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dl class="attribute">
+<dt id="trtoolbox.plothelper.PlotHelper.l2_traces">
+<code class="sig-name descname">l2_traces</code><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.l2_traces" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>matplotlib.lines.Line2D</p>
+</dd>
+</dl>
+</dd></dl>
 
-<dl class="function">
-<dt id="trtoolbox.mytik.genAlphas">
-<code class="sig-prename descclassname">trtoolbox.mytik.</code><code class="sig-name descname">genAlphas</code><span class="sig-paren">(</span><em class="sig-param">a1</em>, <em class="sig-param">a2</em>, <em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mytik.html#genAlphas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mytik.genAlphas" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dl class="attribute">
+<dt id="trtoolbox.plothelper.PlotHelper.axfreq">
+<code class="sig-name descname">axfreq</code><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.axfreq" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>matplotlib.axes.Axes</p>
+</dd>
+</dl>
+</dd></dl>
 
-<dl class="function">
-<dt id="trtoolbox.mytik.genD">
-<code class="sig-prename descclassname">trtoolbox.mytik.</code><code class="sig-name descname">genD</code><span class="sig-paren">(</span><em class="sig-param">time</em>, <em class="sig-param">taus</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mytik.html#genD"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mytik.genD" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dl class="attribute">
+<dt id="trtoolbox.plothelper.PlotHelper.sfreq">
+<code class="sig-name descname">sfreq</code><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.sfreq" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>matplotlib.widgets.Slider</p>
+</dd>
+</dl>
+</dd></dl>
 
-<dl class="function">
-<dt id="trtoolbox.mytik.genL">
-<code class="sig-prename descclassname">trtoolbox.mytik.</code><code class="sig-name descname">genL</code><span class="sig-paren">(</span><em class="sig-param">D</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mytik.html#genL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mytik.genL" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dl class="attribute">
+<dt id="trtoolbox.plothelper.PlotHelper.fig_spectra">
+<code class="sig-name descname">fig_spectra</code><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.fig_spectra" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>matplotlib.figure.Figure</p>
+</dd>
+</dl>
+</dd></dl>
 
-<dl class="function">
-<dt id="trtoolbox.mytik.gentaus">
-<code class="sig-prename descclassname">trtoolbox.mytik.</code><code class="sig-name descname">gentaus</code><span class="sig-paren">(</span><em class="sig-param">t1</em>, <em class="sig-param">t2</em>, <em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mytik.html#gentaus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mytik.gentaus" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dl class="attribute">
+<dt id="trtoolbox.plothelper.PlotHelper.ax_spectra">
+<code class="sig-name descname">ax_spectra</code><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.ax_spectra" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>matplotlib.axes.Axes</p>
+</dd>
+</dl>
+</dd></dl>
 
-<dl class="function">
-<dt id="trtoolbox.mytik.inversesvd">
-<code class="sig-prename descclassname">trtoolbox.mytik.</code><code class="sig-name descname">inversesvd</code><span class="sig-paren">(</span><em class="sig-param">D</em>, <em class="sig-param">k=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mytik.html#inversesvd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mytik.inversesvd" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dl class="attribute">
+<dt id="trtoolbox.plothelper.PlotHelper.l1_spectra">
+<code class="sig-name descname">l1_spectra</code><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.l1_spectra" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>matplotlib.lines.Line2D</p>
+</dd>
+</dl>
+</dd></dl>
 
-<dl class="function">
-<dt id="trtoolbox.mytik.tik">
-<code class="sig-prename descclassname">trtoolbox.mytik.</code><code class="sig-name descname">tik</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">D</em>, <em class="sig-param">alpha</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mytik.html#tik"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mytik.tik" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dl class="attribute">
+<dt id="trtoolbox.plothelper.PlotHelper.l2_spectra">
+<code class="sig-name descname">l2_spectra</code><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.l2_spectra" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>matplotlib.lines.Line2D</p>
+</dd>
+</dl>
+</dd></dl>
 
-<dl class="function">
-<dt id="trtoolbox.mytik.tik_lstsq">
-<code class="sig-prename descclassname">trtoolbox.mytik.</code><code class="sig-name descname">tik_lstsq</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">D</em>, <em class="sig-param">alpha</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mytik.html#tik_lstsq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mytik.tik_lstsq" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dl class="attribute">
+<dt id="trtoolbox.plothelper.PlotHelper.axtime">
+<code class="sig-name descname">axtime</code><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.axtime" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>matplotlib.axes.Axes</p>
+</dd>
+</dl>
+</dd></dl>
 
-<dl class="function">
-<dt id="trtoolbox.mytik.tiks">
-<code class="sig-prename descclassname">trtoolbox.mytik.</code><code class="sig-name descname">tiks</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">D</em>, <em class="sig-param">a1</em>, <em class="sig-param">a2</em>, <em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mytik.html#tiks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mytik.tiks" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dl class="attribute">
+<dt id="trtoolbox.plothelper.PlotHelper.stime">
+<code class="sig-name descname">stime</code><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.stime" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>matplotlib.widgets.Slider</p>
+</dd>
+</dl>
+</dd></dl>
 
-</div>
-<div class="section" id="module-trtoolbox.mytsvd">
-<span id="trtoolbox-mytsvd-module"></span><h2>trtoolbox.mytsvd module<a class="headerlink" href="#module-trtoolbox.mytsvd" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="trtoolbox.mytsvd.genD">
-<code class="sig-prename descclassname">trtoolbox.mytsvd.</code><code class="sig-name descname">genD</code><span class="sig-paren">(</span><em class="sig-param">time</em>, <em class="sig-param">taus</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mytsvd.html#genD"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mytsvd.genD" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dl class="attribute">
+<dt id="trtoolbox.plothelper.PlotHelper.axcolor">
+<code class="sig-name descname">axcolor</code><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.axcolor" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
 
-<dl class="function">
-<dt id="trtoolbox.mytsvd.genDd">
-<code class="sig-prename descclassname">trtoolbox.mytsvd.</code><code class="sig-name descname">genDd</code><span class="sig-paren">(</span><em class="sig-param">time</em>, <em class="sig-param">taus</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mytsvd.html#genDd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mytsvd.genDd" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dl class="method">
+<dt id="trtoolbox.plothelper.PlotHelper.plot_heatmap">
+<code class="sig-name descname">plot_heatmap</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">time</em>, <em class="sig-param">wn</em>, <em class="sig-param">title='data'</em>, <em class="sig-param">newfig=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/plothelper.html#PlotHelper.plot_heatmap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.plot_heatmap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots a nice looking heatmap.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>np.array</em>) – Data matrix subjected to SVD. Assuming <em>m x n</em> with m as frequency
+and n as time. But it is actually not important.</p></li>
+<li><p><strong>time</strong> (<em>np.array</em>) – Time array.</p></li>
+<li><p><strong>wn</strong> (<em>np.array</em>) – Frequency array.</p></li>
+<li><p><strong>title</strong> (<em>np.array</em>) – Title of plot. Default <em>data</em>.</p></li>
+<li><p><strong>newfig</strong> (<em>boolean</em>) – Setting to False prevents the creation of a new figure.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>nothing</p>
+</dd>
+</dl>
+</dd></dl>
 
-<dl class="function">
-<dt id="trtoolbox.mytsvd.gentaus">
-<code class="sig-prename descclassname">trtoolbox.mytsvd.</code><code class="sig-name descname">gentaus</code><span class="sig-paren">(</span><em class="sig-param">t1</em>, <em class="sig-param">t2</em>, <em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mytsvd.html#gentaus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mytsvd.gentaus" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dl class="method">
+<dt id="trtoolbox.plothelper.PlotHelper.plot_spectra">
+<code class="sig-name descname">plot_spectra</code><span class="sig-paren">(</span><em class="sig-param">res</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/plothelper.html#PlotHelper.plot_spectra"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.plot_spectra" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots interactive spectra.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>res</strong> (<a class="reference internal" href="#trtoolbox.mysvd.Results" title="trtoolbox.mysvd.Results"><em>mysvd.Results</em></a>) – Contains the data to be plotted.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>nothing</p>
+</dd>
+</dl>
+</dd></dl>
 
-<dl class="function">
-<dt id="trtoolbox.mytsvd.inversesvd">
-<code class="sig-prename descclassname">trtoolbox.mytsvd.</code><code class="sig-name descname">inversesvd</code><span class="sig-paren">(</span><em class="sig-param">D</em>, <em class="sig-param">k</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mytsvd.html#inversesvd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mytsvd.inversesvd" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dl class="method">
+<dt id="trtoolbox.plothelper.PlotHelper.plot_traces">
+<code class="sig-name descname">plot_traces</code><span class="sig-paren">(</span><em class="sig-param">res</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/plothelper.html#PlotHelper.plot_traces"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.plot_traces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots interactive time traces.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>res</strong> (<a class="reference internal" href="#trtoolbox.mysvd.Results" title="trtoolbox.mysvd.Results"><em>mysvd.Results</em></a>) – Contains the data to be plotted.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>nothing</p>
+</dd>
+</dl>
+</dd></dl>
 
-<dl class="function">
-<dt id="trtoolbox.mytsvd.tsvd">
-<code class="sig-prename descclassname">trtoolbox.mytsvd.</code><code class="sig-name descname">tsvd</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">D</em>, <em class="sig-param">k</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mytsvd.html#tsvd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mytsvd.tsvd" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+</dd></dl>
 
 </div>
 <div class="section" id="module-trtoolbox">
