@@ -1,13 +1,23 @@
 import trtoolbox.mylda as mylda
+import trtoolbox.mysvd as mysvd
 import numpy as np
 import matplotlib.pyplot as plt
+
+plt.close('all')
 
 # load data
 data = np.loadtxt('./data/data.dat', delimiter=',')
 wn = np.loadtxt('./data/wavenumbers.dat', delimiter=',')
 time = np.loadtxt('./data/time.dat', delimiter=',')
 
-res = mylda.dolda(data, time, wn, tlimits=[1e-6, 1e-1])
-# res.plotlda(alpha=0.9)
-res.plot_results(alpha=0.9)
+# data = mysvd.reconstruct(data, 10).svddata
+
+res = mylda.dolda(data, time, wn, tlimits=[1e-6, 1e-1], seqmodel=True)
+res.plot_results()
+res.plot_spectra(alpha=0.9)
+res.plot_traces(alpha=0.9)
 plt.show()
+
+# for inspecting the Results class in Spyder after interactive plotting
+# please run the clean() method!
+# res.clean()

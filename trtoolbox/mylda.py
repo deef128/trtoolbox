@@ -1,10 +1,10 @@
+# TODO: docs & check for time over columns
 import numpy as np
 from scipy.linalg import svd
 import matplotlib.pyplot as plt
 from trtoolbox.plothelper import PlotHelper
 
 
-# TODO: finish plot functions and include option for sq. model
 class Results:
     """ Object containing fit results.
 
@@ -26,6 +26,8 @@ class Results:
         Used alpha values for computation (tik method).
     lmatrix : np.array
         L-matrix (tik method).
+    lcurve : np.array
+        L-curve.
     k : int
         Used SVD Components (tsvd method).
     method : string
@@ -53,7 +55,7 @@ class Results:
         self.dmatrix = np.array([])
         self.alphas = np.array([])
         self.lmatrix = np.array([])
-        self.lcruve = np.array([])
+        self.lcurve = np.array([])
         self.k = None
         self.method = ''
         self.x_k = np.array([])
@@ -64,15 +66,54 @@ class Results:
         self.time_unit = 's'
         self.__phelper = PlotHelper()
 
+    def get_alpha(self, index_alpha=-1, alpha=-1):
+        """ Gets alpha value and index.
+
+        Parameters
+        ----------
+        index_alpha : int
+            Plot for specified alpha at index.
+        alpha : float
+            Plot for the closest alpha as specified.
+
+        Returns
+        -------
+        index_alpha : int
+            Index of alpha value.
+        alpha : float
+            Alpha value.
+        """
+
+        if index_alpha == -1 and alpha == -1:
+            # if no alpha is specified take the middle of the alpha array
+            index_alpha = int(np.ceil(self.alphas.size/2))
+        elif alpha != -1:
+            # search for closest alpha value
+            index_alpha = (np.abs(self.alphas - alpha)).argmin()
+        alpha = self.alphas[index_alpha]
+        return index_alpha, alpha
+
     def get_xk(self, index_alpha=-1, alpha=-1):
+        """ Gets selected LDA map.
+
+        Parameters
+        ----------
+        index_alpha : int
+            Plot for specified alpha at index.
+        alpha : float
+            Plot for the closest alpha as specified.
+
+        Returns
+        -------
+        x_k : np.array
+            LDA map.
+        title : str
+            Title for figure.
+        """
+
         # check for used method
         if len(self.x_k.shape) == 3:
-            if index_alpha == -1 and alpha == -1:
-                # if no alpha is specified take the middle of the alpha array
-                index_alpha = int(np.ceil(self.alphas.size/2))
-            elif alpha != -1:
-                # search for closest alpha value
-                index_alpha = (np.abs(self.alphas - alpha)).argmin()
+            index_alpha, _ = self.get_alpha(index_alpha, alpha)
             x_k = self.x_k[:, :, index_alpha]
             title = 'LDA map at alpha = %f' % (self.alphas[index_alpha])
         else:
@@ -82,7 +123,7 @@ class Results:
         return x_k, title
 
     def plotlda(self, index_alpha=-1, alpha=-1):
-        """ Plots a nice looking heatmap.
+        """ Plots a nice looking contourmap.
 
         Parameters
         ----------
@@ -102,58 +143,63 @@ class Results:
         x_k, title = self.get_xk(index_alpha, alpha)
 
         plt.figure()
-        self.__phelper.plot_heatmap(
+        self.__phelper.plot_contourmap(
             x_k, self.taus, self.wn,
-            title=title, newfig=False)
+            title=title, newfig=True)
         plt.ylabel('%s / %s' % (self.wn_name, self.wn_unit))
         plt.xlabel('%s / %s' % ('tau', self.time_unit))
         plt.title(title)
-        plt.show()
 
-    def plot_results(self, index_alpha=-1, alpha=-1):
-        if self.x_k.size == 0:
-            print('First start a LDA.')
-            return
-        x_k, title = self.get_xk(index_alpha, alpha)
-        # using same routine for all modules
-        self.svddata = np.transpose(self.dmatrix.dot(x_k))
+    def plot_traces(self, index_alpha=-1, alpha=-1):
+        """ Plots interactive time traces.
 
-        # lda map
+        Returns
+        -------
+        nothing
+        """
+
+        self.__phelper.plot_traces(self, index_alpha, alpha)
+
+    def plot_spectra(self, index_alpha=-1, alpha=-1):
+        """ Plots interactive spectra.
+
+        Returns
+        -------
+        nothing
+        """
+
+        self.__phelper.plot_spectra(self, index_alpha, alpha)
+
+    def plot_lcurve(self):
+        """ Plots L-curve.
+
+        Returns
+        -------
+        nothing
+        """
         plt.figure()
-        self.__phelper.plot_heatmap(
-            x_k, self.taus, self.wn,
-            title=title, newfig=False)
-        plt.ylabel('%s / %s' % (self.wn_name, self.wn_unit))
-        plt.xlabel('%s / %s' % ('tau', self.time_unit))
-        plt.title(title)
+        plt.plot(self.lcurve[:, 0], self.lcurve[:, 1], 'o-', markersize=2)
 
-        # original data
-        _, axs = plt.subplots(2, 1)
-        plt.subplots_adjust(top=0.925)
-        plt.subplots_adjust(bottom=0.075)
-        plt.sca(axs[0])
-        self.__phelper.plot_heatmap(
-            self.data, self.time, self.wn,
-            title='Original Data', newfig=False)
-        plt.ylabel('%s / %s' % (self.wn_name, self.wn_unit))
-        plt.xlabel('%s / %s' % (self.time_name, self.time_unit))
+    def plot_results(self):
+        """ Plots interactive contourmaps of original and LDA data,
 
-        # lda data
-        plt.sca(axs[1])
-        self.__phelper.plot_heatmap(
-            self.svddata, self.time, self.wn,
-            title=title, newfig=False)
-        plt.ylabel('%s / %s' % (self.wn_name, self.wn_unit))
-        plt.xlabel('%s / %s' % (self.time_name, self.time_unit))
+        Returns
+        -------
+        nothing
+        """
 
-        self.__phelper.plot_traces(self)
-        self.__phelper.plot_spectra(self)
+        self.__phelper.plot_ldaresults(self)
 
-        plt.show()
-        # important for variable inspection in spyder!
+    def clean(self):
+        """ Unfortunetaly, spyder messes up when the results
+            object is invesitgated via the variable explorer.
+            Running this method fixes this.
+
+        Returns
+        -------
+        nothing
+        """
         self.__phelper = PlotHelper()
-        # deletes temporary attribute
-        delattr(self, 'svddata')
 
 
 def gen_taus(t1, t2, n):
@@ -196,10 +242,11 @@ def gen_dmatrix(time, taus, seqmodel=False):
 
     dmatrix = np.zeros([time.size, taus.size])
     for i in range(len(taus)):
-        dmatrix[:, i] = (np.exp(-time/taus[i])).reshape(-1)
         if i > 0 and seqmodel is True:
             dmatrix[:, i] = \
                 (-1*dmatrix[:, i-1] + np.exp(-time/taus[i])).reshape(-1)
+        else:
+            dmatrix[:, i] = (np.exp(-time/taus[i])).reshape(-1)
     return dmatrix
 
 
@@ -243,13 +290,13 @@ def gen_alphas(a1, a2, n):
         Generated alpha values.
     """
 
-    # alphas = np.linspace(a1, a2, n)
     alphas = np.logspace(np.log10(a1), np.log10(a2), n)
 
-    if a1 > 1e-2:
-        alphas = np.insert(alphas, 0, [1e-5, 1e-4, 1e-3, 1e-2])
-    if a2 < 10:
-        alphas = np.append(alphas, [10, 40, 70, 100])
+    # code snippet to append alpha values for a better lcurce representation
+    # if a1 > 1e-2:
+    #     alphas = np.insert(alphas, 0, [1e-5, 1e-4, 1e-3, 1e-2])
+    # if a2 < 10:
+    #     alphas = np.append(alphas, [10, 40, 50, 100])
     return alphas
 
 
@@ -269,13 +316,14 @@ def inversesvd(dmatrix, k=-1):
     return v.dot(sigma).dot(ut)
 
 
+# TODO: option for truncation
 def tik(data, dmatrix, alpha):
-    lamtrix = gen_lmatrix(dmatrix)
+    lmatrix = gen_lmatrix(dmatrix)
 
     if alpha != 0:
-        d_aug = np.concatenate((dmatrix, alpha**(2)*lamtrix))
+        d_aug = np.concatenate((dmatrix, alpha**(2)*lmatrix))
         a_aug = np.concatenate(
-            (data, np.zeros([np.shape(data)[0], len(lamtrix)])),
+            (data, np.zeros([np.shape(data)[0], len(lmatrix)])),
             axis=1)
     else:
         d_aug = dmatrix
@@ -296,6 +344,26 @@ def tiks(data, dmatrix, alphas):
 
 
 def calc_lcurve(data, dmatrix, lmatrix, x_ks):
+    """ Calculates L-curve.
+
+    Parameters
+    ----------
+    data : np.array
+        Data matrix.
+    dmatrix : np.array
+        D-matrix.
+    lmatrix : np.array
+        L-matrix.
+    x_ks : np.array
+        LDA maps.
+
+    Returns
+    -------
+    lcurve : np.array
+        First column is resdiual norm.
+        Second column is smoothed norm.
+    """
+
     lcurve = np.empty((np.shape(x_ks)[2], 2))
     for i in range(np.shape(x_ks)[2]):
         lcurve[i, 0] = np.sum(
@@ -335,8 +403,47 @@ def dolda(
         alimits=[0.1, 5],
         anum=100,
         method='tik',
+        seqmodel=False,
         k=5,
         prompt=False):
+    """ Wrapper for doing a LDA.
+
+    Parameters
+    ----------
+    data : np.array
+        Data matrix subjected to SVD. Assuming *m x n* with m as frequency
+        and n as time. But it is actually not important.
+    time : np.array
+        Time array.
+    wn : np.array
+        Frequency array.
+    tlimits : list
+        Limits for time constants.
+    tnum : int
+        Number of time constants.
+    alimits : list
+        Limits for alpha values.
+    anum : int
+        Number if alpha values.
+    method : str
+        Chosen method for LDA. Either 'tik' or 'tsvd'.
+    seqmodel : boolean
+        True for constructing the D-matrix assuming a sequential model.
+    k : int
+        Just used for 'tsvd'. Specifies the position of truncation.
+    prompt : boolean
+        True for user prompts.
+
+    Returns
+    -------
+    res : *mylda.results()*
+        Results object.
+    """
+
+    if data.shape[1] != time.size:
+        data = np.transpose(data)
+    time = time.reshape((1, time.size))
+    wn = wn.reshape((wn.size, 1))
 
     if prompt is False:
         if not tlimits:
@@ -356,13 +463,14 @@ def dolda(
             k = int(input('How many singular values? '))
 
     taus = gen_taus(tlimits[0], tlimits[1], tnum)
-    dmatrix = gen_dmatrix(time, taus)
+    dmatrix = gen_dmatrix(time, taus, seqmodel=seqmodel)
+    lmatrix = gen_lmatrix(dmatrix)
 
     res = Results()
     res.data = data
     res.time = time
     res.wn = wn
-    res.taus = taus
+    res.taus = taus.reshape((1, taus.size))
     res.dmatrix = dmatrix
     res.method = method
     if method == 'tik':
@@ -374,17 +482,18 @@ def dolda(
         for i in range(np.shape(x_k)[2]):
             fitdata[:, :, i] = np.transpose(dmatrix.dot(x_k[:, :, i]))
         res.fitdata = fitdata
+        res.lcurve = calc_lcurve(data, dmatrix, lmatrix, x_k)
     elif method == 'tsvd':
         res.k = k
         x_k = tsvd(data, dmatrix, k)
         res.fitdata = np.transpose(dmatrix.dot(x_k))
 
-    res.x_k = x_k
+    res.x_k = np.swapaxes(x_k, 0, 1)
     return res
 
 
 #############################################
-# Functions for lcruve curverature
+# Functions for lcurve curverature
 # (currently not working!)
 #############################################
 

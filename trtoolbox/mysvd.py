@@ -1,3 +1,4 @@
+# TODO: check for tranpose
 from scipy.linalg import svd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -68,7 +69,6 @@ class Results:
             title='Original Data', newfig=False)
         plt.ylabel('%s / %s' % (self.wn_name, self.wn_unit))
         plt.xlabel('%s / %s' % (self.time_name, self.time_unit))
-        plt.show()
 
     def plotsvddata(self):
         """ Plots a nice looking heatmap of the reconstructed data.
@@ -95,9 +95,6 @@ class Results:
         """
 
         self.__phelper.plot_traces(self)
-        self.__phelper = PlotHelper()
-        plt.show()
-        self.__phelper = PlotHelper()
 
     def plot_spectra(self):
         """ Plots interactive spectra.
@@ -108,9 +105,6 @@ class Results:
         """
 
         self.__phelper.plot_spectra(self)
-        self.__phelper = PlotHelper()
-        plt.show()
-        self.__phelper = PlotHelper()
 
     def plot_results(self):
         """ Plots heatmaps of original and SVD data,
@@ -145,8 +139,15 @@ class Results:
         self.__phelper.plot_traces(self)
         self.__phelper.plot_spectra(self)
 
-        plt.show()
-        # important for variable inspection in spyder!
+    def clean(self):
+        """ Unfortunetaly, spyder messes up when the results
+            object is invesitgated via the variable explorer.
+            Running this method fixes this.
+
+        Returns
+        -------
+        nothing
+        """
         self.__phelper = PlotHelper()
 
 
