@@ -210,7 +210,7 @@ class PlotHelper():
             axfreq, res.wn_name,
             np.min(res.wn),
             np.max(res.wn),
-            valinit=res.wn[0],
+            valinit=np.min(res.wn),
             valstep=abs(res.wn[1]-res.wn[0])
             )
         ymin = np.min(res.data[:, :])
@@ -218,6 +218,7 @@ class PlotHelper():
         sc = 1.05
         ax.set_ylim(ymin*sc, ymax*sc)
 
+        # TODO: check for missing values! may be take from traces
         def update(val):
             val = sfreq.val
             ind = np.where(res.wn == val)[0][0]
@@ -274,6 +275,7 @@ class PlotHelper():
         l2, = plt.plot(res.wn, procdata[:, 0], 'o-', markersize=4)
         ax.margins(x=0)
 
+        # TODO: better init for valstep!
         axtime = plt.axes([0.175, 0.05, 0.65, 0.03], facecolor=self.axcolor)
         stime = Slider(
             axtime, res.time_name,

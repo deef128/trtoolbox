@@ -199,8 +199,9 @@ def show_svs(data, time, wn):
     eig = s**2/np.sum(s**2)
 
     num = 15
-    numlist = list(range(num))
-    varlimits = [0.985, 0.99, 0.995]
+    numlist = list(range(1, num+1))
+    varlimits = [0.8, 0.95, 0.995]
+    colors = ['red', 'orange', 'forestgreen']
     fig, axs = plt.subplots(1, 2)
     fig.suptitle('First %i singular values' % (num))
     axs[0].plot(numlist, s[:num], 'o-')
@@ -209,9 +210,9 @@ def show_svs(data, time, wn):
     axs[1].plot(numlist, np.cumsum(eig[:num])*100, 'o-')
     axs[1].set_title('Cummulative variance explained')
     axs[1].set_ylabel('variance explained / %')
-    for limit in varlimits:
-        axs[1].plot(numlist, np.ones(num)*limit*100, '--')
-        svs = np.where(np.cumsum(eig[:num]) >= limit)[0][0]
+    for i, limit in enumerate(varlimits):
+        axs[1].plot(numlist, np.ones(num)*limit*100, '--', color=colors[i])
+        svs = np.where(np.cumsum(eig) >= limit)[0][0]+1
         print(
             '%.1f %% variance explained by %i singular values'
             % (limit*100, svs))

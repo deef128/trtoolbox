@@ -394,6 +394,7 @@ def tsvd(data, dmatrix, k):
     return x_k
 
 
+# TODO: check for float type on wavenumbers!
 def dolda(
         data,
         time,
