@@ -10,15 +10,11 @@ wn = np.loadtxt('./data/wavenumbers.dat', delimiter=',')
 time = np.loadtxt('./data/time.dat', delimiter=',')
 
 tcs = [1e-6, 1e-5, 1e-4, 1e-3, 1e-2]
-res = mygf.doglobalfit(time, wn, data, tcs, svds=5)
-# res.plot_traces()
-# res.plot_spectra()
-res.show_results()
-plt.show()
+res = mygf.doglobalfit(data, time, wn, tcs, svds=5)
 # res.plot_results()
-# res.plot_spectra(alpha=0.9)
-# res.plot_traces(alpha=0.9)
-# plt.show()
+res.plot_traces()
+res.plot_spectra()
+plt.show()
 
 # for inspecting the Results class in Spyder after interactive plotting
 # please run the clean() method!

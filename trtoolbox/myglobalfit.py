@@ -65,7 +65,7 @@ class Results:
         self.wn_unit = 'cm^{-1}'
         self.time_name = 'time'
         self.time_unit = 's'
-        self.__phelper = PlotHelper()
+        self._phelper = PlotHelper()
 
     def print_results(self):
         """ Prints time constants.
@@ -81,7 +81,7 @@ class Results:
         nothing
         """
 
-        self.__phelper.plot_traces(self)
+        self._phelper.plot_traces(self)
 
     def plot_spectra(self, index_alpha=-1, alpha=-1):
         """ Plots interactive spectra.
@@ -91,7 +91,7 @@ class Results:
         nothing
         """
 
-        self.__phelper.plot_spectra(self, index_alpha, alpha)
+        self._phelper.plot_spectra(self, index_alpha, alpha)
 
     def plot_profile(self):
         plt.figure()
@@ -118,13 +118,13 @@ class Results:
 
     def plot_fitdata(self):
         title = 'Globally fitted data'
-        self.__phelper.plot_heatmap(
+        self._phelper.plot_heatmap(
             self.fitdata, self.time, self.wn,
             title=title, newfig=True)
         plt.ylabel('%s / %s' % (self.wn_name, self.wn_unit))
         plt.xlabel('%s / %s' % (self.time_name, self.time_unit))
 
-    def show_results(self):
+    def plot_results(self):
         """ Plots the concentration profile, DAS, fitted data and fitted
             abstract time traces if method='svd' was chosen.
         """
@@ -155,6 +155,25 @@ class Results:
                     axs[r, i-offset].set_xscale('log')
                 else:
                     axs[r, i-offset].plot(self.wn, self.spectral_offset)
+
+
+def check_input(data, time, wn):
+    # check for right dtype
+    if data.dtype != 'float':
+        data = data.astype('float64')
+    if time.dtype != 'float':
+        time = time.astype('float64')
+    if wn.dtype != 'float':
+        wn = wn.astype('float64')
+
+    # ensure time over columns and
+    # frequency over rows
+    if data.shape[1] != time.size:
+        data = np.transpose(data)
+    time = time.reshape((1, time.size))
+    wn = wn.reshape((wn.size, 1))
+
+    return data, time, wn
 
 
 def model(s, time, ks):
@@ -402,7 +421,7 @@ def calculate_sigma(res):
     return var
 
 
-def doglobalfit(time, wn, data, tcs, method='svd', svds=5, offset=False):
+def doglobalfit(data, time, wn, tcs, method='svd', svds=5, offset=False):
     """ Wrapper for global fit routine.
 
     Parameters
@@ -432,15 +451,7 @@ def doglobalfit(time, wn, data, tcs, method='svd', svds=5, offset=False):
         Results objects.
     """
 
-    # ensuring that time spans over columns
-    # if time.shape[0] != 1:
-    #     time = np.transpose(time)
-    #     wn = np.transpose(wn)
-    #     data = np.transpose(data)
-    if data.shape[1] != time.size:
-        data = np.transpose(data)
-    time = time.reshape((1, time.size))
-    wn = wn.reshape((wn.size, 1))
+    data, time, wn = check_input(data, time, wn)
 
     if len(tcs) < 1:
         print('I need at least two time constants.')
@@ -451,7 +462,7 @@ def doglobalfit(time, wn, data, tcs, method='svd', svds=5, offset=False):
             for tc in tcs:
                 start_ks.append(1/float(tc))
                 # start_ks.append(float(tc))
-        except:
+        except TypeError:
             print(tc)
             print('Just put numbers.')
             return
@@ -460,7 +471,10 @@ def doglobalfit(time, wn, data, tcs, method='svd', svds=5, offset=False):
     # TODO: make offset a fit!
     if offset is True:
         spectral_offset = data[:, -1]
-        spectral_offset_matrix = np.tile(spectral_offset, (np.shape(data)[1], 1)).T
+        spectral_offset_matrix = np.tile(
+            spectral_offset,
+            (np.shape(data)[1], 1)
+        ).T
         data = data-spectral_offset_matrix
 
     if method == 'raw':

@@ -64,7 +64,7 @@ class Results:
         self.wn_unit = 'cm^{-1}'
         self.time_name = 'time'
         self.time_unit = 's'
-        self.__phelper = PlotHelper()
+        self._phelper = PlotHelper()
 
     def get_alpha(self, index_alpha=-1, alpha=-1):
         """ Gets alpha value and index.
@@ -143,7 +143,7 @@ class Results:
         x_k, title = self.get_xk(index_alpha, alpha)
 
         plt.figure()
-        self.__phelper.plot_contourmap(
+        self._phelper.plot_contourmap(
             x_k, self.taus, self.wn,
             title=title, newfig=True)
         plt.ylabel('%s / %s' % (self.wn_name, self.wn_unit))
@@ -158,7 +158,7 @@ class Results:
         nothing
         """
 
-        self.__phelper.plot_traces(self, index_alpha, alpha)
+        self._phelper.plot_traces(self, index_alpha, alpha)
 
     def plot_spectra(self, index_alpha=-1, alpha=-1):
         """ Plots interactive spectra.
@@ -168,7 +168,7 @@ class Results:
         nothing
         """
 
-        self.__phelper.plot_spectra(self, index_alpha, alpha)
+        self._phelper.plot_spectra(self, index_alpha, alpha)
 
     def plot_lcurve(self):
         """ Plots L-curve.
@@ -188,7 +188,7 @@ class Results:
         nothing
         """
 
-        self.__phelper.plot_ldaresults(self)
+        self._phelper.plot_ldaresults(self)
 
     def clean(self):
         """ Unfortunetaly, spyder messes up when the results
@@ -199,7 +199,26 @@ class Results:
         -------
         nothing
         """
-        self.__phelper = PlotHelper()
+        self._phelper = PlotHelper()
+
+
+def check_input(data, time, wn):
+    # check for right dtype
+    if data.dtype != 'float':
+        data = data.astype('float64')
+    if time.dtype != 'float':
+        time = time.astype('float64')
+    if wn.dtype != 'float':
+        wn = wn.astype('float64')
+
+    # ensure time over columns and
+    # frequency over rows
+    if data.shape[1] != time.size:
+        data = np.transpose(data)
+    time = time.reshape((1, time.size))
+    wn = wn.reshape((wn.size, 1))
+
+    return data, time, wn
 
 
 def gen_taus(t1, t2, n):
@@ -441,14 +460,11 @@ def dolda(
         Results object.
     """
 
-    if data.shape[1] != time.size:
-        data = np.transpose(data)
-    time = time.reshape((1, time.size))
-    wn = wn.reshape((wn.size, 1))
+    data, time, wn = check_input(data, time, wn)
 
     if prompt is False:
         if not tlimits:
-            tlimits = [time[0], time[-1]]
+            tlimits = [time[0, 0], time[0, -1]]
     elif prompt is True:
         method = input('Which method (tik or tsvd)? ')
         if method == 'tik':

@@ -187,10 +187,12 @@ class PlotHelper():
             if res.method == 'tik':
                 index_alpha, alpha = res.get_alpha(index_alpha, alpha)
                 procdata = res.fitdata[:, :, index_alpha]
-                title = 'Time traces\nblue: Raw, red: LDA (alpha=%.2f)' % (alpha)
+                title = 'Time traces\nblue: Raw, red: LDA '\
+                        '(alpha=%.2f)' % (alpha)
             elif res.method == 'tsvd':
                 procdata = res.fitdata
-                title = 'Time traces\nblue: Raw, red: LDA (TSVD truncated at %i)' % (res.k)
+                title = 'Time traces\nblue: Raw, red: LDA '\
+                        '(TSVD truncated at %i)' % (res.k)
         elif res.type == 'gf':
             title = 'Time traces\nblue: Raw, red: Global Fit'
             procdata = res.fitdata
@@ -199,7 +201,7 @@ class PlotHelper():
         fig.suptitle(title)
         ax = fig.add_subplot(111)
         plt.subplots_adjust(bottom=0.2)
-        plt.plot([min(res.time), max(res.time)], [0, 0], '--', color='k')
+        plt.plot([np.min(res.time), np.max(res.time)], [0, 0], '--', color='k')
         l1, = plt.plot(res.time.T, res.data[0, :])
         l2, = plt.plot(res.time.T, procdata[0, :])
         plt.xscale('log')
@@ -211,14 +213,14 @@ class PlotHelper():
             np.min(res.wn),
             np.max(res.wn),
             valinit=np.min(res.wn),
-            valstep=abs(res.wn[1]-res.wn[0])
+            valstep=abs(res.wn[1, 0]-res.wn[0, 0])
             )
         ymin = np.min(res.data[:, :])
         ymax = np.max(res.data[:, :])
         sc = 1.05
         ax.set_ylim(ymin*sc, ymax*sc)
 
-        # TODO: check for missing values! may be take from traces
+        # TODO: check for missing values! may be take from spectra
         def update(val):
             val = sfreq.val
             ind = np.where(res.wn == val)[0][0]
@@ -258,10 +260,12 @@ class PlotHelper():
             if res.method == 'tik':
                 index_alpha, alpha = res.get_alpha(index_alpha, alpha)
                 procdata = res.fitdata[:, :, index_alpha]
-                title = 'Spectra\nblue: Raw, red: LDA (alpha=%.2f)' % (alpha)
+                title = 'Spectra\nblue: Raw, red: LDA '\
+                        '(alpha=%.2f)' % (alpha)
             elif res.method == 'tsvd':
                 procdata = res.fitdata
-                title = 'Spectra\nblue: Raw, red: LDA (TSVD truncated at %i)' % (res.k)
+                title = 'Spectra\nblue: Raw, red: LDA '\
+                        '(TSVD truncated at %i)' % (res.k)
         elif res.type == 'gf':
             title = 'Spectra\nblue: Raw, red: Global Fit'
             procdata = res.fitdata
@@ -270,7 +274,7 @@ class PlotHelper():
         fig.suptitle(title)
         ax = fig.add_subplot(111)
         plt.subplots_adjust(bottom=0.2)
-        plt.plot([min(res.wn), max(res.wn)], [0, 0], '--', color='k')
+        plt.plot([np.min(res.wn), np.max(res.wn)], [0, 0], '--', color='k')
         l1, = plt.plot(res.wn, res.data[:, 0], 'o-', markersize=4)
         l2, = plt.plot(res.wn, procdata[:, 0], 'o-', markersize=4)
         ax.margins(x=0)
@@ -281,7 +285,7 @@ class PlotHelper():
             axtime, res.time_name,
             np.log10(np.min(res.time)),
             np.log10(np.max(res.time)),
-            valinit=np.log10(np.min(res.time[0])),
+            valinit=np.log10(np.min(res.time[0, 0])),
             valstep=0.01
             )
         stime.valtext.set_text('%1.2e' % (10**stime.val))
@@ -293,7 +297,7 @@ class PlotHelper():
         def update(val):
             val = 10**(stime.val)
             ind = abs(val - res.time).argmin()
-            stime.valtext.set_text('%1.2e' % (res.time[ind]))
+            stime.valtext.set_text('%1.2e' % (res.time[0, ind]))
             l1.set_ydata(res.data[:, ind])
             l2.set_ydata(procdata[:, ind])
             # ymin = min(res.data[:, ind])
@@ -376,7 +380,9 @@ class PlotHelper():
         # plot lda data
         if res.method == 'tik':
             index_alpha = int(np.ceil(res.alphas.size/2))
-            ldadata = np.transpose(res.dmatrix.dot(res.x_k[:, :, index_alpha].T))
+            ldadata = np.transpose(
+                res.dmatrix.dot(res.x_k[:, :, index_alpha].T)
+            )
         elif res.method == 'tsvd':
             ldadata = np.transpose(res.dmatrix.dot(res.x_k.T))
         plt.sca(axs[0, 1])
@@ -413,7 +419,10 @@ class PlotHelper():
             plt.tight_layout()
             plt.subplots_adjust(bottom=0.125)
 
-            axalpha = plt.axes([0.175, 0.03, 0.65, 0.02], facecolor=self.axcolor)
+            axalpha = plt.axes(
+                [0.175, 0.03, 0.65, 0.02],
+                facecolor=self.axcolor
+            )
             salpha = Slider(
                 axalpha, 'Alpha',
                 np.log10(np.min(res.alphas)),

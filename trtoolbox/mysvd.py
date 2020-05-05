@@ -54,7 +54,18 @@ class Results:
         self.wn = np.array([])
         self.wn_name = 'wavenumber'
         self.wn_unit = 'cm^{-1}'
-        self.__phelper = PlotHelper()
+        self._phelper = PlotHelper()
+
+    # if using this rename self.wn to self._wn in init()
+    # @property
+    # def wn(self):
+    #     return self._wn
+
+    # @wn.setter
+    # def wn(self, val):
+    #     if val.dtype != 'float':
+    #         val = val.astype('float64')
+    #     self._wn = val.reshape((val.size, 1))
 
     def plotdata(self, newfig=True):
         """ Plots a nice looking heatmap of the raw data.
@@ -64,7 +75,7 @@ class Results:
         nothing
         """
 
-        self.__phelper.plot_heatmap(
+        self._phelper.plot_heatmap(
             self.data, self.time, self.wn,
             title='Original Data', newfig=False)
         plt.ylabel('%s / %s' % (self.wn_name, self.wn_unit))
@@ -80,7 +91,7 @@ class Results:
 
         nstr = str(self.n)
         title = 'Reconstructed data using ' + nstr + ' components'
-        self.__phelper.plot_heatmap(
+        self._phelper.plot_heatmap(
             self.svddata, self.time, self.wn,
             title=title, newfig=False)
         plt.ylabel('%s / %s' % (self.wn_name, self.wn_unit))
@@ -94,7 +105,7 @@ class Results:
         nothing
         """
 
-        self.__phelper.plot_traces(self)
+        self._phelper.plot_traces(self)
 
     def plot_spectra(self):
         """ Plots interactive spectra.
@@ -104,7 +115,7 @@ class Results:
         nothing
         """
 
-        self.__phelper.plot_spectra(self)
+        self._phelper.plot_spectra(self)
 
     def plot_results(self):
         """ Plots heatmaps of original and SVD data,
@@ -120,7 +131,7 @@ class Results:
         plt.subplots_adjust(top=0.925)
         plt.subplots_adjust(bottom=0.075)
         plt.sca(axs[0])
-        self.__phelper.plot_heatmap(
+        self._phelper.plot_heatmap(
             self.data, self.time, self.wn,
             title='Original Data', newfig=False)
         plt.ylabel('%s / %s' % (self.wn_name, self.wn_unit))
@@ -130,14 +141,14 @@ class Results:
         nstr = str(self.n)
         title = 'Reconstructed data using ' + nstr + ' components'
         plt.sca(axs[1])
-        self.__phelper.plot_heatmap(
+        self._phelper.plot_heatmap(
             self.svddata, self.time, self.wn,
             title=title, newfig=False)
         plt.ylabel('%s / %s' % (self.wn_name, self.wn_unit))
         plt.xlabel('%s / %s' % (self.time_name, self.time_unit))
 
-        self.__phelper.plot_traces(self)
-        self.__phelper.plot_spectra(self)
+        self._phelper.plot_traces(self)
+        self._phelper.plot_spectra(self)
 
     def clean(self):
         """ Unfortunetaly, spyder messes up when the results
@@ -148,7 +159,26 @@ class Results:
         -------
         nothing
         """
-        self.__phelper = PlotHelper()
+        self._phelper = PlotHelper()
+
+
+def check_input(data, time, wn):
+    # check for right dtype
+    if data.dtype != 'float':
+        data = data.astype('float64')
+    if time.dtype != 'float':
+        time = time.astype('float64')
+    if wn.dtype != 'float':
+        wn = wn.astype('float64')
+
+    # ensure time over columns and
+    # frequency over rows
+    if data.shape[1] != time.size:
+        data = np.transpose(data)
+    time = time.reshape((1, time.size))
+    wn = wn.reshape((wn.size, 1))
+
+    return data, time, wn
 
 
 def wrapper_svd(data):
@@ -192,9 +222,8 @@ def show_svs(data, time, wn):
     nothing
     """
 
-    # ensuring that time spans columns
-    if data.shape[1] != time.size:
-        data = np.transpose(data)
+    data, time, wn = check_input(data, time, wn)
+
     u, s, vt = svd(data)
     eig = s**2/np.sum(s**2)
 
@@ -309,9 +338,7 @@ def dosvd(data, time, wn, n=-1):
         Results object.
     """
 
-    # ensuring that time spans columns
-    if data.shape[1] != time.size:
-        data = np.transpose(data)
+    data, time, wn = check_input(data, time, wn)
 
     # prevents plt.show() from blocking execution
     # plt.ion()
