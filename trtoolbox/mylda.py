@@ -1,4 +1,5 @@
-# TODO: docs & check for time over columns
+# TODO: docs
+# TODO: sum of amplitudes over taus
 import numpy as np
 from scipy.linalg import svd
 import matplotlib.pyplot as plt
@@ -243,6 +244,7 @@ def gen_taus(t1, t2, n):
     return taus
 
 
+# TODO: really sequential?
 def gen_dmatrix(time, taus, seqmodel=False):
     """ Generates D-matrix.
 
@@ -289,6 +291,7 @@ def gen_lmatrix(dmatrix):
     return lmatrix
 
 
+# TODO: option for change space
 def gen_alphas(a1, a2, n):
     """ Generates logarihmic spaced alpha values.
     Adds [1e-5, 1e-4, 1e-3, 1e-2] and [10, 40, 70, 100]
@@ -310,6 +313,7 @@ def gen_alphas(a1, a2, n):
     """
 
     alphas = np.logspace(np.log10(a1), np.log10(a2), n)
+    # alphas = np.linspace(a1, a2, n)
 
     # code snippet to append alpha values for a better lcurce representation
     # if a1 > 1e-2:
@@ -340,7 +344,7 @@ def tik(data, dmatrix, alpha):
     lmatrix = gen_lmatrix(dmatrix)
 
     if alpha != 0:
-        d_aug = np.concatenate((dmatrix, alpha**(2)*lmatrix))
+        d_aug = np.concatenate((dmatrix, alpha**(0.5)*lmatrix))
         a_aug = np.concatenate(
             (data, np.zeros([np.shape(data)[0], len(lmatrix)])),
             axis=1)
@@ -413,7 +417,6 @@ def tsvd(data, dmatrix, k):
     return x_k
 
 
-# TODO: check for float type on wavenumbers!
 def dolda(
         data,
         time,

@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider
 import matplotlib.colors as colors
 
-
+#TODO: nicer plot of lda map
 class PlotHelper():
     """ Object for interactive plotting. This class ensures that
     all the matplotlib objects are kept referenced which ensures
@@ -132,7 +132,7 @@ class PlotHelper():
         if data.shape[1] != time.size:
             data = np.transpose(data)
 
-        levels = 12
+        levels = 10
         if time.size == 0 or wn.size == 0:
             pc = plt.contourf(
                 data,
@@ -398,7 +398,7 @@ class PlotHelper():
             x_k, taus = self.append_ldamap(res, index_alpha)
         elif res.method == 'tsvd':
             x_k, taus = self.append_ldamap(res)
-        pc_map = self.plot_contourmap(
+        pc_map = self.plot_heatmap(
             x_k, taus, res.wn,
             title='LDA Map', newfig=False)
         plt.ylabel('%s / %s' % (res.wn_name, res.wn_unit))
@@ -440,7 +440,7 @@ class PlotHelper():
                 plt.sca(axs[1, 1])
                 plt.cla()
                 x_k, _ = self.append_ldamap(res, ind)
-                self.plot_contourmap(
+                self.plot_heatmap(
                     x_k, taus, res.wn,
                     title='LDA Map', newfig=False)
                 plt.ylabel('%s / %s' % (res.wn_name, res.wn_unit))

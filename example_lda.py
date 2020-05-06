@@ -12,10 +12,14 @@ time = np.loadtxt('./data/time.dat', delimiter=',')
 
 # data = mysvd.reconstruct(data, 10).svddata
 
-res = mylda.dolda(data, time, wn, seqmodel=True)
+res = mylda.dolda(data, time, wn)
 res.plot_results()
-res.plot_spectra(alpha=0.9)
-res.plot_traces(alpha=0.9)
+# res.plot_spectra(alpha=0.9)
+# res.plot_traces(alpha=0.9)
+
+res2 = mylda.dolda(data, time, wn, seqmodel=True)
+res2.plot_results()
+
 plt.show()
 
 # for inspecting the Results class in Spyder after interactive plotting
