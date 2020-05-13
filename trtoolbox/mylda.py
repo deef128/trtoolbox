@@ -1,7 +1,7 @@
-# TODO: docs
-# TODO: sum of amplitudes over taus
+# TODO: species associated spectra
 import numpy as np
 from scipy.linalg import svd
+from scipy.integrate import odeint
 import matplotlib.pyplot as plt
 from trtoolbox.plothelper import PlotHelper
 
@@ -178,8 +178,28 @@ class Results:
         -------
         nothing
         """
+
         plt.figure()
         plt.plot(self.lcurve[:, 0], self.lcurve[:, 1], 'o-', markersize=2)
+
+    def plot_solutionvector(self, index_alpha=-1, alpha=-1):
+        """ Plots the sum of amplituted over time constants.
+
+        Returns
+        -------
+        nothing
+        """
+
+        plt.figure()
+        x_k, title = self.get_xk(index_alpha, alpha)
+        plt.plot(
+            [np.min(self.taus), np.max(self.taus)],
+            [0, 0],
+            '--', color='k'
+        )
+        plt.plot(self.taus.T, np.sum(x_k, axis=0))
+        plt.xscale('log')
+        plt.title('Solution vector ' + title[8:])
 
     def plot_results(self):
         """ Plots interactive contourmaps of original and LDA data,
@@ -200,10 +220,28 @@ class Results:
         -------
         nothing
         """
+
         self._phelper = PlotHelper()
 
 
 def check_input(data, time, wn):
+    """ Ensures that all np.arrays have float dtype and that
+        time spans over columns, frequency over rows.
+
+    Parameters
+    ----------
+    data : np.array
+        Data matrix.
+    time : np.array
+        TIme array.
+    wn : np.array
+        Frequency array.
+
+    Returns
+    -------
+    nothing
+    """
+
     # check for right dtype
     if data.dtype != 'float':
         data = data.astype('float64')
@@ -244,7 +282,6 @@ def gen_taus(t1, t2, n):
     return taus
 
 
-# TODO: really sequential?
 def gen_dmatrix(time, taus, seqmodel=False):
     """ Generates D-matrix.
 
@@ -260,12 +297,20 @@ def gen_dmatrix(time, taus, seqmodel=False):
     dmatrix : np.array
         D-matrix
     """
+    if seqmodel is True:
+        def model(s, time, ks):
+            arr = [-ks[0] * s[0]]
+            arr.append(ks[0] * s[0] - ks[1] * s[1])
+            return arr
 
     dmatrix = np.zeros([time.size, taus.size])
     for i in range(len(taus)):
         if i > 0 and seqmodel is True:
-            dmatrix[:, i] = \
-                (-1*dmatrix[:, i-1] + np.exp(-time/taus[i])).reshape(-1)
+            # dmatrix[:, i] = \
+            #     (-1*dmatrix[:, i-1] + np.exp(-time/taus[i])).reshape(-1)
+            ks = 1./taus[np.array([i-1, i])]
+            res = odeint(model, [1, 0], time.flatten(), (ks,))
+            dmatrix[:, i] = res[:, 1]
         else:
             dmatrix[:, i] = (np.exp(-time/taus[i])).reshape(-1)
     return dmatrix
@@ -291,8 +336,7 @@ def gen_lmatrix(dmatrix):
     return lmatrix
 
 
-# TODO: option for change space
-def gen_alphas(a1, a2, n):
+def gen_alphas(a1, a2, n, space='log'):
     """ Generates logarihmic spaced alpha values.
     Adds [1e-5, 1e-4, 1e-3, 1e-2] and [10, 40, 70, 100]
     for a better visualization of the L-curve.
@@ -305,6 +349,8 @@ def gen_alphas(a1, a2, n):
         Upper limit.
     n : int
         Number of alpha values.
+    space : str
+        *log* for logarithmic and *lin* for linear spaced
 
     Returns
     -------
@@ -312,8 +358,10 @@ def gen_alphas(a1, a2, n):
         Generated alpha values.
     """
 
-    alphas = np.logspace(np.log10(a1), np.log10(a2), n)
-    # alphas = np.linspace(a1, a2, n)
+    if space == 'log':
+        alphas = np.logspace(np.log10(a1), np.log10(a2), n)
+    elif space == 'lin':
+        alphas = np.linspace(a1, a2, n)
 
     # code snippet to append alpha values for a better lcurce representation
     # if a1 > 1e-2:
@@ -324,6 +372,19 @@ def gen_alphas(a1, a2, n):
 
 
 def inversesvd(dmatrix, k=-1):
+    """ Returns the inverse of matrix computed via SVD.
+
+    Parameters
+    ----------
+    dmatrix : np.array
+        Matrix to be inversed
+
+    Returns
+    -------
+     : np.array
+        Inverse of input matrix.
+    """
+
     u, s, vt = svd(dmatrix, full_matrices=False)
 
     if k == -1:
@@ -341,8 +402,40 @@ def inversesvd(dmatrix, k=-1):
 
 # TODO: option for truncation
 def tik(data, dmatrix, alpha):
+    """ Function for Tikhonov regularization:
+        min_x ||Dx - A|| + alpha*||Lx||
+        D-matrix contains exponential profiles,
+        x are prefactors/amplitudes,
+        A is the dataset,
+        alpha is the regularization factor and
+        L is the identity matrix.
+
+        Details can be found in
+        Dorlhiac, Gabriel F. et al.
+        "PyLDM-An open source package for lifetime density analysis
+        of time-resolved spectroscopic data."
+        PLoS computational biology 13.5 (2017)
+
+    Parameters
+    ----------
+    data : np.array
+        Data matrix to be analyzed
+    dmatrix : np.array
+        D-matrix
+    alpha : float
+        Regularization factor
+
+    Returns
+    -------
+    x_k : np.array
+        Expontential prefactors/amplitudes.
+    """
+
     lmatrix = gen_lmatrix(dmatrix)
 
+    # constructing augmented D- and A-matrices.
+    # d_aug = (D, sqrt(alpha)*L)
+    # a_aug = (A, zeros)
     if alpha != 0:
         d_aug = np.concatenate((dmatrix, alpha**(0.5)*lmatrix))
         a_aug = np.concatenate(
@@ -358,6 +451,24 @@ def tik(data, dmatrix, alpha):
 
 
 def tiks(data, dmatrix, alphas):
+    """ Wrapper for computing LDA for
+        various alpha values.
+
+    Parameters
+    ----------
+    data : np.array
+        Data matrix to be analyzed.
+    dmatrix : np.array
+        D-matrix.
+    alphas : np.array
+        Array of regularization factors.
+
+    Returns
+    -------
+    x_k : np.array
+        3D matrix of expontential prefactors/amplitudes.
+    """
+
     x_ks = np.empty([np.shape(dmatrix)[1], np.shape(data)[0], len(alphas)])
     for i, alpha in enumerate(alphas):
         x_k = tik(data, dmatrix, alpha)
@@ -396,6 +507,23 @@ def calc_lcurve(data, dmatrix, lmatrix, x_ks):
 
 
 def tik_lstsq(data, dmatrix, alpha):
+    """ Different implementation of the tik function.
+        Uses the ordinary lstsq solver of numpy.
+
+    Parameters
+    ----------
+    data : np.array
+        Data matrix to be analyzed.
+    dmatrix : np.array
+        D-matrix.
+    alpha : float
+        Regularization factor.
+
+    Returns
+    -------
+    res : np.array
+        Expontential prefactors/amplitudes.
+    """
     lmatrix = gen_lmatrix(dmatrix)
 
     if alpha != 0:
@@ -412,6 +540,29 @@ def tik_lstsq(data, dmatrix, alpha):
 
 
 def tsvd(data, dmatrix, k):
+    """ Truncated SVD for LDA. Similar to Tikhonov regularization
+        but here we have a clear cut-off after a specified singular value.
+
+        Details can be found in
+        Hansen PC.
+        The truncated SVD as a method for regularization.
+        Bit. 1987
+
+    Parameters
+    ----------
+    data : np.array
+        Data matrix to be analyzed.
+    dmatrix : np.array
+        D-matrix.
+    k : int
+        Cut-off for singular values.
+
+    Returns
+    -------
+    x_k : np.array
+        Expontential prefactors/amplitudes.
+    """
+
     d_tilde = inversesvd(dmatrix, k)
     x_k = d_tilde.dot(np.transpose(data))
     return x_k

@@ -12,13 +12,14 @@ time = np.loadtxt('./data/time.dat', delimiter=',')
 
 # data = mysvd.reconstruct(data, 10).svddata
 
-res = mylda.dolda(data, time, wn)
+res = mylda.dolda(data, time, wn, tlimits=[1e-6, 1e-1], tnum=50, seqmodel=True)
 res.plot_results()
-# res.plot_spectra(alpha=0.9)
-# res.plot_traces(alpha=0.9)
+# res.plot_spectra(alpha=2)
+# res.plot_traces(alpha=2)
+res.plot_solutionvector(alpha=0.6)
 
-res2 = mylda.dolda(data, time, wn, seqmodel=True)
-res2.plot_results()
+# res2 = mylda.dolda(data, time, wn, seqmodel=True)
+# res2.plot_results()
 
 plt.show()
 

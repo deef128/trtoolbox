@@ -1,4 +1,3 @@
-# TODO: check for tranpose
 from scipy.linalg import svd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -205,7 +204,7 @@ def wrapper_svd(data):
 
 
 def show_svs(data, time, wn):
-    """ Plots singular values.
+    """ Plots singular values and variance explained.
 
     Parameters
     ----------
@@ -266,7 +265,6 @@ def show_svs(data, time, wn):
             offset = 4
         axs[r, i-offset].plot(time.T, vt[i, :])
         axs[r, i-offset].set_xscale('log')
-    plt.show()
 
 
 def reconstruct(data, n):
@@ -342,13 +340,19 @@ def dosvd(data, time, wn, n=-1):
 
     # prevents plt.show() from blocking execution
     # plt.ion()
-    show_svs(data, time, wn)
+    # input can also be a list like 1,2,3,5
     if type(n) == int and n <= 0:
+        plt.ion()
+        show_svs(data, time, wn)
+        plt.show()
+        plt.ioff()
         n = input('How many singular values? ')
         if n.find(',') == -1:
             n = int(n)
         elif n.find(',') > 0:
-            [int(i) for i in n.split(',')]
+            if n[0] == '[' and n[-1] == ']':
+                n = n[1:-1]
+            n = [int(i) for i in n.split(',')]
         else:
             print('Wrong input')
             return

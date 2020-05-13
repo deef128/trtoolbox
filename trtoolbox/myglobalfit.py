@@ -1,5 +1,5 @@
-# TODO: docs & check for time over columns
-# TODO: may be change to log space
+# TODO: fix overflow
+# TODO: GLA
 from scipy.integrate import odeint
 from scipy.optimize import least_squares
 from scipy.optimize import nnls
@@ -8,6 +8,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import trtoolbox.mysvd as mysvd
 from trtoolbox.plothelper import PlotHelper
+from scipy.special import logsumexp
 
 
 class Results:
@@ -70,6 +71,7 @@ class Results:
     def print_results(self):
         """ Prints time constants.
         """
+
         for i in range(len(self.tcs)):
             print('%e with variance of %e' % (self.tcs[i], self.var[i]))
 
@@ -94,29 +96,65 @@ class Results:
         self._phelper.plot_spectra(self, index_alpha, alpha)
 
     def plot_profile(self):
+        """ Plots concentration profile.
+
+        Returns
+        -------
+        nothing
+        """
+
+        num_exp = np.shape(self.estimates)[0]
+        cm = plt.get_cmap('tab20')
+        cm = [cm(1.*i/num_exp) for i in range(num_exp)]
+
         plt.figure()
-        plt.plot(self.time.reshape(-1), self.profile*100)
-        for i in range(np.shape(self.estimates)[0]):
+        # plt.plot(self.time.reshape(-1), self.profile*100, colors=cm)
+        for i in range(num_exp):
             plt.plot(
-                self.time.T, self.estimates[i, :]*100, 'o', markersize=2)
+                self.time.reshape(-1),
+                self.profile[:, i]*100,
+                color=cm[i]
+            )
+            plt.plot(
+                self.time.T,
+                self.estimates[i, :]*100,
+                'o', markersize=2,
+                color=cm[i]
+            )
         plt.xscale('log')
         plt.ylabel('concentration / %')
         plt.xlabel('time / s')
         plt.title('Concentration Profile')
 
     def plot_das(self):
+        """ Plots decay associated spectra.
+
+        Returns
+        -------
+        nothing
+        """
+
         plt.figure()
         plt.plot(
             [np.min(self.wn), np.max(self.wn)], [0, 0],
-            '--', color='k'
+            '--', color='k',
+            label='_nolegend_'
         )
         plt.plot(self.wn, self.das)
         plt.gca().set_xlim(self.wn[-1], self.wn[0])
         plt.ylabel('absorbance / a.u.')
         plt.xlabel('wavenumber / cm^{-1}')
         plt.title('Decay Associated Spectra')
+        plt.legend([str(i+1) for i in range(self.das.shape[0])])
 
     def plot_fitdata(self):
+        """ Plots fitted data.
+
+        Returns
+        -------
+        nothing
+        """
+
         title = 'Globally fitted data'
         self._phelper.plot_heatmap(
             self.fitdata, self.time, self.wn,
@@ -127,6 +165,10 @@ class Results:
     def plot_results(self):
         """ Plots the concentration profile, DAS, fitted data and fitted
             abstract time traces if method='svd' was chosen.
+
+        Returns
+        -------
+        nothing
         """
 
         self.plot_profile()
@@ -146,18 +188,43 @@ class Results:
             r = 0
             offset = 0
             for i in range(nb_plots):
-                if i == nb_cols:
-                    r = 1
-                    offset = nb_cols
-                if i < nb_svds:
-                    axs[r, i-offset].plot(self.time.T, self.svdtraces[i, :])
-                    axs[r, i-offset].plot(self.time.T, self.fittraces[i, :])
-                    axs[r, i-offset].set_xscale('log')
+                if nb_cols == 1:
+                    if i < nb_svds:
+                        axs[i].plot(self.time.T, self.svdtraces[i, :])
+                        axs[i].plot(self.time.T, self.fittraces[i, :])
+                        axs[i].set_xscale('log')
+                    else:
+                        axs[i].plot(self.wn, self.spectral_offset)
                 else:
-                    axs[r, i-offset].plot(self.wn, self.spectral_offset)
+                    if i == nb_cols:
+                        r = 1
+                        offset = nb_cols
+                    if i < nb_svds:
+                        axs[r, i-offset].plot(self.time.T, self.svdtraces[i, :])
+                        axs[r, i-offset].plot(self.time.T, self.fittraces[i, :])
+                        axs[r, i-offset].set_xscale('log')
+                    else:
+                        axs[r, i-offset].plot(self.wn, self.spectral_offset)
 
 
 def check_input(data, time, wn):
+    """ Ensures that all np.arrays have float dtype and that
+        time spans over columns, frequency over rows.
+
+    Parameters
+    ----------
+    data : np.array
+        Data matrix.
+    time : np.array
+        TIme array.
+    wn : np.array
+        Frequency array.
+
+    Returns
+    -------
+    nothing
+    """
+
     # check for right dtype
     if data.dtype != 'float':
         data = data.astype('float64')
@@ -248,13 +315,17 @@ def create_tr(par, time):
         Concentration profile matrix.
     """
 
-    # nb_exps = np.shape(par)[0]
+    # sometimes the sum over exponentials encounter an overflow.
+    # logsumexp encounters an invalid value error
+    old_settings = np.seterr(all='ignore')
+
     svds = np.shape(par)[1]-1
     time = time.reshape((1, time.size))
     fit_tr = np.empty((svds, time.size))
     for isvds in range(0, svds):
         individual = par[:, isvds] * np.exp(-1*par[:, svds]*time.T)
         fit_tr[isvds, :] = np.sum(individual, axis=1)
+    np.seterr(**old_settings)
     return fit_tr
 
 
@@ -317,6 +388,7 @@ def calculate_estimate(das, data):
     est : np.array
         Contributions of the individual DAS.
     """
+
     est = np.empty([np.shape(data)[1], np.shape(das)[1]])
     for i in range(np.shape(data)[1]):
         est[i, :] = nnls(das, data[:, i])[0]
@@ -367,7 +439,7 @@ def opt_func_est(ks, time, data):
     profile = create_profile(time, ks)
     das = create_das(profile, data)
     est = calculate_estimate(das, data)
-    r = profile - est
+    r = profile.T - est
     return r.flatten()
 
 
@@ -421,7 +493,7 @@ def calculate_sigma(res):
     return var
 
 
-def doglobalfit(data, time, wn, tcs, method='svd', svds=5, offset=False):
+def doglobalfit(data, time, wn, tcs, method='svd', svds=5, offset=False, ofindex=-1):
     """ Wrapper for global fit routine.
 
     Parameters
@@ -468,7 +540,7 @@ def doglobalfit(data, time, wn, tcs, method='svd', svds=5, offset=False):
             return
     start_ks = np.array(start_ks)
 
-    # TODO: make offset a fit!
+    # TODO: make offset a fit and define time point!
     if offset is True:
         spectral_offset = data[:, -1]
         spectral_offset_matrix = np.tile(
@@ -507,7 +579,7 @@ def doglobalfit(data, time, wn, tcs, method='svd', svds=5, offset=False):
     # gathering results
     gf_res = Results()
     gf_res.offset = offset
-    if offset == 'yes':
+    if offset is True:
         gf_res.data = data+spectral_offset_matrix
         gf_res.spectral_offset = spectral_offset
     else:

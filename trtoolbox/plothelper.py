@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider
 import matplotlib.colors as colors
 
-#TODO: nicer plot of lda map
+
 class PlotHelper():
     """ Object for interactive plotting. This class ensures that
     all the matplotlib objects are kept referenced which ensures
@@ -160,7 +160,7 @@ class PlotHelper():
                 wn.flatten(),
                 data,
                 levels=levels,
-                linewidths=0.3,
+                linewidths=0.1,
                 colors='k'
             )
         plt.xscale('log')
@@ -220,10 +220,11 @@ class PlotHelper():
         sc = 1.05
         ax.set_ylim(ymin*sc, ymax*sc)
 
-        # TODO: check for missing values! may be take from spectra
         def update(val):
             val = sfreq.val
-            ind = np.where(res.wn == val)[0][0]
+            # ind = np.where(res.wn == val)[0][0]
+            ind = abs(val - res.wn).argmin()
+            sfreq.valtext.set_text('%.2f' % (res.wn[ind, 0]))
             l1.set_ydata(res.data[ind, :])
             l2.set_ydata(procdata[ind, :])
             # ymin = min(res.data[ind, :])
@@ -279,14 +280,13 @@ class PlotHelper():
         l2, = plt.plot(res.wn, procdata[:, 0], 'o-', markersize=4)
         ax.margins(x=0)
 
-        # TODO: better init for valstep!
         axtime = plt.axes([0.175, 0.05, 0.65, 0.03], facecolor=self.axcolor)
         stime = Slider(
             axtime, res.time_name,
             np.log10(np.min(res.time)),
             np.log10(np.max(res.time)),
             valinit=np.log10(np.min(res.time[0, 0])),
-            valstep=0.01
+            valstep=np.log10(res.time[0, 1]) - np.log10(res.time[0, 0])
             )
         stime.valtext.set_text('%1.2e' % (10**stime.val))
         ymin = np.min(res.data[:, :])
@@ -340,9 +340,10 @@ class PlotHelper():
         nanarray = np.empty(np.shape(res.wn))
         nanarray[:] = np.NaN
         nanarray = np.hstack((nanarray, nanarray))
+        taus = res.taus
         if np.min(res.time) < np.min(res.taus):
             taus = np.insert(
-                res.taus,
+                taus,
                 0,
                 [np.min(res.time), np.min(res.taus)*0.99]
             )
@@ -351,7 +352,6 @@ class PlotHelper():
             taus = np.append(taus, [np.max(res.taus)*1.01, np.max(res.time)])
             taus = taus.reshape((1, taus.size))
             x_k = np.hstack((x_k, nanarray))
-        # print(x_k)
         return x_k, taus
 
     def plot_ldaresults(self, res):
@@ -398,7 +398,7 @@ class PlotHelper():
             x_k, taus = self.append_ldamap(res, index_alpha)
         elif res.method == 'tsvd':
             x_k, taus = self.append_ldamap(res)
-        pc_map = self.plot_heatmap(
+        pc_map = self.plot_contourmap(
             x_k, taus, res.wn,
             title='LDA Map', newfig=False)
         plt.ylabel('%s / %s' % (res.wn_name, res.wn_unit))
@@ -440,7 +440,7 @@ class PlotHelper():
                 plt.sca(axs[1, 1])
                 plt.cla()
                 x_k, _ = self.append_ldamap(res, ind)
-                self.plot_heatmap(
+                self.plot_contourmap(
                     x_k, taus, res.wn,
                     title='LDA Map', newfig=False)
                 plt.ylabel('%s / %s' % (res.wn_name, res.wn_unit))

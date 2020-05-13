@@ -7,15 +7,14 @@ plt.close('all')
 # load data
 data = np.loadtxt('./data/data.dat', delimiter=',')
 wn = np.loadtxt('./data/wavenumbers.dat', delimiter=',')
-wn = wn.reshape((wn.size, 1))
 time = np.loadtxt('./data/time.dat', delimiter=',')
-time = time.reshape((1, time.size))
 
-# mysvd.show_svs(data, time, wn)
-res = mysvd.reconstruct(data, [1, 2, 3, 5])
-res.wn = wn
-res.time = time
-res.plot_results()
+# if time and frequency are manually added
+# time has to span columns and frequency rows.
+# wn = wn.reshape((wn.size, 1))
+# time = time.reshape((1, time.size))
+
+res = mysvd.dosvd(data, time, wn)
 plt.show()
 
 # for inspecting the Results class in Spyder after interactive plotting
