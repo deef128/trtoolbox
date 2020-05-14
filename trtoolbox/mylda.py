@@ -199,6 +199,10 @@ class Results:
         )
         plt.plot(self.taus.T, np.sum(x_k, axis=0))
         plt.xscale('log')
+        time_min = np.min(self.time[0, :])
+        time_max = np.max(self.time[0, :])
+        plt.xlim([time_min, time_max])
+        plt.xlabel('time constant / ' + self.time_unit)
         plt.title('Solution vector ' + title[8:])
 
     def plot_results(self):

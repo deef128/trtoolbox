@@ -202,8 +202,8 @@ class PlotHelper():
         ax = fig.add_subplot(111)
         plt.subplots_adjust(bottom=0.2)
         plt.plot([np.min(res.time), np.max(res.time)], [0, 0], '--', color='k')
-        l1, = plt.plot(res.time.T, res.data[0, :])
-        l2, = plt.plot(res.time.T, procdata[0, :])
+        l1, = plt.plot(res.time.T, res.data[0, :], 'o-', markersize=4)
+        l2, = plt.plot(res.time.T, procdata[0, :], 'o-', markersize=4)
         plt.xscale('log')
         ax.margins(x=0)
 
@@ -219,6 +219,11 @@ class PlotHelper():
         ymax = np.max(res.data[:, :])
         sc = 1.05
         ax.set_ylim(ymin*sc, ymax*sc)
+
+        ax.set_xlabel(res.time_name + ' / ' + res.time_unit)
+        time_min = np.min(res.time[0, :])
+        time_max = np.max(res.time[0, :])
+        ax.set_xlim([time_min, time_max])
 
         def update(val):
             val = sfreq.val
@@ -241,7 +246,7 @@ class PlotHelper():
         self.axfreq = axfreq
         self.sfreq = sfreq
 
-    def plot_spectra(self, res, index_alpha=-1, alpha=-1):
+    def plot_spectra(self, res, index_alpha=-1, alpha=-1, rev=True):
         """ Plots interactive spectra.
 
         Parameters
@@ -281,18 +286,29 @@ class PlotHelper():
         ax.margins(x=0)
 
         axtime = plt.axes([0.175, 0.05, 0.65, 0.03], facecolor=self.axcolor)
+        time_log_dist = \
+            [np.log10(res.time[0, i]) - np.log10(res.time[0, i-1]) \
+                for i in range(1, res.time.shape[1])]
         stime = Slider(
             axtime, res.time_name,
             np.log10(np.min(res.time)),
             np.log10(np.max(res.time)),
             valinit=np.log10(np.min(res.time[0, 0])),
-            valstep=np.log10(res.time[0, 1]) - np.log10(res.time[0, 0])
+            valstep=np.min(time_log_dist)
             )
         stime.valtext.set_text('%1.2e' % (10**stime.val))
         ymin = np.min(res.data[:, :])
         ymax = np.max(res.data[:, :])
         sc = 1.05
         ax.set_ylim(ymin*sc, ymax*sc)
+
+        ax.set_xlabel(res.wn_name + ' / ' + res.wn_unit)
+        wn_min = np.min(res.wn[:, 0])
+        wn_max = np.max(res.wn[:, 0])
+        if rev is True:
+            ax.set_xlim([wn_max, wn_min])
+        else:
+            ax.set_xlim([wn_min, wn_max])
 
         def update(val):
             val = 10**(stime.val)
