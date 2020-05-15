@@ -1,5 +1,6 @@
 # TODO: fix overflow
 # TODO: GLA
+# TODO: check if back-reactions is nicely implemented
 from scipy.integrate import odeint
 from scipy.optimize import least_squares
 from scipy.optimize import nnls
@@ -24,6 +25,8 @@ class Results:
         Wavenumber array.
     offset : str
         Default is *'no'*.
+    back : boolean
+        Determines if a model with back-reactions was used.
     spectral_offset : np.array
         *optional if offset was chosen*
     method : str
@@ -52,6 +55,7 @@ class Results:
         self.time = np.array([])
         self.wn = np.array([])
         self.offset = str()
+        self.back = bool
         self.spectral_offset = np.array([])
         self.method = str()
         self.ks = np.array([])
@@ -72,8 +76,12 @@ class Results:
         """ Prints time constants.
         """
 
-        for i in range(len(self.tcs)):
-            print('%e with variance of %e' % (self.tcs[i], self.var[i]))
+        if self.back is False:
+            for i in range(len(self.tcs)):
+                print('%i. %e with variance of %e' % (i, self.tcs[i], self.var[i]))
+        elif self.back is True:
+            for i in range(self.tcs.shape[0]):
+                print('%i. forward: %e, backward: %e' % (i, self.tcs[i, 0], self.tcs[i, 1]))
 
     def plot_traces(self):
         """ Plots interactive time traces.
@@ -243,7 +251,7 @@ def check_input(data, time, wn):
     return data, time, wn
 
 
-def model(s, time, ks):
+def model(s, time, ks, back=False):
     """ Creates an array of differential equations according
         to an unidirectional sequential exponential model.
     S[0]/dt = -k0*S[0]
@@ -259,6 +267,13 @@ def model(s, time, ks):
         Time array.
     ks : np.array
         Decay rate constants for each species.
+    back : boolean
+        Determines if a model with back-reactions is used. If yes,
+        ks has to be a matrix with 1st column forward and
+        2nd column backward rate constants.
+        A -> B with ks[i, 0]
+        A <- B with ks[i, 1]
+        Therefore ks[-1] is not used.
 
     Returns
     -------
@@ -266,13 +281,26 @@ def model(s, time, ks):
         Array containing the differential equations.
     """
 
-    arr = [-ks[0] * s[0]]
-    for i in range(1, len(ks)):
-        arr.append(ks[i-1] * s[i-1] - ks[i] * s[i])
+    if back is False:
+        arr = [-ks[0] * s[0]]
+        for i in range(1, len(ks)):
+            arr.append(ks[i-1] * s[i-1] - ks[i] * s[i])
+
+    elif back is True:
+        if ks.shape[0] < ks.shape[1]:
+            ks = ks.T
+        arr = [-ks[0, 0] * s[0] + ks[0, 1] * s[1]]
+        for i in range(1, len(ks)-1):
+            arr.append(
+                ks[i-1, 0] * s[i-1] - ks[i, 0] * s[i] \
+                    - ks[i-1, 1] * s[i] + ks[i, 1] * s[i+1]
+                )
+        arr.append(ks[-2, 0] * s[-2] - ks[-1, 0] * s[-1] - ks[-2, 1] * s[-1])
+
     return arr
 
 
-def create_profile(time, ks):
+def create_profile(time, ks, back=False):
     """ Computes a concentration profile according to the *model()* function.
 
     Parameters
@@ -293,7 +321,7 @@ def create_profile(time, ks):
     s0[0] = 1
 
     time = time.reshape(-1)
-    profile = odeint(model, s0, time, (ks,))
+    profile = odeint(model, s0, time, (ks, back))
 
     return profile
 
@@ -315,7 +343,7 @@ def create_tr(par, time):
         Concentration profile matrix.
     """
 
-    # sometimes the sum over exponentials encounter an overflow.
+    # sometimes the sum over exponentials encounters an overflow.
     # logsumexp encounters an invalid value error
     old_settings = np.seterr(all='ignore')
 
@@ -349,7 +377,7 @@ def create_das(profile, data):
     return das[0].T
 
 
-def calculate_fitdata(ks, time, data):
+def calculate_fitdata(ks, time, data, back=False):
     """ Computes the final fitted dataset.
 
     Parameters
@@ -367,7 +395,7 @@ def calculate_fitdata(ks, time, data):
         Fitted dataset.
     """
 
-    profile = create_profile(time, ks)
+    profile = create_profile(time, ks, back)
     das = create_das(profile, data)
     fitdata = das.dot(profile.T)
     return fitdata
@@ -395,7 +423,7 @@ def calculate_estimate(das, data):
     return est.T
 
 
-def opt_func_raw(ks, time, data):
+def opt_func_raw(ks, time, data, back):
     """ Optimization function for residuals of fitted data - input data.
 
     Parameters
@@ -413,7 +441,11 @@ def opt_func_raw(ks, time, data):
         Flattened array of residuals.
     """
 
-    fitdata = calculate_fitdata(ks, time, data)
+    # deflattens array
+    if back is True and ks.ndim == 1:
+        ks = ks.reshape(int(ks.shape[0]/2), 2)
+
+    fitdata = calculate_fitdata(ks, time, data, back)
     r = fitdata - data
     return r.flatten()
 
@@ -443,7 +475,7 @@ def opt_func_est(ks, time, data):
     return r.flatten()
 
 
-def opt_func_svd(par, time, data, svdtraces, nb_exps):
+def opt_func_svd(par, time, data, svdtraces, nb_exps, back):
     """ Optimization function for residuals of SVD
         abstract time traces - fitted traces.
 
@@ -493,7 +525,18 @@ def calculate_sigma(res):
     return var
 
 
-def doglobalfit(data, time, wn, tcs, method='svd', svds=5, offset=False, ofindex=-1):
+# TODO: finish back-reaction fitting for est
+# TODO: check results for back-reactions
+def doglobalfit(
+        data,
+        time,
+        wn,
+        tcs,
+        method='svd',
+        svds=5,
+        offset=False,
+        offindex=-1,
+        back=False):
     """ Wrapper for global fit routine.
 
     Parameters
@@ -513,9 +556,13 @@ def doglobalfit(data, time, wn, tcs, method='svd', svds=5, offset=False, ofindex
         and contributions of DAS,
         *svd* for fitting the SVD time traces (default).
     svd : int
-        Number of SVD components to be fitted. Default: 5
+        Number of SVD components to be fitted. Default: 5.
     offset : boolean
-        Considering the last spectrum to be an offset. Default: False
+        Considering the last spectrum to be an offset. Default: False.
+    offindex : int
+        Index of spectral offset.
+    back : boolean
+        Determines if the model consideres back-reactions.
 
     Returns
     -------
@@ -524,25 +571,19 @@ def doglobalfit(data, time, wn, tcs, method='svd', svds=5, offset=False, ofindex
     """
 
     data, time, wn = check_input(data, time, wn)
+    tcs = np.array(tcs)
 
     if len(tcs) < 1:
         print('I need at least two time constants.')
         return
     else:
-        start_ks = []
-        try:
-            for tc in tcs:
-                start_ks.append(1/float(tc))
-                # start_ks.append(float(tc))
-        except TypeError:
-            print(tc)
-            print('Just put numbers.')
-            return
-    start_ks = np.array(start_ks)
+        start_ks = 1./tcs
+        # ensuring that start_ks has two columns if back is True
+        if back is True and start_ks.shape[0] < start_ks.shape[1]:
+            start_ks = start_ks.T
 
-    # TODO: make offset a fit and define time point!
     if offset is True:
-        spectral_offset = data[:, -1]
+        spectral_offset = data[:, offindex]
         spectral_offset_matrix = np.tile(
             spectral_offset,
             (np.shape(data)[1], 1)
@@ -550,35 +591,56 @@ def doglobalfit(data, time, wn, tcs, method='svd', svds=5, offset=False, ofindex
         data = data-spectral_offset_matrix
 
     if method == 'raw':
-        res = least_squares(opt_func_raw, start_ks, args=(time, data))
-        ks = res.x
-        var = calculate_sigma(res)
+        res = least_squares(
+            opt_func_raw,
+            start_ks.flatten(),
+            args=(time, data, back)
+            )
+        if back is False:
+            ks = res.x
+            var = calculate_sigma(res)
+        elif back is True:
+            ks = res.x.reshape(start_ks.shape)
+            # TODO: variance singular!
+            var = -1
+
     elif method == 'est':
         res = least_squares(opt_func_est, start_ks, args=(time, data))
         ks = res.x
         var = calculate_sigma(res)
+
     elif method == 'svd':
         u, s, vt = mysvd.wrapper_svd(data)
         sigma = np.zeros((u.shape[0], vt.shape[0]))
         sigma[:s.shape[0], :s.shape[0]] = np.diag(s)
         svdtraces = sigma[0:svds, :].dot(vt)
 
-        nb_exps = np.shape(start_ks)[0]
-        pars = np.empty((nb_exps, svds+1))
-        pars[:, 0:svds] = np.ones((svds,))*0.02
-        pars[:, svds] = start_ks.T
+        if back is False:
+            nb_exps = np.shape(start_ks)[0]
+            pars = np.empty((nb_exps, svds+1))
+            pars[:, 0:svds] = np.ones((svds,))*0.02
+            pars[:, svds] = start_ks.T
+        elif back is True:
+            nb_exps = start_ks.size
+            pars = np.empty((nb_exps, svds+1))
+            pars[:, 0:svds] = np.ones((svds,))*0.02
+            pars[:, svds] = start_ks.flatten()
+
         res = least_squares(
             opt_func_svd,
             pars.flatten(),
-            args=(time, data, svdtraces, nb_exps)
+            args=(time, data, svdtraces, nb_exps, back)
         )
         ks = res.x[svds::svds+1]
+        if back is True:
+            ks = ks.reshape(start_ks.shape)
         var = calculate_sigma(res)
         var = var[svds::svds+1]
 
     # gathering results
     gf_res = Results()
     gf_res.offset = offset
+    gf_res.back = back
     if offset is True:
         gf_res.data = data+spectral_offset_matrix
         gf_res.spectral_offset = spectral_offset
@@ -589,9 +651,9 @@ def doglobalfit(data, time, wn, tcs, method='svd', svds=5, offset=False, ofindex
     gf_res.ks = ks
     gf_res.tcs = 1/ks
     gf_res.var = 1/var
-    gf_res.fitdata = calculate_fitdata(ks, time, data)
+    gf_res.fitdata = calculate_fitdata(ks, time, data, back)
     gf_res.method = method
-    gf_res.profile = create_profile(time, ks)
+    gf_res.profile = create_profile(time, ks, back)
     gf_res.das = create_das(gf_res.profile, data)
     gf_res.estimates = calculate_estimate(gf_res.das, data)
     if method == 'svd':

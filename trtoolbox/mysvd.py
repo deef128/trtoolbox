@@ -66,7 +66,7 @@ class Results:
     #         val = val.astype('float64')
     #     self._wn = val.reshape((val.size, 1))
 
-    def plotdata(self, newfig=True):
+    def plot_data(self, newfig=True):
         """ Plots a nice looking heatmap of the raw data.
 
         Returns
@@ -80,7 +80,7 @@ class Results:
         plt.ylabel('%s / %s' % (self.wn_name, self.wn_unit))
         plt.xlabel('%s / %s' % (self.time_name, self.time_unit))
 
-    def plotsvddata(self):
+    def plot_svddata(self):
         """ Plots a nice looking heatmap of the reconstructed data.
 
         Returns

@@ -123,7 +123,7 @@ class Results:
 
         return x_k, title
 
-    def plotlda(self, index_alpha=-1, alpha=-1):
+    def plot_ldamap(self, index_alpha=-1, alpha=-1):
         """ Plots a nice looking contourmap.
 
         Parameters
@@ -192,12 +192,12 @@ class Results:
 
         plt.figure()
         x_k, title = self.get_xk(index_alpha, alpha)
-        plt.plot(
-            [np.min(self.taus), np.max(self.taus)],
-            [0, 0],
-            '--', color='k'
-        )
-        plt.plot(self.taus.T, np.sum(x_k, axis=0))
+        # plt.plot(
+        #     [np.min(self.taus), np.max(self.taus)],
+        #     [0, 0],
+        #     '--', color='k'
+        # )
+        plt.plot(self.taus.T, np.sum(np.abs(x_k), axis=0))
         plt.xscale('log')
         time_min = np.min(self.time[0, :])
         time_max = np.max(self.time[0, :])
