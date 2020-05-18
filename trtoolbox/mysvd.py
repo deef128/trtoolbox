@@ -1,3 +1,4 @@
+# TODO: plot abstract spectra and traces
 from scipy.linalg import svd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -66,6 +67,10 @@ class Results:
     #         val = val.astype('float64')
     #     self._wn = val.reshape((val.size, 1))
 
+    def init_phelper(self):
+        if type(self._phelper) == list:
+            self._phelper = PlotHelper()
+
     def plot_data(self, newfig=True):
         """ Plots a nice looking heatmap of the raw data.
 
@@ -74,6 +79,7 @@ class Results:
         nothing
         """
 
+        self.init_phelper()
         self._phelper.plot_heatmap(
             self.data, self.time, self.wn,
             title='Original Data', newfig=False)
@@ -88,6 +94,7 @@ class Results:
         nothing
         """
 
+        self.init_phelper()
         nstr = str(self.n)
         title = 'Reconstructed data using ' + nstr + ' components'
         self._phelper.plot_heatmap(
@@ -104,6 +111,7 @@ class Results:
         nothing
         """
 
+        self.init_phelper()
         self._phelper.plot_traces(self)
 
     def plot_spectra(self):
@@ -114,6 +122,7 @@ class Results:
         nothing
         """
 
+        self.init_phelper()
         self._phelper.plot_spectra(self)
 
     def plot_results(self):
@@ -125,6 +134,7 @@ class Results:
         nothing
         """
 
+        self.init_phelper()
         # original data
         _, axs = plt.subplots(2, 1)
         plt.subplots_adjust(top=0.925)
@@ -158,7 +168,7 @@ class Results:
         -------
         nothing
         """
-        self._phelper = PlotHelper()
+        self._phelper = []
 
 
 def check_input(data, time, wn):
@@ -359,5 +369,5 @@ def dosvd(data, time, wn, n=-1):
     res = reconstruct(data, n)
     res.time = time
     res.wn = wn
-    res.plot_results()
+    # res.plot_results()
     return res

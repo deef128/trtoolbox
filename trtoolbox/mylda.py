@@ -67,6 +67,10 @@ class Results:
         self.time_unit = 's'
         self._phelper = PlotHelper()
 
+    def init_phelper(self):
+        if type(self._phelper) == list:
+            self._phelper = PlotHelper()
+
     def get_alpha(self, index_alpha=-1, alpha=-1):
         """ Gets alpha value and index.
 
@@ -138,6 +142,7 @@ class Results:
         nothing
         """
 
+        self.init_phelper()
         if self.x_k.size == 0:
             print('First start a LDA.')
             return
@@ -159,6 +164,7 @@ class Results:
         nothing
         """
 
+        self.init_phelper()
         self._phelper.plot_traces(self, index_alpha, alpha)
 
     def plot_spectra(self, index_alpha=-1, alpha=-1):
@@ -169,6 +175,7 @@ class Results:
         nothing
         """
 
+        self.init_phelper()
         self._phelper.plot_spectra(self, index_alpha, alpha)
 
     def plot_lcurve(self):
@@ -213,6 +220,7 @@ class Results:
         nothing
         """
 
+        self.init_phelper()
         self._phelper.plot_ldaresults(self)
 
     def clean(self):
@@ -225,7 +233,7 @@ class Results:
         nothing
         """
 
-        self._phelper = PlotHelper()
+        self._phelper = []
 
 
 def check_input(data, time, wn):

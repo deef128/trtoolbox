@@ -1,6 +1,7 @@
 # TODO: fix overflow
 # TODO: GLA
 # TODO: check if back-reactions is nicely implemented
+# TODO: Chi Square
 from scipy.integrate import odeint
 from scipy.optimize import least_squares
 from scipy.optimize import nnls
@@ -9,7 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import trtoolbox.mysvd as mysvd
 from trtoolbox.plothelper import PlotHelper
-from scipy.special import logsumexp
+# from scipy.special import logsumexp
 
 
 class Results:
@@ -72,16 +73,22 @@ class Results:
         self.time_unit = 's'
         self._phelper = PlotHelper()
 
+    def init_phelper(self):
+        if type(self._phelper) == list:
+            self._phelper = PlotHelper()
+
     def print_results(self):
         """ Prints time constants.
         """
 
         if self.back is False:
             for i in range(len(self.tcs)):
-                print('%i. %e with variance of %e' % (i, self.tcs[i], self.var[i]))
+                print('%i. %e with variance of %e'
+                      % (i+1, self.tcs[i], self.var[i]))
         elif self.back is True:
             for i in range(self.tcs.shape[0]):
-                print('%i. forward: %e, backward: %e' % (i, self.tcs[i, 0], self.tcs[i, 1]))
+                print('%i. forward: %e, backward: %e'
+                      % (i+1, self.tcs[i, 0], self.tcs[i, 1]))
 
     def plot_traces(self):
         """ Plots interactive time traces.
@@ -91,6 +98,7 @@ class Results:
         nothing
         """
 
+        self.init_phelper()
         self._phelper.plot_traces(self)
 
     def plot_spectra(self, index_alpha=-1, alpha=-1):
@@ -101,6 +109,7 @@ class Results:
         nothing
         """
 
+        self.init_phelper()
         self._phelper.plot_spectra(self, index_alpha, alpha)
 
     def plot_profile(self):
@@ -112,22 +121,22 @@ class Results:
         """
 
         num_exp = np.shape(self.estimates)[0]
-        cm = plt.get_cmap('tab20')
-        cm = [cm(1.*i/num_exp) for i in range(num_exp)]
+        cm = plt.get_cmap('tab10')
+        # nice for choosing aequidistant colors
+        # cm = [cm(1.*i/num_exp) for i in range(num_exp)]
 
         plt.figure()
-        # plt.plot(self.time.reshape(-1), self.profile*100, colors=cm)
         for i in range(num_exp):
             plt.plot(
                 self.time.reshape(-1),
                 self.profile[:, i]*100,
-                color=cm[i]
+                color=cm(i)
             )
             plt.plot(
                 self.time.T,
                 self.estimates[i, :]*100,
                 'o', markersize=2,
-                color=cm[i]
+                color=cm(i)
             )
         plt.xscale('log')
         plt.ylabel('concentration / %')
@@ -148,6 +157,8 @@ class Results:
             '--', color='k',
             label='_nolegend_'
         )
+        # for choosing a specific colormap
+        # plt.gca().set_prop_cycle(color=cm)
         plt.plot(self.wn, self.das)
         plt.gca().set_xlim(self.wn[-1], self.wn[0])
         plt.ylabel('absorbance / a.u.')
@@ -163,6 +174,7 @@ class Results:
         nothing
         """
 
+        self.init_phelper()
         title = 'Globally fitted data'
         self._phelper.plot_heatmap(
             self.fitdata, self.time, self.wn,
@@ -208,11 +220,26 @@ class Results:
                         r = 1
                         offset = nb_cols
                     if i < nb_svds:
-                        axs[r, i-offset].plot(self.time.T, self.svdtraces[i, :])
-                        axs[r, i-offset].plot(self.time.T, self.fittraces[i, :])
+                        axs[r, i-offset].plot(
+                            self.time.T, self.svdtraces[i, :])
+                        axs[r, i-offset].plot(
+                            self.time.T, self.fittraces[i, :])
                         axs[r, i-offset].set_xscale('log')
                     else:
                         axs[r, i-offset].plot(self.wn, self.spectral_offset)
+
+    def clean(self):
+        """ Unfortunetaly, spyder messes up when the results
+            object is invesitgated via the variable explorer.
+            Running this method fixes this.
+
+        Returns
+        -------
+        nothing
+        """
+        # self._phelper = PlotHelper()
+        # delattr(self, '_phelper')
+        self._phelper = []
 
 
 def check_input(data, time, wn):
@@ -292,8 +319,8 @@ def model(s, time, ks, back=False):
         arr = [-ks[0, 0] * s[0] + ks[0, 1] * s[1]]
         for i in range(1, len(ks)-1):
             arr.append(
-                ks[i-1, 0] * s[i-1] - ks[i, 0] * s[i] \
-                    - ks[i-1, 1] * s[i] + ks[i, 1] * s[i+1]
+                ks[i-1, 0] * s[i-1] - ks[i, 0] * s[i]
+                - ks[i-1, 1] * s[i] + ks[i, 1] * s[i+1]
                 )
         arr.append(ks[-2, 0] * s[-2] - ks[-1, 0] * s[-1] - ks[-2, 1] * s[-1])
 
@@ -447,10 +474,10 @@ def opt_func_raw(ks, time, data, back):
 
     fitdata = calculate_fitdata(ks, time, data, back)
     r = fitdata - data
-    return r.flatten()
+    return r.flatten()**2
 
 
-def opt_func_est(ks, time, data):
+def opt_func_est(ks, time, data, back):
     """ Optimization function for residuals of concentration profile
         and estimated contributions of DAS
     Parameters
@@ -468,13 +495,18 @@ def opt_func_est(ks, time, data):
         Flattened array of residuals.
     """
 
-    profile = create_profile(time, ks)
+    # deflattens array
+    if back is True and ks.ndim == 1:
+        ks = ks.reshape(int(ks.shape[0]/2), 2)
+
+    profile = create_profile(time, ks, back)
     das = create_das(profile, data)
     est = calculate_estimate(das, data)
     r = profile.T - est
-    return r.flatten()
+    return r.flatten()**2
 
 
+# TODO: check results for back-reactions
 def opt_func_svd(par, time, data, svdtraces, nb_exps, back):
     """ Optimization function for residuals of SVD
         abstract time traces - fitted traces.
@@ -525,8 +557,6 @@ def calculate_sigma(res):
     return var
 
 
-# TODO: finish back-reaction fitting for est
-# TODO: check results for back-reactions
 def doglobalfit(
         data,
         time,
@@ -562,7 +592,12 @@ def doglobalfit(
     offindex : int
         Index of spectral offset.
     back : boolean
-        Determines if the model consideres back-reactions.
+        Determines if a model with back-reactions is used. If yes,
+        ks has to be a matrix with 1st column forward and
+        2nd column backward rate constants.
+        A -> B with ks[i, 0]
+        A <- B with ks[i, 1]
+        Therefore ks[-1] is not used.
 
     Returns
     -------
@@ -579,7 +614,7 @@ def doglobalfit(
     else:
         start_ks = 1./tcs
         # ensuring that start_ks has two columns if back is True
-        if back is True and start_ks.shape[0] < start_ks.shape[1]:
+        if back is True and start_ks.shape[1] != 2:
             start_ks = start_ks.T
 
     if offset is True:
@@ -605,9 +640,18 @@ def doglobalfit(
             var = -1
 
     elif method == 'est':
-        res = least_squares(opt_func_est, start_ks, args=(time, data))
-        ks = res.x
-        var = calculate_sigma(res)
+        res = least_squares(
+            opt_func_est,
+            start_ks.flatten(),
+            args=(time, data, back)
+            )
+        if back is False:
+            ks = res.x
+            var = calculate_sigma(res)
+        elif back is True:
+            ks = res.x.reshape(start_ks.shape)
+            # TODO: variance singular!
+            var = -1
 
     elif method == 'svd':
         u, s, vt = mysvd.wrapper_svd(data)
