@@ -1,7 +1,6 @@
 # TODO: fix overflow
 # TODO: GLA
 # TODO: check if back-reactions is nicely implemented
-# TODO: Chi Square
 from scipy.integrate import odeint
 from scipy.optimize import least_squares
 from scipy.optimize import nnls
@@ -81,6 +80,7 @@ class Results:
         """ Prints time constants.
         """
 
+        print('Obtained time constants:')
         if self.back is False:
             for i in range(len(self.tcs)):
                 print('%i. %e with variance of %e'
@@ -557,6 +557,29 @@ def calculate_sigma(res):
     return var
 
 
+def calc_r2(data, res):
+    """ Returns R^2 in percent.
+
+    Parameters
+    ----------
+    data : np.array
+        Data matrix.
+    res : *scipy.optimize.OptimizeResult*
+        Results object obtained with least squares.
+
+    Returns
+    -------
+    r2 : float
+        R^2.
+    """
+
+    mean = np.mean(data)
+    ss_tot = np.sum((data - mean)**2)
+    ss_res = np.sum(res.fun**2)
+    r2 = 1 - ss_res/ss_tot
+    return r2*100
+
+
 def doglobalfit(
         data,
         time,
@@ -700,10 +723,12 @@ def doglobalfit(
     gf_res.profile = create_profile(time, ks, back)
     gf_res.das = create_das(gf_res.profile, data)
     gf_res.estimates = calculate_estimate(gf_res.das, data)
+    gf_res.r2 = calc_r2(data, res)
     if method == 'svd':
         gf_res.svdtraces = svdtraces
         par = res.x.reshape(nb_exps, svds+1)
         gf_res.fittraces = create_tr(par, time)
 
     gf_res.print_results()
+    print('With an R^2 of %.2f%%' % (gf_res.r2))
     return gf_res

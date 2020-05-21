@@ -31,28 +31,36 @@
           <div class="body" role="main">
             
   <h1>Source code for trtoolbox.myglobalfit</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">odeint</span>
+<span></span><span class="c1"># TODO: fix overflow</span>
+<span class="c1"># TODO: GLA</span>
+<span class="c1"># TODO: check if back-reactions is nicely implemented</span>
+<span class="c1"># TODO: Chi Square</span>
+<span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">odeint</span>
 <span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">least_squares</span>
 <span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">nnls</span>
 <span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">lstsq</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">trtoolbox.mysvd</span> <span class="k">as</span> <span class="nn">mysvd</span>
+<span class="kn">from</span> <span class="nn">trtoolbox.plothelper</span> <span class="kn">import</span> <span class="n">PlotHelper</span>
+<span class="c1"># from scipy.special import logsumexp</span>
 
 
-<div class="viewcode-block" id="results"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.results">[docs]</a><span class="k">class</span> <span class="nc">results</span><span class="p">:</span>
+<div class="viewcode-block" id="Results"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.Results">[docs]</a><span class="k">class</span> <span class="nc">Results</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot; Object containing fit results.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    data : np.array</span>
-<span class="sd">        Data matrix subjected to fitting. </span>
+<span class="sd">        Data matrix subjected to fitting.</span>
 <span class="sd">    time : np.array</span>
 <span class="sd">        Time array.</span>
 <span class="sd">    wn : np.array</span>
 <span class="sd">        Wavenumber array.</span>
 <span class="sd">    offset : str</span>
 <span class="sd">        Default is *&#39;no&#39;*.</span>
+<span class="sd">    back : boolean</span>
+<span class="sd">        Determines if a model with back-reactions was used.</span>
 <span class="sd">    spectral_offset : np.array</span>
 <span class="sd">        *optional if offset was chosen*</span>
 <span class="sd">    method : str</span>
@@ -74,42 +82,152 @@
 <span class="sd">    fittraces : np.array</span>
 <span class="sd">        *optional if method=&#39;svd&#39; was chosen*. Fitted abstract time traces.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
-    
-<div class="viewcode-block" id="results.print_results"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.results.print_results">[docs]</a>    <span class="k">def</span> <span class="nf">print_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="s1">&#39;gf&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">=</span> <span class="nb">str</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">back</span> <span class="o">=</span> <span class="nb">bool</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spectral_offset</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="nb">str</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tcs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">das</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">profile</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">estimates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fitdata</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fittraces</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wn_name</span> <span class="o">=</span> <span class="s1">&#39;wavenumber&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wn_unit</span> <span class="o">=</span> <span class="s1">&#39;cm^{-1}&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_name</span> <span class="o">=</span> <span class="s1">&#39;time&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_unit</span> <span class="o">=</span> <span class="s1">&#39;s&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_phelper</span> <span class="o">=</span> <span class="n">PlotHelper</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Results.init_phelper"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.Results.init_phelper">[docs]</a>    <span class="k">def</span> <span class="nf">init_phelper</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_phelper</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_phelper</span> <span class="o">=</span> <span class="n">PlotHelper</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Results.print_results"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.Results.print_results">[docs]</a>    <span class="k">def</span> <span class="nf">print_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Prints time constants.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tcs</span><span class="p">)):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%e</span><span class="s1"> with variance of </span><span class="si">%e</span><span class="s1">&#39;</span> <span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tcs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span></div>
-    
-    
-<div class="viewcode-block" id="results.show_results"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.results.show_results">[docs]</a>    <span class="k">def</span> <span class="nf">show_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Plots the concentration profile, DAS, fitted data and fitted abstract time traces if method=&#39;svd&#39; was chosen.</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">back</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tcs</span><span class="p">)):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%i</span><span class="s1">. </span><span class="si">%e</span><span class="s1"> with variance of </span><span class="si">%e</span><span class="s1">&#39;</span>
+                      <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tcs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">back</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tcs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%i</span><span class="s1">. forward: </span><span class="si">%e</span><span class="s1">, backward: </span><span class="si">%e</span><span class="s1">&#39;</span>
+                      <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tcs</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">tcs</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span></div>
+
+<div class="viewcode-block" id="Results.plot_traces"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.Results.plot_traces">[docs]</a>    <span class="k">def</span> <span class="nf">plot_traces</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Plots interactive time traces.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        nothing</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_phelper</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_phelper</span><span class="o">.</span><span class="n">plot_traces</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Results.plot_spectra"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.Results.plot_spectra">[docs]</a>    <span class="k">def</span> <span class="nf">plot_spectra</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index_alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Plots interactive spectra.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        nothing</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_phelper</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_phelper</span><span class="o">.</span><span class="n">plot_spectra</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index_alpha</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Results.plot_profile"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.Results.plot_profile">[docs]</a>    <span class="k">def</span> <span class="nf">plot_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Plots concentration profile.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        nothing</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">num_exp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimates</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">cm</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s1">&#39;tab10&#39;</span><span class="p">)</span>
+        <span class="c1"># nice for choosing aequidistant colors</span>
+        <span class="c1"># cm = [cm(1.*i/num_exp) for i in range(num_exp)]</span>
+
         <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">*</span><span class="mi">100</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimates</span><span class="p">)[</span><span class="mi">1</span><span class="p">]):</span>
-            <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimates</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="mi">100</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_exp</span><span class="p">):</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span>
+                <span class="n">color</span><span class="o">=</span><span class="n">cm</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">estimates</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span>
+                <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                <span class="n">color</span><span class="o">=</span><span class="n">cm</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;concentration / %&#39;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;time / s&#39;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Concentration Profile&#39;</span><span class="p">)</span>
-        
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Concentration Profile&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Results.plot_das"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.Results.plot_das">[docs]</a>    <span class="k">def</span> <span class="nf">plot_das</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Plots decay associated spectra.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        nothing</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wn</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wn</span><span class="p">)],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="s1">&#39;_nolegend_&#39;</span>
+        <span class="p">)</span>
+        <span class="c1"># for choosing a specific colormap</span>
+        <span class="c1"># plt.gca().set_prop_cycle(color=cm)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wn</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">das</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wn</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">wn</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;absorbance / a.u.&#39;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;wavenumber / cm^{-1}&#39;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Decay Associated Spectra&#39;</span><span class="p">)</span>
-        
-        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wn</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fitdata</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;jet&#39;</span><span class="p">,</span> <span class="n">shading</span><span class="o">=</span><span class="s1">&#39;gouraud&#39;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;wavenumber / cm^{-1}&#39;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;time / s&#39;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Fitted Data&#39;</span><span class="p">)</span>
-        
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">das</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])])</span></div>
+
+<div class="viewcode-block" id="Results.plot_fitdata"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.Results.plot_fitdata">[docs]</a>    <span class="k">def</span> <span class="nf">plot_fitdata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Plots fitted data.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        nothing</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_phelper</span><span class="p">()</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Globally fitted data&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_phelper</span><span class="o">.</span><span class="n">plot_heatmap</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fitdata</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wn</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">newfig</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wn_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wn_unit</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_unit</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Results.plot_results"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.Results.plot_results">[docs]</a>    <span class="k">def</span> <span class="nf">plot_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Plots the concentration profile, DAS, fitted data and fitted</span>
+<span class="sd">            abstract time traces if method=&#39;svd&#39; was chosen.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        nothing</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_profile</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_das</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_fitdata</span><span class="p">()</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;svd&#39;</span><span class="p">:</span>
             <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Abstract time traces&#39;</span>
             <span class="n">nb_svds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">svdtraces</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
@@ -123,19 +241,79 @@
             <span class="n">r</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nb_plots</span><span class="p">):</span>
-                <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">nb_cols</span><span class="p">:</span>
-                    <span class="n">r</span> <span class="o">=</span> <span class="mi">1</span>
-                    <span class="n">offset</span> <span class="o">=</span> <span class="n">nb_cols</span>
-                <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nb_svds</span><span class="p">:</span>
-                    <span class="n">axs</span><span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">i</span><span class="o">-</span><span class="n">offset</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">svdtraces</span><span class="p">[</span><span class="n">i</span><span class="p">,:])</span>
-                    <span class="n">axs</span><span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">i</span><span class="o">-</span><span class="n">offset</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fittraces</span><span class="p">[</span><span class="n">i</span><span class="p">,:])</span>
-                    <span class="n">axs</span><span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">i</span><span class="o">-</span><span class="n">offset</span><span class="p">]</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">nb_cols</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nb_svds</span><span class="p">:</span>
+                        <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">svdtraces</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:])</span>
+                        <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fittraces</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:])</span>
+                        <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wn</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">spectral_offset</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">axs</span><span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">i</span><span class="o">-</span><span class="n">offset</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wn</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">spectral_offset</span><span class="p">)</span></div></div>
+                    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">nb_cols</span><span class="p">:</span>
+                        <span class="n">r</span> <span class="o">=</span> <span class="mi">1</span>
+                        <span class="n">offset</span> <span class="o">=</span> <span class="n">nb_cols</span>
+                    <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nb_svds</span><span class="p">:</span>
+                        <span class="n">axs</span><span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">i</span><span class="o">-</span><span class="n">offset</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">svdtraces</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:])</span>
+                        <span class="n">axs</span><span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">i</span><span class="o">-</span><span class="n">offset</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fittraces</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:])</span>
+                        <span class="n">axs</span><span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">i</span><span class="o">-</span><span class="n">offset</span><span class="p">]</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">axs</span><span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">i</span><span class="o">-</span><span class="n">offset</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wn</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">spectral_offset</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Results.clean"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.Results.clean">[docs]</a>    <span class="k">def</span> <span class="nf">clean</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Unfortunetaly, spyder messes up when the results</span>
+<span class="sd">            object is invesitgated via the variable explorer.</span>
+<span class="sd">            Running this method fixes this.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        nothing</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># self._phelper = PlotHelper()</span>
+        <span class="c1"># delattr(self, &#39;_phelper&#39;)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_phelper</span> <span class="o">=</span> <span class="p">[]</span></div></div>
 
 
-<div class="viewcode-block" id="model"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.model">[docs]</a><span class="k">def</span> <span class="nf">model</span><span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">ks</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Creates an array of differential equations according to a unidirectional sequential exponential model.</span>
+<div class="viewcode-block" id="check_input"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.check_input">[docs]</a><span class="k">def</span> <span class="nf">check_input</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">wn</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Ensures that all np.arrays have float dtype and that</span>
+<span class="sd">        time spans over columns, frequency over rows.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : np.array</span>
+<span class="sd">        Data matrix.</span>
+<span class="sd">    time : np.array</span>
+<span class="sd">        TIme array.</span>
+<span class="sd">    wn : np.array</span>
+<span class="sd">        Frequency array.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    nothing</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># check for right dtype</span>
+    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="s1">&#39;float&#39;</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">time</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="s1">&#39;float&#39;</span><span class="p">:</span>
+        <span class="n">time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">wn</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="s1">&#39;float&#39;</span><span class="p">:</span>
+        <span class="n">wn</span> <span class="o">=</span> <span class="n">wn</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span>
+
+    <span class="c1"># ensure time over columns and</span>
+    <span class="c1"># frequency over rows</span>
+    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">time</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">size</span><span class="p">))</span>
+    <span class="n">wn</span> <span class="o">=</span> <span class="n">wn</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">wn</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">wn</span></div>
+
+
+<div class="viewcode-block" id="model"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.model">[docs]</a><span class="k">def</span> <span class="nf">model</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">ks</span><span class="p">,</span> <span class="n">back</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Creates an array of differential equations according</span>
+<span class="sd">        to an unidirectional sequential exponential model.</span>
 <span class="sd">    S[0]/dt = -k0*S[0]</span>
 <span class="sd">    S[1]/dt = k0*S[0] - k1*S[1]</span>
 <span class="sd">    S[2]/dt = k1*S[1] - k2*S[2]</span>
@@ -149,20 +327,40 @@
 <span class="sd">        Time array.</span>
 <span class="sd">    ks : np.array</span>
 <span class="sd">        Decay rate constants for each species.</span>
+<span class="sd">    back : boolean</span>
+<span class="sd">        Determines if a model with back-reactions is used. If yes,</span>
+<span class="sd">        ks has to be a matrix with 1st column forward and</span>
+<span class="sd">        2nd column backward rate constants.</span>
+<span class="sd">        A -&gt; B with ks[i, 0]</span>
+<span class="sd">        A &lt;- B with ks[i, 1]</span>
+<span class="sd">        Therefore ks[-1] is not used.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    arr : np.array</span>
 <span class="sd">        Array containing the differential equations.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
-    <span class="n">arr</span> <span class="o">=</span> <span class="p">[</span> <span class="o">-</span><span class="n">ks</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">]</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ks</span><span class="p">)):</span>
-        <span class="n">arr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">ks</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">ks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">back</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="n">arr</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="n">ks</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ks</span><span class="p">)):</span>
+            <span class="n">arr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ks</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">ks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+    <span class="k">elif</span> <span class="n">back</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ks</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">ks</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">ks</span> <span class="o">=</span> <span class="n">ks</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">arr</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="n">ks</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">ks</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ks</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">arr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">ks</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">ks</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="o">-</span> <span class="n">ks</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">ks</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+                <span class="p">)</span>
+        <span class="n">arr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ks</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">s</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">ks</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">s</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">ks</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">s</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
     <span class="k">return</span> <span class="n">arr</span></div>
 
 
-<div class="viewcode-block" id="create_profile"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.create_profile">[docs]</a><span class="k">def</span> <span class="nf">create_profile</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">ks</span><span class="p">):</span>
+<div class="viewcode-block" id="create_profile"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.create_profile">[docs]</a><span class="k">def</span> <span class="nf">create_profile</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">ks</span><span class="p">,</span> <span class="n">back</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Computes a concentration profile according to the *model()* function.</span>
 
 <span class="sd">    Parameters</span>
@@ -177,14 +375,14 @@
 <span class="sd">    profile : np.array</span>
 <span class="sd">        Concentration profile matrix.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
+
     <span class="c1"># assuming a starting population of 100% for the first species</span>
-    <span class="n">S0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ks</span><span class="p">))</span>
-    <span class="n">S0</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-    
+    <span class="n">s0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ks</span><span class="p">))</span>
+    <span class="n">s0</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
     <span class="n">time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">profile</span> <span class="o">=</span> <span class="n">odeint</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">S0</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="p">(</span><span class="n">ks</span><span class="p">,))</span>
-    
+    <span class="n">profile</span> <span class="o">=</span> <span class="n">odeint</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">s0</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="p">(</span><span class="n">ks</span><span class="p">,</span> <span class="n">back</span><span class="p">))</span>
+
     <span class="k">return</span> <span class="n">profile</span></div>
 
 
@@ -194,7 +392,8 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    par : np.array</span>
-<span class="sd">        Parameter matrix. Last column contains rate constants. Remaining columns are prefactors (rate constants x SVD components)</span>
+<span class="sd">        Parameter matrix. Last column contains rate constants. Remaining</span>
+<span class="sd">        columns are prefactors (rate constants x SVD components)</span>
 <span class="sd">    time : np.array</span>
 <span class="sd">        Time array.</span>
 
@@ -203,13 +402,18 @@
 <span class="sd">    profile : np.array</span>
 <span class="sd">        Concentration profile matrix.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
-    <span class="n">nb_exps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">par</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># sometimes the sum over exponentials encounters an overflow.</span>
+    <span class="c1"># logsumexp encounters an invalid value error</span>
+    <span class="n">old_settings</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">seterr</span><span class="p">(</span><span class="nb">all</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+
     <span class="n">svds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">par</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span>
-    <span class="n">fit_tr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span> <span class="p">(</span><span class="n">svds</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">time</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span> <span class="p">)</span>
+    <span class="n">time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">size</span><span class="p">))</span>
+    <span class="n">fit_tr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">svds</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">size</span><span class="p">))</span>
     <span class="k">for</span> <span class="n">isvds</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">svds</span><span class="p">):</span>
-        <span class="n">individual</span> <span class="o">=</span> <span class="n">par</span><span class="p">[:,</span><span class="n">isvds</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">par</span><span class="p">[:,</span><span class="n">svds</span><span class="p">]</span><span class="o">*</span><span class="n">time</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
-        <span class="n">fit_tr</span><span class="p">[</span><span class="n">isvds</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">individual</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">individual</span> <span class="o">=</span> <span class="n">par</span><span class="p">[:,</span> <span class="n">isvds</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">par</span><span class="p">[:,</span> <span class="n">svds</span><span class="p">]</span><span class="o">*</span><span class="n">time</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+        <span class="n">fit_tr</span><span class="p">[</span><span class="n">isvds</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">individual</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">seterr</span><span class="p">(</span><span class="o">**</span><span class="n">old_settings</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">fit_tr</span></div>
 
 
@@ -228,12 +432,12 @@
 <span class="sd">    das : np.array</span>
 <span class="sd">        Decay associated spectra</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
+
     <span class="n">das</span> <span class="o">=</span> <span class="n">lstsq</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">das</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">T</span></div>
 
 
-<div class="viewcode-block" id="calculate_fitdata"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.calculate_fitdata">[docs]</a><span class="k">def</span> <span class="nf">calculate_fitdata</span><span class="p">(</span><span class="n">ks</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<div class="viewcode-block" id="calculate_fitdata"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.calculate_fitdata">[docs]</a><span class="k">def</span> <span class="nf">calculate_fitdata</span><span class="p">(</span><span class="n">ks</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">back</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Computes the final fitted dataset.</span>
 
 <span class="sd">    Parameters</span>
@@ -250,8 +454,8 @@
 <span class="sd">    fitdata : np.array</span>
 <span class="sd">        Fitted dataset.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
-    <span class="n">profile</span> <span class="o">=</span> <span class="n">create_profile</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">ks</span><span class="p">)</span>
+
+    <span class="n">profile</span> <span class="o">=</span> <span class="n">create_profile</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">ks</span><span class="p">,</span> <span class="n">back</span><span class="p">)</span>
     <span class="n">das</span> <span class="o">=</span> <span class="n">create_das</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
     <span class="n">fitdata</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">profile</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">fitdata</span></div>
@@ -272,13 +476,14 @@
 <span class="sd">    est : np.array</span>
 <span class="sd">        Contributions of the individual DAS.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">est</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">data</span><span class="p">)[</span><span class="mi">1</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">das</span><span class="p">)[</span><span class="mi">1</span><span class="p">]])</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">data</span><span class="p">)[</span><span class="mi">1</span><span class="p">]):</span>
-        <span class="n">est</span><span class="p">[</span><span class="n">i</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">nnls</span><span class="p">(</span><span class="n">das</span><span class="p">,</span> <span class="n">data</span><span class="p">[:,</span><span class="n">i</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">est</span></div>
+        <span class="n">est</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">nnls</span><span class="p">(</span><span class="n">das</span><span class="p">,</span> <span class="n">data</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">est</span><span class="o">.</span><span class="n">T</span></div>
 
 
-<div class="viewcode-block" id="opt_func_raw"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.opt_func_raw">[docs]</a><span class="k">def</span> <span class="nf">opt_func_raw</span><span class="p">(</span><span class="n">ks</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<div class="viewcode-block" id="opt_func_raw"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.opt_func_raw">[docs]</a><span class="k">def</span> <span class="nf">opt_func_raw</span><span class="p">(</span><span class="n">ks</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">back</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Optimization function for residuals of fitted data - input data.</span>
 
 <span class="sd">    Parameters</span>
@@ -295,14 +500,19 @@
 <span class="sd">    R : np.array</span>
 <span class="sd">        Flattened array of residuals.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
-    <span class="n">fitdata</span> <span class="o">=</span> <span class="n">calculate_fitdata</span><span class="p">(</span><span class="n">ks</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
-    <span class="n">R</span> <span class="o">=</span> <span class="n">fitdata</span> <span class="o">-</span> <span class="n">data</span>
-    <span class="k">return</span> <span class="n">R</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span></div>
+
+    <span class="c1"># deflattens array</span>
+    <span class="k">if</span> <span class="n">back</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">and</span> <span class="n">ks</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">ks</span> <span class="o">=</span> <span class="n">ks</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">ks</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">fitdata</span> <span class="o">=</span> <span class="n">calculate_fitdata</span><span class="p">(</span><span class="n">ks</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">back</span><span class="p">)</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">fitdata</span> <span class="o">-</span> <span class="n">data</span>
+    <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">**</span><span class="mi">2</span></div>
 
 
-<div class="viewcode-block" id="opt_func_est"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.opt_func_est">[docs]</a><span class="k">def</span> <span class="nf">opt_func_est</span><span class="p">(</span><span class="n">ks</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Optimization function for residuals of concentration profile and estimated contributions of DAS</span>
+<div class="viewcode-block" id="opt_func_est"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.opt_func_est">[docs]</a><span class="k">def</span> <span class="nf">opt_func_est</span><span class="p">(</span><span class="n">ks</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">back</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Optimization function for residuals of concentration profile</span>
+<span class="sd">        and estimated contributions of DAS</span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    ks : np.array</span>
@@ -317,16 +527,22 @@
 <span class="sd">    R : np.array</span>
 <span class="sd">        Flattened array of residuals.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
-    <span class="n">profile</span> <span class="o">=</span> <span class="n">create_profile</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">ks</span><span class="p">)</span>
+
+    <span class="c1"># deflattens array</span>
+    <span class="k">if</span> <span class="n">back</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">and</span> <span class="n">ks</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">ks</span> <span class="o">=</span> <span class="n">ks</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">ks</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">profile</span> <span class="o">=</span> <span class="n">create_profile</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">ks</span><span class="p">,</span> <span class="n">back</span><span class="p">)</span>
     <span class="n">das</span> <span class="o">=</span> <span class="n">create_das</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
     <span class="n">est</span> <span class="o">=</span> <span class="n">calculate_estimate</span><span class="p">(</span><span class="n">das</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
-    <span class="n">R</span> <span class="o">=</span> <span class="n">profile</span> <span class="o">-</span> <span class="n">est</span>
-    <span class="k">return</span> <span class="n">R</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span></div>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">profile</span><span class="o">.</span><span class="n">T</span> <span class="o">-</span> <span class="n">est</span>
+    <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">**</span><span class="mi">2</span></div>
 
 
-<div class="viewcode-block" id="opt_func_svd"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.opt_func_svd">[docs]</a><span class="k">def</span> <span class="nf">opt_func_svd</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">svdtraces</span><span class="p">,</span> <span class="n">nb_exps</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Optimization function for residuals of SVD abstract time traces - fitted traces.</span>
+<span class="c1"># TODO: check results for back-reactions</span>
+<div class="viewcode-block" id="opt_func_svd"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.opt_func_svd">[docs]</a><span class="k">def</span> <span class="nf">opt_func_svd</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">svdtraces</span><span class="p">,</span> <span class="n">nb_exps</span><span class="p">,</span> <span class="n">back</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Optimization function for residuals of SVD</span>
+<span class="sd">        abstract time traces - fitted traces.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -339,18 +555,19 @@
 <span class="sd">    svdtraces : np.array</span>
 <span class="sd">        SVD traces</span>
 <span class="sd">    nb_exps : int</span>
-<span class="sd">        Number of exponential decay processes. Needed for reshaping the flattened paramater array</span>
+<span class="sd">        Number of exponential decay processes. Needed for reshaping the</span>
+<span class="sd">        flattened paramater array.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    R : np.array</span>
 <span class="sd">        Flattened array of residuals.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
+
     <span class="n">svds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">svdtraces</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">par</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span> <span class="n">nb_exps</span><span class="p">,</span> <span class="n">svds</span><span class="o">+</span><span class="mi">1</span> <span class="p">)</span>
-    <span class="n">R</span> <span class="o">=</span> <span class="n">svdtraces</span> <span class="o">-</span> <span class="n">create_tr</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">R</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span></div>
+    <span class="n">par</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nb_exps</span><span class="p">,</span> <span class="n">svds</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">svdtraces</span> <span class="o">-</span> <span class="n">create_tr</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="calculate_sigma"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.calculate_sigma">[docs]</a><span class="k">def</span> <span class="nf">calculate_sigma</span><span class="p">(</span><span class="n">res</span><span class="p">):</span>
@@ -366,14 +583,23 @@
 <span class="sd">    var : np.array</span>
 <span class="sd">        Variance of the parameters.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
-    <span class="n">J</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">jac</span>
-    <span class="n">cov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">J</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">J</span><span class="p">))</span>
+
+    <span class="n">j</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">jac</span>
+    <span class="n">cov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">j</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">j</span><span class="p">))</span>
     <span class="n">var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diagonal</span><span class="p">(</span><span class="n">cov</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">var</span></div>
 
 
-<div class="viewcode-block" id="doglobalfit"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.doglobalfit">[docs]</a><span class="k">def</span> <span class="nf">doglobalfit</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">wn</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">tcs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;svd&#39;</span><span class="p">,</span> <span class="n">svds</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="doglobalfit"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.doglobalfit">[docs]</a><span class="k">def</span> <span class="nf">doglobalfit</span><span class="p">(</span>
+        <span class="n">data</span><span class="p">,</span>
+        <span class="n">time</span><span class="p">,</span>
+        <span class="n">wn</span><span class="p">,</span>
+        <span class="n">tcs</span><span class="p">,</span>
+        <span class="n">method</span><span class="o">=</span><span class="s1">&#39;svd&#39;</span><span class="p">,</span>
+        <span class="n">svds</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="n">offset</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">offindex</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">back</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Wrapper for global fit routine.</span>
 
 <span class="sd">    Parameters</span>
@@ -389,73 +615,110 @@
 <span class="sd">    method : np.array</span>
 <span class="sd">        Method for global fitting.</span>
 <span class="sd">        *raw* for fitting the residuals of fitted data and input data,</span>
-<span class="sd">        *est* for fitting the residuals between concentration profile and contributions of DAS,</span>
+<span class="sd">        *est* for fitting the residuals between concentration profile</span>
+<span class="sd">        and contributions of DAS,</span>
 <span class="sd">        *svd* for fitting the SVD time traces (default).</span>
 <span class="sd">    svd : int</span>
-<span class="sd">        Number of SVD components to be fitted. Default: 5</span>
+<span class="sd">        Number of SVD components to be fitted. Default: 5.</span>
 <span class="sd">    offset : boolean</span>
-<span class="sd">        Considering the last spectrum to be an offset. Default: False</span>
+<span class="sd">        Considering the last spectrum to be an offset. Default: False.</span>
+<span class="sd">    offindex : int</span>
+<span class="sd">        Index of spectral offset.</span>
+<span class="sd">    back : boolean</span>
+<span class="sd">        Determines if a model with back-reactions is used. If yes,</span>
+<span class="sd">        ks has to be a matrix with 1st column forward and</span>
+<span class="sd">        2nd column backward rate constants.</span>
+<span class="sd">        A -&gt; B with ks[i, 0]</span>
+<span class="sd">        A &lt;- B with ks[i, 1]</span>
+<span class="sd">        Therefore ks[-1] is not used.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    gf_res : *myglobalfit.results()*</span>
 <span class="sd">        Results objects.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
-    <span class="c1"># ensuring that time spans over columns</span>
-    <span class="k">if</span> <span class="n">time</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
-        <span class="n">wn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">wn</span><span class="p">)</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-    
+
+    <span class="n">data</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">wn</span> <span class="o">=</span> <span class="n">check_input</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">wn</span><span class="p">)</span>
+    <span class="n">tcs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">tcs</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tcs</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;I need at least two time constants.&#39;</span><span class="p">)</span>
         <span class="k">return</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">start_ks</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">tc</span> <span class="ow">in</span> <span class="n">tcs</span><span class="p">:</span>
-                <span class="n">start_ks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">tc</span><span class="p">))</span>
-                <span class="c1">#start_ks.append(float(tc))</span>
-        <span class="k">except</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">tc</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Just put numbers.&#39;</span><span class="p">)</span>
-            <span class="k">return</span>
-    <span class="n">start_ks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">start_ks</span><span class="p">)</span>
-    
-    <span class="c1"># TODO: make offset a fit!</span>
-    <span class="k">if</span> <span class="n">offset</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
-        <span class="n">spectral_offset</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">spectral_offset_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">spectral_offset</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">data</span><span class="p">)[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">-</span><span class="n">spectral_offset_matrix</span>
-    
-    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;raw&#39;</span><span class="p">:</span>
-        <span class="n">res</span> <span class="o">=</span> <span class="n">least_squares</span><span class="p">(</span><span class="n">opt_func_raw</span><span class="p">,</span> <span class="n">start_ks</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">data</span><span class="p">))</span>
-        <span class="n">ks</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span>
-        <span class="n">var</span> <span class="o">=</span> <span class="n">calculate_sigma</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;est&#39;</span><span class="p">:</span>
-        <span class="n">res</span> <span class="o">=</span> <span class="n">least_squares</span><span class="p">(</span><span class="n">opt_func_est</span><span class="p">,</span> <span class="n">start_ks</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">data</span><span class="p">))</span>
-        <span class="n">ks</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span>
-        <span class="n">var</span> <span class="o">=</span> <span class="n">calculate_sigma</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;svd&#39;</span><span class="p">:</span>
-        <span class="n">U</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">VT</span> <span class="o">=</span> <span class="n">mysvd</span><span class="o">.</span><span class="n">dosvd</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-        <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">U</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">VT</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
-        <span class="n">sigma</span><span class="p">[:</span><span class="n">U</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">:</span><span class="n">U</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-        <span class="n">svdtraces</span> <span class="o">=</span> <span class="n">sigma</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">svds</span><span class="p">,:]</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">VT</span><span class="p">)</span>
+        <span class="n">start_ks</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="n">tcs</span>
+        <span class="c1"># ensuring that start_ks has two columns if back is True</span>
+        <span class="k">if</span> <span class="n">back</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">and</span> <span class="n">start_ks</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">start_ks</span> <span class="o">=</span> <span class="n">start_ks</span><span class="o">.</span><span class="n">T</span>
 
-        <span class="n">nb_exps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">start_ks</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">pars</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span> <span class="p">(</span><span class="n">nb_exps</span><span class="p">,</span><span class="n">svds</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="p">)</span>
-        <span class="n">pars</span><span class="p">[:,</span><span class="mi">0</span><span class="p">:</span><span class="n">svds</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">svds</span><span class="p">,))</span><span class="o">*</span><span class="mf">0.02</span>
-        <span class="n">pars</span><span class="p">[:,</span><span class="n">svds</span><span class="p">]</span> <span class="o">=</span> <span class="n">start_ks</span><span class="o">.</span><span class="n">T</span>
-        <span class="n">res</span> <span class="o">=</span> <span class="n">least_squares</span><span class="p">(</span><span class="n">opt_func_svd</span><span class="p">,</span> <span class="n">pars</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">svdtraces</span><span class="p">,</span> <span class="n">nb_exps</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">offset</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">spectral_offset</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="n">offindex</span><span class="p">]</span>
+        <span class="n">spectral_offset_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span>
+            <span class="n">spectral_offset</span><span class="p">,</span>
+            <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">data</span><span class="p">)[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">-</span><span class="n">spectral_offset_matrix</span>
+
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;raw&#39;</span><span class="p">:</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">least_squares</span><span class="p">(</span>
+            <span class="n">opt_func_raw</span><span class="p">,</span>
+            <span class="n">start_ks</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
+            <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">back</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">back</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">ks</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span>
+            <span class="n">var</span> <span class="o">=</span> <span class="n">calculate_sigma</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">back</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">ks</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">start_ks</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+            <span class="c1"># TODO: variance singular!</span>
+            <span class="n">var</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;est&#39;</span><span class="p">:</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">least_squares</span><span class="p">(</span>
+            <span class="n">opt_func_est</span><span class="p">,</span>
+            <span class="n">start_ks</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
+            <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">back</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">back</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">ks</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span>
+            <span class="n">var</span> <span class="o">=</span> <span class="n">calculate_sigma</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">back</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">ks</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">start_ks</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+            <span class="c1"># TODO: variance singular!</span>
+            <span class="n">var</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;svd&#39;</span><span class="p">:</span>
+        <span class="n">u</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">vt</span> <span class="o">=</span> <span class="n">mysvd</span><span class="o">.</span><span class="n">wrapper_svd</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">u</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vt</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="n">sigma</span><span class="p">[:</span><span class="n">s</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">:</span><span class="n">s</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">svdtraces</span> <span class="o">=</span> <span class="n">sigma</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">svds</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">vt</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">back</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">nb_exps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">start_ks</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">pars</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">nb_exps</span><span class="p">,</span> <span class="n">svds</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+            <span class="n">pars</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="n">svds</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">svds</span><span class="p">,))</span><span class="o">*</span><span class="mf">0.02</span>
+            <span class="n">pars</span><span class="p">[:,</span> <span class="n">svds</span><span class="p">]</span> <span class="o">=</span> <span class="n">start_ks</span><span class="o">.</span><span class="n">T</span>
+        <span class="k">elif</span> <span class="n">back</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">nb_exps</span> <span class="o">=</span> <span class="n">start_ks</span><span class="o">.</span><span class="n">size</span>
+            <span class="n">pars</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">nb_exps</span><span class="p">,</span> <span class="n">svds</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+            <span class="n">pars</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="n">svds</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">svds</span><span class="p">,))</span><span class="o">*</span><span class="mf">0.02</span>
+            <span class="n">pars</span><span class="p">[:,</span> <span class="n">svds</span><span class="p">]</span> <span class="o">=</span> <span class="n">start_ks</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
+        <span class="n">res</span> <span class="o">=</span> <span class="n">least_squares</span><span class="p">(</span>
+            <span class="n">opt_func_svd</span><span class="p">,</span>
+            <span class="n">pars</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
+            <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">svdtraces</span><span class="p">,</span> <span class="n">nb_exps</span><span class="p">,</span> <span class="n">back</span><span class="p">)</span>
+        <span class="p">)</span>
         <span class="n">ks</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">svds</span><span class="p">::</span><span class="n">svds</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">back</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">ks</span> <span class="o">=</span> <span class="n">ks</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">start_ks</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
         <span class="n">var</span> <span class="o">=</span> <span class="n">calculate_sigma</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
         <span class="n">var</span> <span class="o">=</span> <span class="n">var</span><span class="p">[</span><span class="n">svds</span><span class="p">::</span><span class="n">svds</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
-    
+
     <span class="c1"># gathering results</span>
-    <span class="n">gf_res</span> <span class="o">=</span> <span class="n">results</span><span class="p">()</span>
+    <span class="n">gf_res</span> <span class="o">=</span> <span class="n">Results</span><span class="p">()</span>
     <span class="n">gf_res</span><span class="o">.</span><span class="n">offset</span> <span class="o">=</span> <span class="n">offset</span>
-    <span class="k">if</span> <span class="n">offset</span> <span class="o">==</span> <span class="s1">&#39;yes&#39;</span><span class="p">:</span>
+    <span class="n">gf_res</span><span class="o">.</span><span class="n">back</span> <span class="o">=</span> <span class="n">back</span>
+    <span class="k">if</span> <span class="n">offset</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
         <span class="n">gf_res</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">+</span><span class="n">spectral_offset_matrix</span>
         <span class="n">gf_res</span><span class="o">.</span><span class="n">spectral_offset</span> <span class="o">=</span> <span class="n">spectral_offset</span>
     <span class="k">else</span><span class="p">:</span>
@@ -464,17 +727,18 @@
     <span class="n">gf_res</span><span class="o">.</span><span class="n">wn</span> <span class="o">=</span> <span class="n">wn</span>
     <span class="n">gf_res</span><span class="o">.</span><span class="n">ks</span> <span class="o">=</span> <span class="n">ks</span>
     <span class="n">gf_res</span><span class="o">.</span><span class="n">tcs</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">ks</span>
-    <span class="n">gf_res</span><span class="o">.</span><span class="n">var</span> <span class="o">=</span> <span class="n">var</span>
-    <span class="n">gf_res</span><span class="o">.</span><span class="n">fitdata</span> <span class="o">=</span> <span class="n">calculate_fitdata</span><span class="p">(</span><span class="n">ks</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+    <span class="n">gf_res</span><span class="o">.</span><span class="n">var</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">var</span>
+    <span class="n">gf_res</span><span class="o">.</span><span class="n">fitdata</span> <span class="o">=</span> <span class="n">calculate_fitdata</span><span class="p">(</span><span class="n">ks</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">back</span><span class="p">)</span>
     <span class="n">gf_res</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="n">method</span>
-    <span class="n">gf_res</span><span class="o">.</span><span class="n">profile</span> <span class="o">=</span> <span class="n">create_profile</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">ks</span><span class="p">)</span>
+    <span class="n">gf_res</span><span class="o">.</span><span class="n">profile</span> <span class="o">=</span> <span class="n">create_profile</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">ks</span><span class="p">,</span> <span class="n">back</span><span class="p">)</span>
     <span class="n">gf_res</span><span class="o">.</span><span class="n">das</span> <span class="o">=</span> <span class="n">create_das</span><span class="p">(</span><span class="n">gf_res</span><span class="o">.</span><span class="n">profile</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
     <span class="n">gf_res</span><span class="o">.</span><span class="n">estimates</span> <span class="o">=</span> <span class="n">calculate_estimate</span><span class="p">(</span><span class="n">gf_res</span><span class="o">.</span><span class="n">das</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;svd&#39;</span><span class="p">:</span>
         <span class="n">gf_res</span><span class="o">.</span><span class="n">svdtraces</span> <span class="o">=</span> <span class="n">svdtraces</span>
-        <span class="n">par</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span> <span class="n">nb_exps</span><span class="p">,</span> <span class="n">svds</span><span class="o">+</span><span class="mi">1</span> <span class="p">)</span>
+        <span class="n">par</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nb_exps</span><span class="p">,</span> <span class="n">svds</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">gf_res</span><span class="o">.</span><span class="n">fittraces</span> <span class="o">=</span> <span class="n">create_tr</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span>
-    
+
+    <span class="n">gf_res</span><span class="o">.</span><span class="n">print_results</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">gf_res</span></div>
 </pre></div>
 

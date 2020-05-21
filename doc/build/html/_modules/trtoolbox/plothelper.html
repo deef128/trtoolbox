@@ -35,6 +35,7 @@
 <span class="kn">import</span> <span class="nn">matplotlib</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">matplotlib.widgets</span> <span class="kn">import</span> <span class="n">Slider</span>
+<span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="k">as</span> <span class="nn">colors</span>
 
 
 <div class="viewcode-block" id="PlotHelper"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.plothelper.PlotHelper">[docs]</a><span class="k">class</span> <span class="nc">PlotHelper</span><span class="p">():</span>
@@ -56,6 +57,13 @@
 <span class="sd">    l2_spectra : matplotlib.lines.Line2D</span>
 <span class="sd">    axtime : matplotlib.axes.Axes</span>
 <span class="sd">    stime : matplotlib.widgets.Slider</span>
+<span class="sd">    fig_lda = matplotlib.figure.Figure()</span>
+<span class="sd">    axs_lda = np.array</span>
+<span class="sd">    map_lda = matplotlib.contour.QuadContourSet</span>
+<span class="sd">    ldadata = matplotlib.collections.QuadMesh</span>
+<span class="sd">    l1_lda = matplotlib.lines.Line2D</span>
+<span class="sd">    axalpha = matplotlib.axes.Axes</span>
+<span class="sd">    salpha = matplotlib.widgets.Slider</span>
 <span class="sd">    axcolor : str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -68,11 +76,21 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">sfreq</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">widgets</span><span class="o">.</span><span class="n">Slider</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axfreq</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">fig_spectra</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">Figure</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ax_spectra</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fig_traces</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax_spectra</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fig_spectra</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">l1_spectra</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">Line2D</span><span class="p">([],</span> <span class="p">[])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">l2_spectra</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">Line2D</span><span class="p">([],</span> <span class="p">[])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">axtime</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fig_traces</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">stime</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">widgets</span><span class="o">.</span><span class="n">Slider</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axfreq</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">axtime</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fig_spectra</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stime</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">widgets</span><span class="o">.</span><span class="n">Slider</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axtime</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fig_lda</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">Figure</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">axs_lda</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="c1"># self.map_lda = matplotlib.contour.QuadContourSet(</span>
+        <span class="c1">#     matplotlib.axes.Axes(self.fig_lda, [0, 0, 0, 0])</span>
+        <span class="c1"># )</span>
+        <span class="c1"># self.ldadata = matplotlib.collections.QuadMesh()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">l1_lda</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">Line2D</span><span class="p">([],</span> <span class="p">[])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">axalpha</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fig_lda</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">salpha</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">widgets</span><span class="o">.</span><span class="n">Slider</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axalpha</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">axcolor</span> <span class="o">=</span> <span class="s1">&#39;lightgoldenrodyellow&#39;</span>
 
@@ -105,19 +123,84 @@
             <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">time</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">wn</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;jet&#39;</span><span class="p">,</span> <span class="n">shading</span><span class="o">=</span><span class="s1">&#39;gouraud&#39;</span><span class="p">)</span>
+            <span class="n">pc</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;jet&#39;</span><span class="p">,</span> <span class="n">shading</span><span class="o">=</span><span class="s1">&#39;gouraud&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span>
+            <span class="n">pc</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span>
                 <span class="n">time</span><span class="p">,</span>
                 <span class="n">wn</span><span class="p">,</span>
                 <span class="n">data</span><span class="p">,</span>
                 <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;jet&#39;</span><span class="p">,</span>
-                <span class="n">shading</span><span class="o">=</span><span class="s1">&#39;gouraud&#39;</span><span class="p">)</span>
+                <span class="n">shading</span><span class="o">=</span><span class="s1">&#39;gouraud&#39;</span><span class="p">,</span>
+                <span class="n">norm</span><span class="o">=</span><span class="n">MidpointNormalize</span><span class="p">(</span><span class="n">midpoint</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+                <span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span></div>
-        <span class="c1"># plt.show()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pc</span></div>
 
-<div class="viewcode-block" id="PlotHelper.plot_traces"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.plothelper.PlotHelper.plot_traces">[docs]</a>    <span class="k">def</span> <span class="nf">plot_traces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">res</span><span class="p">):</span>
+<div class="viewcode-block" id="PlotHelper.plot_contourmap"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.plothelper.PlotHelper.plot_contourmap">[docs]</a>    <span class="k">def</span> <span class="nf">plot_contourmap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">wn</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="n">newfig</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Plots a nice looking contourmap.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data : np.array</span>
+<span class="sd">            Data matrix subjected to SVD. Assuming *m x n* with m as frequency</span>
+<span class="sd">            and n as time. But it is actually not important.</span>
+<span class="sd">        time : np.array</span>
+<span class="sd">            Time array.</span>
+<span class="sd">        wn : np.array</span>
+<span class="sd">            Frequency array.</span>
+<span class="sd">        title : np.array</span>
+<span class="sd">            Title of plot. Default *data*.</span>
+<span class="sd">        newfig : boolean</span>
+<span class="sd">            Setting to False prevents the creation of a new figure.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        nothing</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">newfig</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="c1"># ensuring that time spans columns</span>
+        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">time</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="n">levels</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="k">if</span> <span class="n">time</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">wn</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">pc</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span>
+                <span class="n">data</span><span class="p">,</span>
+                <span class="n">levels</span><span class="o">=</span><span class="n">levels</span><span class="p">,</span>
+                <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;bwr&#39;</span><span class="p">,</span>
+                <span class="n">norm</span><span class="o">=</span><span class="n">MidpointNormalize</span><span class="p">(</span><span class="n">midpoint</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">pc</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span>
+                <span class="n">data</span><span class="p">,</span>
+                <span class="n">levels</span><span class="o">=</span><span class="n">levels</span><span class="p">,</span>
+                <span class="n">linewidths</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+                <span class="n">colors</span><span class="o">=</span><span class="s1">&#39;k&#39;</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pc</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
+                <span class="n">wn</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
+                <span class="n">data</span><span class="p">,</span>
+                <span class="n">levels</span><span class="o">=</span><span class="n">levels</span><span class="p">,</span>
+                <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;bwr&#39;</span><span class="p">,</span>
+                <span class="n">norm</span><span class="o">=</span><span class="n">MidpointNormalize</span><span class="p">(</span><span class="n">midpoint</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">pc</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
+                <span class="n">wn</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
+                <span class="n">data</span><span class="p">,</span>
+                <span class="n">levels</span><span class="o">=</span><span class="n">levels</span><span class="p">,</span>
+                <span class="n">linewidths</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+                <span class="n">colors</span><span class="o">=</span><span class="s1">&#39;k&#39;</span>
+            <span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pc</span></div>
+
+<div class="viewcode-block" id="PlotHelper.plot_traces"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.plothelper.PlotHelper.plot_traces">[docs]</a>    <span class="k">def</span> <span class="nf">plot_traces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">index_alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Plots interactive time traces.</span>
 
 <span class="sd">        Parameters</span>
@@ -132,16 +215,28 @@
 
         <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;svd&#39;</span><span class="p">:</span>
             <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Time traces</span><span class="se">\n</span><span class="s1">blue: Raw, red: SVD&#39;</span>
+            <span class="n">procdata</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">svddata</span>
         <span class="k">elif</span> <span class="n">res</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;lda&#39;</span><span class="p">:</span>
-            <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Time traces</span><span class="se">\n</span><span class="s1">blue: Raw, red: LDA&#39;</span>
+            <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;tik&#39;</span><span class="p">:</span>
+                <span class="n">index_alpha</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">get_alpha</span><span class="p">(</span><span class="n">index_alpha</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+                <span class="n">procdata</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">fitdata</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">index_alpha</span><span class="p">]</span>
+                <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Time traces</span><span class="se">\n</span><span class="s1">blue: Raw, red: LDA &#39;</span>\
+                        <span class="s1">&#39;(alpha=</span><span class="si">%.2f</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">res</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;tsvd&#39;</span><span class="p">:</span>
+                <span class="n">procdata</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">fitdata</span>
+                <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Time traces</span><span class="se">\n</span><span class="s1">blue: Raw, red: LDA &#39;</span>\
+                        <span class="s1">&#39;(TSVD truncated at </span><span class="si">%i</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">k</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">res</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;gf&#39;</span><span class="p">:</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Time traces</span><span class="se">\n</span><span class="s1">blue: Raw, red: Global Fit&#39;</span>
+            <span class="n">procdata</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">fitdata</span>
 
         <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
         <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="nb">min</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">time</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">time</span><span class="p">)],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
-        <span class="n">l1</span><span class="p">,</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:])</span>
-        <span class="n">l2</span><span class="p">,</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">svddata</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">time</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">time</span><span class="p">)],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+        <span class="n">l1</span><span class="p">,</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span> <span class="s1">&#39;o-&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+        <span class="n">l2</span><span class="p">,</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">procdata</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span> <span class="s1">&#39;o-&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">margins</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
@@ -150,19 +245,26 @@
             <span class="n">axfreq</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">wn_name</span><span class="p">,</span>
             <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">wn</span><span class="p">),</span>
             <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">wn</span><span class="p">),</span>
-            <span class="n">valinit</span><span class="o">=</span><span class="n">res</span><span class="o">.</span><span class="n">wn</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-            <span class="n">valstep</span><span class="o">=</span><span class="nb">abs</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">wn</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">res</span><span class="o">.</span><span class="n">wn</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">valinit</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">wn</span><span class="p">),</span>
+            <span class="n">valstep</span><span class="o">=</span><span class="nb">abs</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">wn</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">res</span><span class="o">.</span><span class="n">wn</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
             <span class="p">)</span>
         <span class="n">ymin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="p">:])</span>
         <span class="n">ymax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="p">:])</span>
         <span class="n">sc</span> <span class="o">=</span> <span class="mf">1.05</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">ymin</span><span class="o">*</span><span class="n">sc</span><span class="p">,</span> <span class="n">ymax</span><span class="o">*</span><span class="n">sc</span><span class="p">)</span>
 
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">time_name</span> <span class="o">+</span> <span class="s1">&#39; / &#39;</span> <span class="o">+</span> <span class="n">res</span><span class="o">.</span><span class="n">time_unit</span><span class="p">)</span>
+        <span class="n">time_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">time</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:])</span>
+        <span class="n">time_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">time</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:])</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="n">time_min</span><span class="p">,</span> <span class="n">time_max</span><span class="p">])</span>
+
         <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
             <span class="n">val</span> <span class="o">=</span> <span class="n">sfreq</span><span class="o">.</span><span class="n">val</span>
-            <span class="n">ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">wn</span> <span class="o">==</span> <span class="n">val</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="c1"># ind = np.where(res.wn == val)[0][0]</span>
+            <span class="n">ind</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">val</span> <span class="o">-</span> <span class="n">res</span><span class="o">.</span><span class="n">wn</span><span class="p">)</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
+            <span class="n">sfreq</span><span class="o">.</span><span class="n">valtext</span><span class="o">.</span><span class="n">set_text</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%.2f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">wn</span><span class="p">[</span><span class="n">ind</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
             <span class="n">l1</span><span class="o">.</span><span class="n">set_ydata</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">ind</span><span class="p">,</span> <span class="p">:])</span>
-            <span class="n">l2</span><span class="o">.</span><span class="n">set_ydata</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">svddata</span><span class="p">[</span><span class="n">ind</span><span class="p">,</span> <span class="p">:])</span>
+            <span class="n">l2</span><span class="o">.</span><span class="n">set_ydata</span><span class="p">(</span><span class="n">procdata</span><span class="p">[</span><span class="n">ind</span><span class="p">,</span> <span class="p">:])</span>
             <span class="c1"># ymin = min(res.data[ind, :])</span>
             <span class="c1"># ymax = max(res.data[ind, :])</span>
             <span class="c1"># sc = 1.1</span>
@@ -177,7 +279,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">axfreq</span> <span class="o">=</span> <span class="n">axfreq</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sfreq</span> <span class="o">=</span> <span class="n">sfreq</span></div>
 
-<div class="viewcode-block" id="PlotHelper.plot_spectra"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.plothelper.PlotHelper.plot_spectra">[docs]</a>    <span class="k">def</span> <span class="nf">plot_spectra</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">res</span><span class="p">):</span>
+<div class="viewcode-block" id="PlotHelper.plot_spectra"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.plothelper.PlotHelper.plot_spectra">[docs]</a>    <span class="k">def</span> <span class="nf">plot_spectra</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">index_alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">rev</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Plots interactive spectra.</span>
 
 <span class="sd">        Parameters</span>
@@ -191,26 +293,41 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;svd&#39;</span><span class="p">:</span>
-            <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Time traces</span><span class="se">\n</span><span class="s1">blue: Raw, red: SVD&#39;</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Spectra</span><span class="se">\n</span><span class="s1">blue: Raw, red: SVD&#39;</span>
+            <span class="n">procdata</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">svddata</span>
         <span class="k">elif</span> <span class="n">res</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;lda&#39;</span><span class="p">:</span>
-            <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Time traces</span><span class="se">\n</span><span class="s1">blue: Raw, red: LDA&#39;</span>
+            <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;tik&#39;</span><span class="p">:</span>
+                <span class="n">index_alpha</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">get_alpha</span><span class="p">(</span><span class="n">index_alpha</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+                <span class="n">procdata</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">fitdata</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">index_alpha</span><span class="p">]</span>
+                <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Spectra</span><span class="se">\n</span><span class="s1">blue: Raw, red: LDA &#39;</span>\
+                        <span class="s1">&#39;(alpha=</span><span class="si">%.2f</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">res</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;tsvd&#39;</span><span class="p">:</span>
+                <span class="n">procdata</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">fitdata</span>
+                <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Spectra</span><span class="se">\n</span><span class="s1">blue: Raw, red: LDA &#39;</span>\
+                        <span class="s1">&#39;(TSVD truncated at </span><span class="si">%i</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">k</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">res</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;gf&#39;</span><span class="p">:</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Spectra</span><span class="se">\n</span><span class="s1">blue: Raw, red: Global Fit&#39;</span>
+            <span class="n">procdata</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">fitdata</span>
 
         <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
         <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="nb">min</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">wn</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">wn</span><span class="p">)],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">wn</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">wn</span><span class="p">)],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
         <span class="n">l1</span><span class="p">,</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">wn</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;o-&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
-        <span class="n">l2</span><span class="p">,</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">wn</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">svddata</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;o-&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+        <span class="n">l2</span><span class="p">,</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">wn</span><span class="p">,</span> <span class="n">procdata</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;o-&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">margins</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="n">axtime</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">([</span><span class="mf">0.175</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.65</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">],</span> <span class="n">facecolor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">axcolor</span><span class="p">)</span>
+        <span class="n">time_log_dist</span> <span class="o">=</span> \
+            <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">time</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">])</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">time</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> \
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
         <span class="n">stime</span> <span class="o">=</span> <span class="n">Slider</span><span class="p">(</span>
             <span class="n">axtime</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">time_name</span><span class="p">,</span>
             <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">time</span><span class="p">)),</span>
             <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">time</span><span class="p">)),</span>
-            <span class="n">valinit</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">time</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span>
-            <span class="n">valstep</span><span class="o">=</span><span class="mf">0.01</span>
+            <span class="n">valinit</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">time</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])),</span>
+            <span class="n">valstep</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">time_log_dist</span><span class="p">)</span>
             <span class="p">)</span>
         <span class="n">stime</span><span class="o">.</span><span class="n">valtext</span><span class="o">.</span><span class="n">set_text</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%1.2e</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="n">stime</span><span class="o">.</span><span class="n">val</span><span class="p">))</span>
         <span class="n">ymin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="p">:])</span>
@@ -218,12 +335,20 @@
         <span class="n">sc</span> <span class="o">=</span> <span class="mf">1.05</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">ymin</span><span class="o">*</span><span class="n">sc</span><span class="p">,</span> <span class="n">ymax</span><span class="o">*</span><span class="n">sc</span><span class="p">)</span>
 
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">wn_name</span> <span class="o">+</span> <span class="s1">&#39; / &#39;</span> <span class="o">+</span> <span class="n">res</span><span class="o">.</span><span class="n">wn_unit</span><span class="p">)</span>
+        <span class="n">wn_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">wn</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="n">wn_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">wn</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">rev</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="n">wn_max</span><span class="p">,</span> <span class="n">wn_min</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="n">wn_min</span><span class="p">,</span> <span class="n">wn_max</span><span class="p">])</span>
+
         <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
             <span class="n">val</span> <span class="o">=</span> <span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="n">stime</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
             <span class="n">ind</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">val</span> <span class="o">-</span> <span class="n">res</span><span class="o">.</span><span class="n">time</span><span class="p">)</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
-            <span class="n">stime</span><span class="o">.</span><span class="n">valtext</span><span class="o">.</span><span class="n">set_text</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%1.2e</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">time</span><span class="p">[</span><span class="n">ind</span><span class="p">]))</span>
+            <span class="n">stime</span><span class="o">.</span><span class="n">valtext</span><span class="o">.</span><span class="n">set_text</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%1.2e</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">time</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">ind</span><span class="p">]))</span>
             <span class="n">l1</span><span class="o">.</span><span class="n">set_ydata</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="n">ind</span><span class="p">])</span>
-            <span class="n">l2</span><span class="o">.</span><span class="n">set_ydata</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">svddata</span><span class="p">[:,</span> <span class="n">ind</span><span class="p">])</span>
+            <span class="n">l2</span><span class="o">.</span><span class="n">set_ydata</span><span class="p">(</span><span class="n">procdata</span><span class="p">[:,</span> <span class="n">ind</span><span class="p">])</span>
             <span class="c1"># ymin = min(res.data[:, ind])</span>
             <span class="c1"># ymax = max(res.data[:, ind])</span>
             <span class="c1"># sc = 1.1</span>
@@ -236,7 +361,172 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">l1_spectra</span> <span class="o">=</span> <span class="n">l1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">l2_spectra</span> <span class="o">=</span> <span class="n">l2</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">axtime</span> <span class="o">=</span> <span class="n">axtime</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">stime</span> <span class="o">=</span> <span class="n">stime</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stime</span> <span class="o">=</span> <span class="n">stime</span></div>
+
+<div class="viewcode-block" id="PlotHelper.append_ldamap"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.plothelper.PlotHelper.append_ldamap">[docs]</a>    <span class="k">def</span> <span class="nf">append_ldamap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">index_alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Appends NaN values in order to expand the taus array</span>
+<span class="sd">            to match the time array span.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -------</span>
+<span class="sd">        res : mylda.Results</span>
+<span class="sd">            Contains the results to be plotted.</span>
+<span class="sd">        index_alpha : int</span>
+<span class="sd">            Index of selected alpha value.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        x_k : np.array</span>
+<span class="sd">            LDA map of selected alpha value.</span>
+<span class="sd">        taus : np.array</span>
+<span class="sd">            Extended taus array.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">index_alpha</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">x_k</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">x_k</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">index_alpha</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">index_alpha</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">x_k</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">x_k</span>
+        <span class="n">nanarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">wn</span><span class="p">))</span>
+        <span class="n">nanarray</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span>
+        <span class="n">nanarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">nanarray</span><span class="p">,</span> <span class="n">nanarray</span><span class="p">))</span>
+        <span class="n">taus</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">taus</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">time</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">taus</span><span class="p">):</span>
+            <span class="n">taus</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span>
+                <span class="n">taus</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">time</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">taus</span><span class="p">)</span><span class="o">*</span><span class="mf">0.99</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="n">x_k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">nanarray</span><span class="p">,</span> <span class="n">x_k</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">time</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">taus</span><span class="p">):</span>
+            <span class="n">taus</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">taus</span><span class="p">,</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">taus</span><span class="p">)</span><span class="o">*</span><span class="mf">1.01</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">time</span><span class="p">)])</span>
+            <span class="n">taus</span> <span class="o">=</span> <span class="n">taus</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">taus</span><span class="o">.</span><span class="n">size</span><span class="p">))</span>
+            <span class="n">x_k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">x_k</span><span class="p">,</span> <span class="n">nanarray</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">x_k</span><span class="p">,</span> <span class="n">taus</span></div>
+
+<div class="viewcode-block" id="PlotHelper.plot_ldaresults"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.plothelper.PlotHelper.plot_ldaresults">[docs]</a>    <span class="k">def</span> <span class="nf">plot_ldaresults</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">res</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Plots interactive resaults of LDA.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -------</span>
+<span class="sd">        res : mylda.Results</span>
+<span class="sd">            Contains the results to be plotted.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        nothing</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mf">6.4</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="mf">4.8</span><span class="o">*</span><span class="mi">2</span><span class="p">])</span>
+
+        <span class="c1"># original data</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_heatmap</span><span class="p">(</span>
+            <span class="n">res</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">wn</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Original Data&#39;</span><span class="p">,</span> <span class="n">newfig</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">wn_name</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">wn_unit</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">time_name</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">time_unit</span><span class="p">))</span>
+
+        <span class="c1"># plot lda data</span>
+        <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;tik&#39;</span><span class="p">:</span>
+            <span class="n">index_alpha</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">alphas</span><span class="o">.</span><span class="n">size</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span>
+            <span class="n">ldadata</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span>
+                <span class="n">res</span><span class="o">.</span><span class="n">dmatrix</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">x_k</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">index_alpha</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">res</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;tsvd&#39;</span><span class="p">:</span>
+            <span class="n">ldadata</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">dmatrix</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">x_k</span><span class="o">.</span><span class="n">T</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="n">pc_ldadata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_heatmap</span><span class="p">(</span>
+            <span class="n">ldadata</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">wn</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="s1">&#39;LDA data&#39;</span><span class="p">,</span> <span class="n">newfig</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">wn_name</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">wn_unit</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">time_name</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">time_unit</span><span class="p">))</span>
+
+        <span class="c1"># lda map</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;tik&#39;</span><span class="p">:</span>
+            <span class="n">x_k</span><span class="p">,</span> <span class="n">taus</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">append_ldamap</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">index_alpha</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">res</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;tsvd&#39;</span><span class="p">:</span>
+            <span class="n">x_k</span><span class="p">,</span> <span class="n">taus</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">append_ldamap</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+        <span class="n">pc_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_contourmap</span><span class="p">(</span>
+            <span class="n">x_k</span><span class="p">,</span> <span class="n">taus</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">wn</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="s1">&#39;LDA Map&#39;</span><span class="p">,</span> <span class="n">newfig</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">wn_name</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">wn_unit</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="s1">&#39;tau&#39;</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">time_unit</span><span class="p">))</span>
+
+        <span class="c1"># lcurve</span>
+        <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;tik&#39;</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">lcurve</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">res</span><span class="o">.</span><span class="n">lcurve</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;o-&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">l1</span><span class="p">,</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+                <span class="n">res</span><span class="o">.</span><span class="n">lcurve</span><span class="p">[</span><span class="n">index_alpha</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                <span class="n">res</span><span class="o">.</span><span class="n">lcurve</span><span class="p">[</span><span class="n">index_alpha</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                <span class="s1">&#39;o-&#39;</span><span class="p">,</span>
+                <span class="n">markersize</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span>
+            <span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;L-curve&#39;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="mf">0.125</span><span class="p">)</span>
+
+            <span class="n">axalpha</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span>
+                <span class="p">[</span><span class="mf">0.175</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.65</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">],</span>
+                <span class="n">facecolor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">axcolor</span>
+            <span class="p">)</span>
+            <span class="n">salpha</span> <span class="o">=</span> <span class="n">Slider</span><span class="p">(</span>
+                <span class="n">axalpha</span><span class="p">,</span> <span class="s1">&#39;Alpha&#39;</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">alphas</span><span class="p">)),</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">alphas</span><span class="p">)),</span>
+                <span class="n">valinit</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">alphas</span><span class="p">[</span><span class="n">index_alpha</span><span class="p">])),</span>
+                <span class="n">valstep</span><span class="o">=</span><span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">alphas</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">alphas</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+                <span class="p">)</span>
+            <span class="n">salpha</span><span class="o">.</span><span class="n">valtext</span><span class="o">.</span><span class="n">set_text</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%1.2e</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="n">salpha</span><span class="o">.</span><span class="n">val</span><span class="p">))</span>
+
+            <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="n">salpha</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+                <span class="n">ind</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">val</span> <span class="o">-</span> <span class="n">res</span><span class="o">.</span><span class="n">alphas</span><span class="p">)</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
+                <span class="n">salpha</span><span class="o">.</span><span class="n">valtext</span><span class="o">.</span><span class="n">set_text</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%1.2e</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">alphas</span><span class="p">[</span><span class="n">ind</span><span class="p">]))</span>
+                <span class="c1"># lda map</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">cla</span><span class="p">()</span>
+                <span class="n">x_k</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">append_ldamap</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">ind</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">plot_contourmap</span><span class="p">(</span>
+                    <span class="n">x_k</span><span class="p">,</span> <span class="n">taus</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">wn</span><span class="p">,</span>
+                    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;LDA Map&#39;</span><span class="p">,</span> <span class="n">newfig</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">wn_name</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">wn_unit</span><span class="p">))</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="s1">&#39;tau&#39;</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">time_unit</span><span class="p">))</span>
+                <span class="c1"># lda data</span>
+                <span class="n">ldadata</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">dmatrix</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">x_k</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">ind</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">))</span>
+                <span class="n">pc_ldadata</span><span class="o">.</span><span class="n">set_array</span><span class="p">(</span><span class="n">ldadata</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
+                <span class="c1"># lcurve</span>
+                <span class="n">l1</span><span class="o">.</span><span class="n">set_data</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">lcurve</span><span class="p">[</span><span class="n">ind</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">res</span><span class="o">.</span><span class="n">lcurve</span><span class="p">[</span><span class="n">ind</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+
+            <span class="n">salpha</span><span class="o">.</span><span class="n">on_changed</span><span class="p">(</span><span class="n">update</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">l1_lda</span> <span class="o">=</span> <span class="n">l1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">axalpha</span> <span class="o">=</span> <span class="n">axalpha</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">salpha</span> <span class="o">=</span> <span class="n">salpha</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fig_lda</span> <span class="o">=</span> <span class="n">fig</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">axs_lda</span> <span class="o">=</span> <span class="n">axs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">map_lda</span> <span class="o">=</span> <span class="n">pc_map</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ldadata</span> <span class="o">=</span> <span class="n">pc_ldadata</span></div></div>
+
+
+<div class="viewcode-block" id="MidpointNormalize"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.plothelper.MidpointNormalize">[docs]</a><span class="k">class</span> <span class="nc">MidpointNormalize</span><span class="p">(</span><span class="n">colors</span><span class="o">.</span><span class="n">Normalize</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Class for setting 0 as midpoint in the colormap.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    midpoint : float</span>
+<span class="sd">        Midpoint of colormap</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">midpoint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">clip</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">midpoint</span> <span class="o">=</span> <span class="n">midpoint</span>
+        <span class="n">colors</span><span class="o">.</span><span class="n">Normalize</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">,</span> <span class="n">clip</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">clip</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">vmin</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">midpoint</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vmax</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">masked_array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span></div>
 </pre></div>
 
           </div>
