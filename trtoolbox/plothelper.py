@@ -3,7 +3,6 @@ import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider
 import matplotlib.colors as colors
-from matplotlib import cm
 from mpl_toolkits import mplot3d
 
 
@@ -341,7 +340,7 @@ class PlotHelper():
 
         axtime = plt.axes([0.175, 0.05, 0.65, 0.03], facecolor=self.axcolor)
         time_log_dist = \
-            [np.log10(res.time[0, i]) - np.log10(res.time[0, i-1]) \
+            [np.log10(res.time[0, i]) - np.log10(res.time[0, i-1])
                 for i in range(1, res.time.shape[1])]
         stime = Slider(
             axtime, res.time_name,

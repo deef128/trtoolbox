@@ -340,7 +340,7 @@ class Results:
                     delimiter=',',
                     fmt='%.4e'
                 )
-        
+
         index_alpha, alpha = self.get_alpha(index_alpha, alpha)
         fitdata = self.fitdata[:, :, index_alpha]
         np.savetxt(
@@ -364,8 +364,10 @@ class Results:
         print('Writing 00_comments.txt')
         f.write('Created with trtoolbox\n' +
                 '----------------------\n\n' +
-                'Time constants limits: %.2e to %.2e\n' % (self.taus[0, 0], self.taus[0, -1]) +
-                'Alpha value limits: %.2f to %.2f\n' % (self.alphas[0], self.alphas[-1]) +
+                'Time constants limits: %.2e to %.2e\n'
+                % (self.taus[0, 0], self.taus[0, -1]) +
+                'Alpha value limits: %.2f to %.2f\n'
+                % (self.alphas[0], self.alphas[-1]) +
                 'Chosen alpha value: %.2f\n' % (alpha) +
                 '----------------------\n\n' +
                 'Files:\n' +
@@ -376,6 +378,7 @@ class Results:
                 '\t- taus.dat (Used time constants)'
                 )
         f.close()
+
 
 def check_input(data, time, wn):
     """ Ensures that all np.arrays have float dtype and that

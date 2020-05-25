@@ -174,11 +174,12 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.get_file_data()
 
     def get_file_time(self):
-        fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open time file', "ASCII files (*.dat *.txt)")
+        fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open time file')
         if os.path.exists(fname[0]):
             try:
                 self.data.time = np.loadtxt(fname[0], delimiter=',')
-                self.label_file_time.setText('Time file:\n' + fname[0].split(os.path.sep)[-1][-20:])
+                self.label_file_time.setText(
+                    'Time file:\n' + fname[0].split(os.path.sep)[-1][-20:])
             except ValueError:
                 print('Wrong file format.')
             os.chdir(os.path.dirname(fname[0]))
@@ -186,11 +187,15 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             print('File not found.')
 
     def get_file_wn(self):
-        fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open frequency file', "ASCII files (*.dat *.txt)")
+        fname = QtWidgets.QFileDialog.getOpenFileName(
+            self,
+            'Open frequency file'
+        )
         if os.path.exists(fname[0]):
             try:
                 self.data.wn = np.loadtxt(fname[0], delimiter=',')
-                self.label_file_freq.setText('Freq file:\n' + fname[0].split(os.path.sep)[-1][-20:])
+                self.label_file_freq.setText(
+                    'Freq file:\n' + fname[0].split(os.path.sep)[-1][-20:])
             except ValueError:
                 print('Wrong file format.')
             os.chdir(os.path.dirname(fname[0]))
@@ -198,11 +203,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             print('File not found.')
 
     def get_file_data(self):
-        fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open data file', "ASCII files (*.dat *.txt)")
+        fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open data file')
         if os.path.exists(fname[0]):
             try:
                 self.data.data = np.loadtxt(fname[0], delimiter=',')
-                self.label_file_data.setText('Data file:\n...' + fname[0][-45:])
+                self.label_file_data.setText(
+                    'Data file:\n...' + fname[0][-45:]
+                )
             except ValueError:
                 print('Wrong file format.')
             os.chdir(os.path.dirname(fname[0]))
@@ -215,18 +222,34 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.data.wn = np.loadtxt('./data/wavenumbers.dat', delimiter=',')
 
     def change_time(self):
-        text, ok = QtWidgets.QInputDialog.getText(self, 'Text Input Dialog', 'Enter time unit long:')
+        text, ok = QtWidgets.QInputDialog.getText(
+            self,
+            'Text Input Dialog',
+            'Enter time unit long:'
+        )
         if ok:
             self.data.time_name = text
-        text, ok = QtWidgets.QInputDialog.getText(self, 'Text Input Dialog', 'Enter time unit short:')
+        text, ok = QtWidgets.QInputDialog.getText(
+            self,
+            'Text Input Dialog',
+            'Enter time unit short:'
+        )
         if ok:
             self.data.time_unit = text
 
     def change_freq(self):
-        text, ok = QtWidgets.QInputDialog.getText(self, 'Text Input Dialog', 'Enter frequency unit long:')
+        text, ok = QtWidgets.QInputDialog.getText(
+            self,
+            'Text Input Dialog',
+            'Enter frequency unit long:'
+        )
         if ok:
             self.data.wn_name = text
-        text, ok = QtWidgets.QInputDialog.getText(self, 'Text Input Dialog', 'Enter frequency unit short:')
+        text, ok = QtWidgets.QInputDialog.getText(
+            self,
+            'Text Input Dialog',
+            'Enter frequency unit short:'
+        )
         if ok:
             self.data.wn_unit = text
 
@@ -234,7 +257,11 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         plt.close('all')
 
     def save_all(self):
-        basepath = str(QtWidgets.QFileDialog.getExistingDirectory(self, "Select Directory"))
+        basepath = str(
+            QtWidgets.QFileDialog.getExistingDirectory(
+                self, "Select Directory"
+            )
+        )
         if self.results.check_svd(silent=True) is True:
             path = os.path.join(basepath, 'svd')
             if os.path.exists(path) is False:
@@ -282,7 +309,12 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             return
 
         num = self.sb_svd_svd.value()
-        self.results.svd = mysvd.dosvd(self.data.data, self.data.time, self.data.wn, n=num)
+        self.results.svd = mysvd.dosvd(
+            self.data.data,
+            self.data.time,
+            self.data.wn,
+            n=num
+        )
         self.results.svd.plot_results()
         plt.show()
 
@@ -313,7 +345,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         except ValueError:
             print('Please provide valid string')
             return
-        self.results.gf = mygf.doglobalfit(self.data.data, self.data.time, self.data.wn, tcs, svds=num)
+        self.results.gf = mygf.doglobalfit(
+            self.data.data,
+            self.data.time,
+            self.data.wn,
+            tcs,
+            svds=num
+        )
         self.results.gf.plot_results()
         plt.show()
         self.print_results()
@@ -408,4 +446,4 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     window = MyApp()
     window.show()
-    sys.exit(app.exec_()) 
+    sys.exit(app.exec_())
