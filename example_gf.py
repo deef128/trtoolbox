@@ -11,10 +11,12 @@ time = np.loadtxt('./data/time.dat', delimiter=',')
 
 tcs = [1e-6, 1e-5, 1e-4, 1e-3, 1e-2]
 res = mygf.doglobalfit(data, time, wn, tcs, svds=5)
-res.plot_results()
+# res.plot_results()
 # res.plot_traces()
 # res.plot_spectra()
-plt.show()
+# plt.show()
+
+res.save_to_files('/home/dave/Downloads/gf')
 
 # for inspecting the Results class in Spyder after interactive plotting
 # please run the clean() method!

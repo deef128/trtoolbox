@@ -3,6 +3,8 @@ import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider
 import matplotlib.colors as colors
+from matplotlib import cm
+from mpl_toolkits import mplot3d
 
 
 class PlotHelper():
@@ -167,6 +169,55 @@ class PlotHelper():
         plt.title(title)
         return pc
 
+    # TODO: better 3D plot
+    def plot_surface(self, data, time, wn, title='data'):
+        """ Plots a nice looking heatmap.
+
+        Parameters
+        ----------
+        data : np.array
+            Data matrix subjected to SVD. Assuming *m x n* with m as frequency
+            and n as time. But it is actually not important.
+        time : np.array
+            Time array.
+        wn : np.array
+            Frequency array.
+        title : np.array
+            Title of plot. Default *data*.
+        newfig : boolean
+            Setting to False prevents the creation of a new figure.
+
+        Returns
+        -------
+        nothing
+        """
+
+        plt.figure()
+        ax = plt.axes(projection="3d")
+
+        # ensuring that time spans columns
+        if data.shape[1] != time.size:
+            data = np.transpose(data)
+
+        if time.size == 0 or wn.size == 0:
+            surf = plt.pcolormesh(data, cmap='jet', shading='gouraud')
+            plt.xscale('log')
+        else:
+            x, y = np.meshgrid(np.log10(time), wn)
+            surf = ax.plot_surface(
+                x,
+                y,
+                data,
+                cmap='jet',
+                lw=0.5,
+                antialiased=True,
+                shade=True,
+                rstride=7,
+                cstride=7
+                )
+        plt.title(title)
+        return surf
+
     def plot_traces(self, res, index_alpha=-1, alpha=-1):
         """ Plots interactive time traces.
 
@@ -196,14 +247,17 @@ class PlotHelper():
         elif res.type == 'gf':
             title = 'Time traces\nblue: Raw, red: Global Fit'
             procdata = res.fitdata
+        elif res.type == 'raw':
+            title = 'Raw data'
 
         fig = plt.figure()
         fig.suptitle(title)
         ax = fig.add_subplot(111)
         plt.subplots_adjust(bottom=0.2)
         plt.plot([np.min(res.time), np.max(res.time)], [0, 0], '--', color='k')
-        l1, = plt.plot(res.time.T, res.data[0, :], 'o-', markersize=4)
-        l2, = plt.plot(res.time.T, procdata[0, :], 'o-', markersize=4)
+        l1, = plt.plot(res.time.T, res.data[0, :], 'o-', markersize=2)
+        if res.type != 'raw':
+            l2, = plt.plot(res.time.T, procdata[0, :], 'o-', markersize=2)
         plt.xscale('log')
         ax.margins(x=0)
 
@@ -227,22 +281,19 @@ class PlotHelper():
 
         def update(val):
             val = sfreq.val
-            # ind = np.where(res.wn == val)[0][0]
             ind = abs(val - res.wn).argmin()
             sfreq.valtext.set_text('%.2f' % (res.wn[ind, 0]))
             l1.set_ydata(res.data[ind, :])
-            l2.set_ydata(procdata[ind, :])
-            # ymin = min(res.data[ind, :])
-            # ymax = max(res.data[ind, :])
-            # sc = 1.1
-            # ax.set_ylim(ymin*sc, ymax*sc)
+            if res.type != 'raw':
+                l2.set_ydata(procdata[ind, :])
 
         sfreq.on_changed(update)
 
         self.fig_traces = fig
         self.ax_traces = ax
         self.l1_traces = l1
-        self.l2_traces = l2
+        if res.type != 'raw':
+            self.l2_traces = l2
         self.axfreq = axfreq
         self.sfreq = sfreq
 
@@ -275,14 +326,17 @@ class PlotHelper():
         elif res.type == 'gf':
             title = 'Spectra\nblue: Raw, red: Global Fit'
             procdata = res.fitdata
+        elif res.type == 'raw':
+            title = 'Raw data'
 
         fig = plt.figure()
         fig.suptitle(title)
         ax = fig.add_subplot(111)
         plt.subplots_adjust(bottom=0.2)
         plt.plot([np.min(res.wn), np.max(res.wn)], [0, 0], '--', color='k')
-        l1, = plt.plot(res.wn, res.data[:, 0], 'o-', markersize=4)
-        l2, = plt.plot(res.wn, procdata[:, 0], 'o-', markersize=4)
+        l1, = plt.plot(res.wn, res.data[:, 0], 'o-', markersize=3)
+        if res.type != 'raw':
+            l2, = plt.plot(res.wn, procdata[:, 0], 'o-', markersize=3)
         ax.margins(x=0)
 
         axtime = plt.axes([0.175, 0.05, 0.65, 0.03], facecolor=self.axcolor)
@@ -315,18 +369,16 @@ class PlotHelper():
             ind = abs(val - res.time).argmin()
             stime.valtext.set_text('%1.2e' % (res.time[0, ind]))
             l1.set_ydata(res.data[:, ind])
-            l2.set_ydata(procdata[:, ind])
-            # ymin = min(res.data[:, ind])
-            # ymax = max(res.data[:, ind])
-            # sc = 1.1
-            # ax.set_ylim(ymin*sc, ymax*sc)
+            if res.type != 'raw':
+                l2.set_ydata(procdata[:, ind])
 
         stime.on_changed(update)
 
         self.fig_spectra = fig
         self.ax_spectra = ax
         self.l1_spectra = l1
-        self.l2_spectra = l2
+        if res.type != 'raw':
+            self.l2_spectra = l2
         self.axtime = axtime
         self.stime = stime
 

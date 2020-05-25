@@ -1,4 +1,5 @@
 # TODO: species associated spectra
+import os
 import numpy as np
 from scipy.linalg import svd
 from scipy.integrate import odeint
@@ -127,6 +128,76 @@ class Results:
 
         return x_k, title
 
+    def plot_fitdata(self, index_alpha=-1, alpha=-1):
+        """ Plots a nice looking heatmap of fitted data.
+
+        Parameters
+        ----------
+        index_alpha : int
+            Plot for specified alpha at index.
+        alpha : float
+            Plot for the closest alpha as specified.
+
+        Returns
+        -------
+        nothing
+        """
+
+        self.init_phelper()
+        if self.fitdata.size == 0:
+            print('First start a LDA.')
+            return
+
+        if len(self.fitdata.shape) == 3:
+            index_alpha, _ = self.get_alpha(index_alpha, alpha)
+            fitdata = self.fitdata[:, :, index_alpha]
+            title = 'Fitted data at alpha = %f' % (self.alphas[index_alpha])
+        else:
+            fitdata = self.fitdata
+            title = 'Fitted data using TSVD'
+
+        self._phelper.plot_heatmap(
+            fitdata, self.time, self.wn,
+            title=title, newfig=True)
+        plt.ylabel('%s / %s' % (self.wn_name, self.wn_unit))
+        plt.xlabel('%s / %s' % (self.time_name, self.time_unit))
+        plt.title(title)
+
+    def plot_fitdata_3d(self, index_alpha=-1, alpha=-1):
+        """ Plots a 3D surface of fitted data.
+
+        Parameters
+        ----------
+        index_alpha : int
+            Plot for specified alpha at index.
+        alpha : float
+            Plot for the closest alpha as specified.
+
+        Returns
+        -------
+        nothing
+        """
+
+        self.init_phelper()
+        if self.fitdata.size == 0:
+            print('First start a LDA.')
+            return
+
+        if len(self.fitdata.shape) == 3:
+            index_alpha, _ = self.get_alpha(index_alpha, alpha)
+            fitdata = self.fitdata[:, :, index_alpha]
+            title = 'Fitted data at alpha = %f' % (self.alphas[index_alpha])
+        else:
+            fitdata = self.fitdata
+            title = 'Fitted data using TSVD'
+
+        self._phelper.plot_surface(
+            fitdata, self.time, self.wn,
+            title=title)
+        plt.ylabel('%s / %s' % (self.wn_name, self.wn_unit))
+        plt.xlabel('%s / %s' % (self.time_name, self.time_unit))
+        plt.title(title)
+
     def plot_ldamap(self, index_alpha=-1, alpha=-1):
         """ Plots a nice looking contourmap.
 
@@ -148,7 +219,6 @@ class Results:
             return
         x_k, title = self.get_xk(index_alpha, alpha)
 
-        plt.figure()
         self._phelper.plot_contourmap(
             x_k, self.taus, self.wn,
             title=title, newfig=True)
@@ -235,6 +305,77 @@ class Results:
 
         self._phelper = []
 
+    def save_to_files(self, path, index_alpha=-1, alpha=-1):
+        """ Saving results to *.dat files.
+
+        Parameters
+        ----------
+        path : str
+            Path for saving.
+        index_alpha : int
+            Plot for specified alpha at index.
+        alpha : float
+            Plot for the closest alpha as specified.
+
+        Returns
+        -------
+        nothing
+        """
+
+        if os.path.exists(path) is False:
+            answer = input('Path not found. Create (y/n)? ')
+            if answer == 'y':
+                os.mkdir(path)
+            else:
+                return
+
+        to_save = ['alphas', 'data', 'lcruve', 'taus']
+        for k, i in vars(self).items():
+            if k in to_save:
+                fname = k + '.dat'
+                print('Writing ' + fname)
+                np.savetxt(
+                    os.path.join(path, fname),
+                    i,
+                    delimiter=',',
+                    fmt='%.4e'
+                )
+        
+        index_alpha, alpha = self.get_alpha(index_alpha, alpha)
+        fitdata = self.fitdata[:, :, index_alpha]
+        np.savetxt(
+                    os.path.join(path, fname),
+                    fitdata,
+                    delimiter=',',
+                    fmt='%.4e'
+                )
+
+        fname = 'ldamap.dat'
+        print('Writing ' + fname)
+        x_k, _ = self.get_xk(index_alpha, alpha)
+        np.savetxt(
+                    os.path.join(path, fname),
+                    x_k,
+                    delimiter=',',
+                    fmt='%.4e'
+                )
+
+        f = open(os.path.join(path, '00_comments.txt'), 'w')
+        print('Writing 00_comments.txt')
+        f.write('Created with trtoolbox\n' +
+                '----------------------\n\n' +
+                'Time constants limits: %.2e to %.2e\n' % (self.taus[0, 0], self.taus[0, -1]) +
+                'Alpha value limits: %.2f to %.2f\n' % (self.alphas[0], self.alphas[-1]) +
+                'Chosen alpha value: %.2f\n' % (alpha) +
+                '----------------------\n\n' +
+                'Files:\n' +
+                '\t- alphas.dat (Alpha values)\n' +
+                '\t- data.dat (Raw data)\n' +
+                '\t- fitdata.dat (Fitted data)\n' +
+                '\t- lcurve.dat (L-curve)\n' +
+                '\t- taus.dat (Used time constants)'
+                )
+        f.close()
 
 def check_input(data, time, wn):
     """ Ensures that all np.arrays have float dtype and that

@@ -1,4 +1,5 @@
 # TODO: plot abstract spectra and traces
+import os
 from scipy.linalg import svd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -86,7 +87,7 @@ class Results:
         plt.ylabel('%s / %s' % (self.wn_name, self.wn_unit))
         plt.xlabel('%s / %s' % (self.time_name, self.time_unit))
 
-    def plot_svddata(self):
+    def plot_svddata(self, newfig=False):
         """ Plots a nice looking heatmap of the reconstructed data.
 
         Returns
@@ -99,7 +100,24 @@ class Results:
         title = 'Reconstructed data using ' + nstr + ' components'
         self._phelper.plot_heatmap(
             self.svddata, self.time, self.wn,
-            title=title, newfig=False)
+            title=title, newfig=newfig)
+        plt.ylabel('%s / %s' % (self.wn_name, self.wn_unit))
+        plt.xlabel('%s / %s' % (self.time_name, self.time_unit))
+
+    def plot_svddata_3d(self):
+        """ Plots 3D surface of the reconstructed data.
+
+        Returns
+        -------
+        nothing
+        """
+
+        self.init_phelper()
+        nstr = str(self.n)
+        title = 'Reconstructed data using ' + nstr + ' components'
+        self._phelper.plot_surface(
+            self.svddata, self.time, self.wn,
+            title=title)
         plt.ylabel('%s / %s' % (self.wn_name, self.wn_unit))
         plt.xlabel('%s / %s' % (self.time_name, self.time_unit))
 
@@ -169,6 +187,50 @@ class Results:
         nothing
         """
         self._phelper = []
+
+    def save_to_files(self, path):
+        """ Saving results to *.dat files.
+
+        Parameters
+        ----------
+        path : str
+            Path for saving.
+
+        Returns
+        -------
+        nothing
+        """
+
+        if os.path.exists(path) is False:
+            answer = input('Path not found. Create (y/n)? ')
+            if answer == 'y':
+                os.mkdir(path)
+            else:
+                return
+
+        to_save = ['data', 'svddata']
+        for k, i in vars(self).items():
+            if k in to_save:
+                fname = k + '.dat'
+                print('Writing ' + fname)
+                np.savetxt(
+                    os.path.join(path, fname),
+                    i,
+                    delimiter=',',
+                    fmt='%.4e'
+                )
+
+        f = open(os.path.join(path, '00_comments.txt'), 'w')
+        print('Writing 00_comments.txt')
+        f.write('Created with trtoolbox\n' +
+                '----------------------\n\n' +
+                'SVD components used: %i\n' % (self.n) +
+                '----------------------\n\n' +
+                'Files:\n' +
+                '\t- data.dat (Raw data)\n' +
+                '\t- svddata.data (Reconstructed data)\n'
+                )
+        f.close()
 
 
 def check_input(data, time, wn):

@@ -14,8 +14,10 @@ time = np.loadtxt('./data/time.dat', delimiter=',')
 # wn = wn.reshape((wn.size, 1))
 # time = time.reshape((1, time.size))
 
-res = mysvd.dosvd(data, time, wn)
+res = mysvd.dosvd(data, time, wn, n=5)
 plt.show()
+
+res.save_to_files('/home/dave/Downloads/svd')
 
 # for inspecting the Results class in Spyder after interactive plotting
 # please run the clean() method!

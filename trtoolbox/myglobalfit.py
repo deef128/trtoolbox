@@ -1,6 +1,7 @@
 # TODO: fix overflow
 # TODO: GLA
 # TODO: check if back-reactions is nicely implemented
+import os
 from scipy.integrate import odeint
 from scipy.optimize import least_squares
 from scipy.optimize import nnls
@@ -47,6 +48,8 @@ class Results:
         Fitted dataset.
     fittraces : np.array
         *optional if method='svd' was chosen*. Fitted abstract time traces.
+    r2 : float
+        R^2 of fit.
     """
 
     def __init__(self):
@@ -66,6 +69,7 @@ class Results:
         self.estimates = np.array([])
         self.fitdata = np.array([])
         self.fittraces = np.array([])
+        self.r2 = 0
         self.wn_name = 'wavenumber'
         self.wn_unit = 'cm^{-1}'
         self.time_name = 'time'
@@ -182,6 +186,22 @@ class Results:
         plt.ylabel('%s / %s' % (self.wn_name, self.wn_unit))
         plt.xlabel('%s / %s' % (self.time_name, self.time_unit))
 
+    def plot_fitdata_3d(self):
+        """ 3D plot fitted data.
+
+        Returns
+        -------
+        nothing
+        """
+
+        self.init_phelper()
+        title = 'Globally fitted data'
+        self._phelper.plot_surface(
+            self.fitdata, self.time, self.wn,
+            title=title)
+        plt.ylabel('%s / %s' % (self.wn_name, self.wn_unit))
+        plt.xlabel('%s / %s' % (self.time_name, self.time_unit))
+
     def plot_results(self):
         """ Plots the concentration profile, DAS, fitted data and fitted
             abstract time traces if method='svd' was chosen.
@@ -240,6 +260,55 @@ class Results:
         # self._phelper = PlotHelper()
         # delattr(self, '_phelper')
         self._phelper = []
+
+    def save_to_files(self, path):
+        """ Saving results to *.dat files.
+
+        Parameters
+        ----------
+        path : str
+            Path for saving.
+
+        Returns
+        -------
+        nothing
+        """
+
+        if os.path.exists(path) is False:
+            answer = input('Path not found. Create (y/n)? ')
+            if answer == 'y':
+                os.mkdir(path)
+            else:
+                return
+
+        to_save = ['das', 'data', 'estimates', 'fitdata', 'profile']
+        for k, i in vars(self).items():
+            if k in to_save:
+                fname = k + '.dat'
+                print('Writing ' + fname)
+                np.savetxt(
+                    os.path.join(path, fname),
+                    i,
+                    delimiter=',',
+                    fmt='%.4e'
+                )
+
+        f = open(os.path.join(path, '00_comments.txt'), 'w')
+        print('Writing 00_comments.txt')
+        tcs_str = ['\n\t%.2e' % (i) for i in self.tcs]
+        f.write('Created with trtoolbox\n' +
+                '----------------------\n\n' +
+                'Obtained time constants: %s\n' % (''.join(tcs_str)) +
+                'R^2: %.2f%%\n' % (self.r2) +
+                '----------------------\n\n' +
+                'Files:\n' +
+                '\t- das.dat (Decay associated spectra)\n' +
+                '\t- data.dat (Raw data)\n' +
+                '\t- estimates.dat (Estimted DAS contributions)\n' +
+                '\t- fitdata.dat (Fitted data)\n' +
+                '\t- profile.dat (Obtained concentration profile)\n'
+                )
+        f.close()
 
 
 def check_input(data, time, wn):
