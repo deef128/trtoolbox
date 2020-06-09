@@ -1,4 +1,5 @@
 # TODO: species associated spectra
+# TODO: something against noise in the beginning
 import os
 import numpy as np
 from scipy.linalg import svd
@@ -15,7 +16,7 @@ class Results:
     type : str
         Results object type.
     data : np.array
-        Data matrix subjected to fitting.
+        Data matrix subjected to LDA.
     time : np.array
         Time array
     wn : np.array
@@ -44,7 +45,7 @@ class Results:
         Frequency unit (default cm^{-1}).
     t_name : str
         Time name (default: time).
-    time_uni : str
+    time_unit : str
         Time uni (default: s).
     """
 
@@ -69,6 +70,13 @@ class Results:
         self._phelper = PlotHelper()
 
     def init_phelper(self):
+        """ Initiliazes phelper after clean().
+
+        Returns
+        -------
+        nothing
+        """
+
         if type(self._phelper) == list:
             self._phelper = PlotHelper()
 
@@ -276,8 +284,8 @@ class Results:
         # )
         plt.plot(self.taus.T, np.sum(np.abs(x_k), axis=0))
         plt.xscale('log')
-        time_min = np.min(self.time[0, :])
-        time_max = np.max(self.time[0, :])
+        time_min = np.min(self.taus[0, :])
+        time_max = np.max(self.taus[0, :])
         plt.xlim([time_min, time_max])
         plt.xlabel('time constant / ' + self.time_unit)
         plt.title('Solution vector ' + title[8:])
@@ -295,7 +303,7 @@ class Results:
 
     def clean(self):
         """ Unfortunetaly, spyder messes up when the results
-            object is invesitgated via the variable explorer.
+            object is investigated via the variable explorer.
             Running this method fixes this.
 
         Returns

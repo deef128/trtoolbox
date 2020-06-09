@@ -7,8 +7,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>849</width>
-    <height>610</height>
+    <width>918</width>
+    <height>641</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,10 +18,10 @@
    <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
      <rect>
-      <x>210</x>
-      <y>60</y>
+      <x>290</x>
+      <y>70</y>
       <width>251</width>
-      <height>201</height>
+      <height>221</height>
      </rect>
     </property>
     <property name="font">
@@ -38,8 +38,8 @@
       <rect>
        <x>20</x>
        <y>40</y>
-       <width>113</width>
-       <height>110</height>
+       <width>102</width>
+       <height>131</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -55,10 +55,19 @@
         <property name="text">
          <string>SVD Components</string>
         </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
        </widget>
       </item>
       <item>
        <widget class="QSpinBox" name="sb_svd_svd">
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
         <property name="value">
          <number>5</number>
         </property>
@@ -123,61 +132,30 @@
       </item>
      </layout>
     </widget>
-   </widget>
-   <widget class="QWidget" name="verticalLayoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>100</y>
-      <width>82</width>
-      <height>143</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <widget class="QCheckBox" name="cb_data_contour">
-       <property name="text">
-        <string>Contour</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QCheckBox" name="cb_data_3d">
-       <property name="text">
-        <string>3D</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QCheckBox" name="cb_data_spectra">
-       <property name="text">
-        <string>Spectra</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QCheckBox" name="cb_data_traces">
-       <property name="text">
-        <string>Traces</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pb_data_plot">
-       <property name="text">
-        <string>Plot</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
+    <widget class="Line" name="line">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>40</y>
+       <width>31</width>
+       <height>161</height>
+      </rect>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+    </widget>
+    <zorder>line</zorder>
+    <zorder>verticalLayoutWidget_2</zorder>
+    <zorder>verticalLayoutWidget_3</zorder>
    </widget>
    <widget class="QGroupBox" name="groupBox_2">
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>60</y>
-      <width>121</width>
-      <height>201</height>
+      <y>70</y>
+      <width>251</width>
+      <height>221</height>
      </rect>
     </property>
     <property name="font">
@@ -189,14 +167,137 @@
     <property name="title">
      <string>Raw data</string>
     </property>
+    <widget class="QWidget" name="verticalLayoutWidget">
+     <property name="geometry">
+      <rect>
+       <x>150</x>
+       <y>40</y>
+       <width>82</width>
+       <height>143</height>
+      </rect>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QCheckBox" name="cb_data_contour">
+        <property name="text">
+         <string>Contour</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="cb_data_3d">
+        <property name="text">
+         <string>3D</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="cb_data_spectra">
+        <property name="text">
+         <string>Spectra</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="cb_data_traces">
+        <property name="text">
+         <string>Traces</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_data_plot">
+        <property name="text">
+         <string>Plot</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QWidget" name="verticalLayoutWidget_8">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>40</y>
+       <width>101</width>
+       <height>161</height>
+      </rect>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_9">
+      <item>
+       <widget class="QLabel" name="label_14">
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Truncation</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_15">
+        <property name="text">
+         <string>Frequency</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="txt_trunc_freq">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_16">
+        <property name="text">
+         <string>Time</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="txt_trunc_time">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_truncate">
+        <property name="text">
+         <string>Truncate</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+    <widget class="Line" name="line_3">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>40</y>
+       <width>31</width>
+       <height>161</height>
+      </rect>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+    </widget>
+    <zorder>line_3</zorder>
+    <zorder>verticalLayoutWidget</zorder>
+    <zorder>verticalLayoutWidget_8</zorder>
    </widget>
    <widget class="QWidget" name="verticalLayoutWidget_4">
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>330</y>
-      <width>111</width>
-      <height>191</height>
+      <y>350</y>
+      <width>121</width>
+      <height>201</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -209,6 +310,9 @@
      </item>
      <item>
       <widget class="QSpinBox" name="sb_gf_svd">
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
        <property name="value">
         <number>5</number>
        </property>
@@ -247,10 +351,10 @@ p, li { white-space: pre-wrap; }
    <widget class="QWidget" name="verticalLayoutWidget_5">
     <property name="geometry">
      <rect>
-      <x>170</x>
-      <y>330</y>
-      <width>171</width>
-      <height>191</height>
+      <x>180</x>
+      <y>350</y>
+      <width>221</width>
+      <height>201</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -270,9 +374,9 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>290</y>
-      <width>441</width>
-      <height>251</height>
+      <y>310</y>
+      <width>521</width>
+      <height>261</height>
      </rect>
     </property>
     <property name="title">
@@ -281,7 +385,7 @@ p, li { white-space: pre-wrap; }
     <widget class="QWidget" name="verticalLayoutWidget_6">
      <property name="geometry">
       <rect>
-       <x>340</x>
+       <x>420</x>
        <y>40</y>
        <width>85</width>
        <height>201</height>
@@ -339,11 +443,26 @@ p, li { white-space: pre-wrap; }
       </item>
      </layout>
     </widget>
+    <widget class="Line" name="line_2">
+     <property name="geometry">
+      <rect>
+       <x>380</x>
+       <y>40</y>
+       <width>41</width>
+       <height>201</height>
+      </rect>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+    </widget>
+    <zorder>line_2</zorder>
+    <zorder>verticalLayoutWidget_6</zorder>
    </widget>
    <widget class="QWidget" name="verticalLayoutWidget_7">
     <property name="geometry">
      <rect>
-      <x>690</x>
+      <x>760</x>
       <y>160</y>
       <width>118</width>
       <height>313</height>
@@ -432,7 +551,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QGroupBox" name="groupBox_4">
     <property name="geometry">
      <rect>
-      <x>490</x>
+      <x>560</x>
       <y>120</y>
       <width>331</width>
       <height>371</height>
@@ -535,7 +654,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="text">
-      <string>Bottom limit:</string>
+      <string>Lower limit:</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_6">
@@ -548,7 +667,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="text">
-      <string>Bottom limit:</string>
+      <string>Lower limit:</string>
      </property>
     </widget>
     <widget class="QPushButton" name="pb_lda_dolda">
@@ -654,12 +773,41 @@ p, li { white-space: pre-wrap; }
       <string>Upper limit:</string>
      </property>
     </widget>
+    <widget class="Line" name="line_4">
+     <property name="geometry">
+      <rect>
+       <x>170</x>
+       <y>40</y>
+       <width>31</width>
+       <height>311</height>
+      </rect>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+    </widget>
+    <zorder>line_4</zorder>
+    <zorder>label_9</zorder>
+    <zorder>label_8</zorder>
+    <zorder>txt_lda_tc_number</zorder>
+    <zorder>txt_lda_alpha_bottom</zorder>
+    <zorder>label_12</zorder>
+    <zorder>txt_lda_alpha_upper</zorder>
+    <zorder>label_10</zorder>
+    <zorder>label_6</zorder>
+    <zorder>pb_lda_dolda</zorder>
+    <zorder>txt_lda_alpha_number</zorder>
+    <zorder>label_5</zorder>
+    <zorder>label_11</zorder>
+    <zorder>txt_lda_tc_upper</zorder>
+    <zorder>txt_lda_tc_bottom</zorder>
+    <zorder>label_7</zorder>
    </widget>
    <widget class="QPushButton" name="pb_plt_close">
     <property name="geometry">
      <rect>
-      <x>729</x>
-      <y>40</y>
+      <x>790</x>
+      <y>10</y>
       <width>101</width>
       <height>25</height>
      </rect>
@@ -673,7 +821,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>311</width>
+      <width>361</width>
       <height>41</height>
      </rect>
     </property>
@@ -688,9 +836,9 @@ p, li { white-space: pre-wrap; }
    <widget class="QLabel" name="label_file_time">
     <property name="geometry">
      <rect>
-      <x>350</x>
+      <x>400</x>
       <y>10</y>
-      <width>161</width>
+      <width>171</width>
       <height>41</height>
      </rect>
     </property>
@@ -705,9 +853,9 @@ p, li { white-space: pre-wrap; }
    <widget class="QLabel" name="label_file_freq">
     <property name="geometry">
      <rect>
-      <x>530</x>
+      <x>600</x>
       <y>10</y>
-      <width>161</width>
+      <width>171</width>
       <height>41</height>
      </rect>
     </property>
@@ -722,8 +870,8 @@ p, li { white-space: pre-wrap; }
    <widget class="QPushButton" name="pb_save_results">
     <property name="geometry">
      <rect>
-      <x>720</x>
-      <y>520</y>
+      <x>790</x>
+      <y>540</y>
       <width>101</width>
       <height>25</height>
      </rect>
@@ -736,7 +884,6 @@ p, li { white-space: pre-wrap; }
    <zorder>groupBox_3</zorder>
    <zorder>groupBox</zorder>
    <zorder>groupBox_2</zorder>
-   <zorder>verticalLayoutWidget</zorder>
    <zorder>verticalLayoutWidget_4</zorder>
    <zorder>verticalLayoutWidget_5</zorder>
    <zorder>verticalLayoutWidget_7</zorder>
@@ -751,7 +898,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>849</width>
+     <width>918</width>
      <height>23</height>
     </rect>
    </property>

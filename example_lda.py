@@ -16,15 +16,15 @@ res = mylda.dolda(data, time, wn, tlimits=[1e-6, 1e-1], tnum=50)
 # res.plot_results()
 # res.plot_spectra(alpha=2)
 # res.plot_traces(alpha=2)
-# res.plot_solutionvector(alpha=1)
+res.plot_solutionvector(alpha=1)
 # res.plot_fitdata()
 
 # res2 = mylda.dolda(data, time, wn, seqmodel=True)
 # res2.plot_results()
 # 
-# plt.show()
+plt.show()
 
-res.save_to_files('/home/dave/Downloads/lda', alpha=1.1)
+# res.save_to_files('/home/dave/Downloads/lda', alpha=1.1)
 
 # for inspecting the Results class in Spyder after interactive plotting
 # please run the clean() method!

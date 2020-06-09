@@ -175,6 +175,8 @@ class DataGenerator:
         self.data = self.das.dot(self.profile.T)
         self.back = back
 
+    # TODO: number of datapoints missing
+    # TODO: num_das should be len(tcs) or len(tcs)/2 if back
     def gen_data(
             self,
             tlimit=[-7, -1],

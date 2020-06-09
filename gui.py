@@ -1,3 +1,4 @@
+# TODO: dgen integration
 import sys
 import os
 import numpy as np
@@ -12,6 +13,34 @@ Ui_MainWindow, QtBaseClass = uic.loadUiType("gui/interface.ui")
 
 
 class DataStorage():
+    """ Object for data storage.
+
+    Attributes
+    ----------
+    type : str
+        Object type.
+    _data : np.array
+        Data matrix.
+    _time : np.array
+        Time array.
+    _wn : np.array.
+        Frequency array.
+    _phelper : PlotHelper()
+        Contains plotting routines.
+    wn_name : str
+        Name of the frequency unit (default: wavenumber).
+    wn_unit : str
+        Frequency unit (default cm^{-1}).
+    t_name : str
+        Time name (default: time).
+    time_unit : str
+        Time uni (default: s).
+    trunc_time : list
+        Limits for truncation in time units
+    trunc.wn : list
+        Limit for truncation in freq units.
+    """
+
     def __init__(self):
         self.type = 'raw'
         self._data = np.array([])
@@ -22,38 +51,99 @@ class DataStorage():
         self.wn_unit = 'cm^{-1}'
         self.time_name = 'time'
         self.time_unit = 's'
+        self.trunc_time = list()
+        self.trunc_wn = list()
 
     @property
     def wn(self):
-        return self._wn
+        """ wn getter.
+
+        Returns
+        -------
+        Truncated freq array.
+        """
+
+        i1 = np.argmin(abs(self._wn - self.trunc_wn[0]))
+        i2 = np.argmin(abs(self._wn - self.trunc_wn[1]))
+        return self._wn[i1:i2+1, 0]
 
     @wn.setter
     def wn(self, val):
+        """ wn setter. It also sets trunc_wn to the min/max values.
+
+        Returns
+        -------
+        nothing
+        """
+
         if val.dtype != 'float':
             val = val.astype('float64')
         self._wn = val.reshape((val.size, 1))
+        self.trunc_wn = [np.min(self._wn), np.max(self._wn)]
 
     @property
     def time(self):
-        return self._time
+        """ time getter.
+
+        Returns
+        -------
+        Truncated time array.
+        """
+
+        i1 = np.argmin(abs(self._time - self.trunc_time[0]))
+        i2 = np.argmin(abs(self._time - self.trunc_time[1]))
+        return self._time[0, i1:i2+1]
 
     @time.setter
     def time(self, val):
+        """ time setter. It also sets trunc_time to the min/max values.
+
+        Returns
+        -------
+        nothing
+        """
+
         if val.dtype != 'float':
             val = val.astype('float64')
         self._time = val.reshape((1, val.size))
+        self.trunc_time = [np.min(self._time), np.max(self._time)]
 
     @property
     def data(self):
-        return self._data
+        """ data getter.
+
+        Returns
+        -------
+        Truncated data matrix.
+        """
+
+        w1 = np.argmin(abs(self._wn - self.trunc_wn[0]))
+        w2 = np.argmin(abs(self._wn - self.trunc_wn[1]))
+        t1 = np.argmin(abs(self._time - self.trunc_time[0]))
+        t2 = np.argmin(abs(self._time - self.trunc_time[1]))
+        return self._data[w1:w2+1, t1:t2+1]
 
     @data.setter
     def data(self, val):
+        """ data setter.
+
+        Returns
+        -------
+        nothing
+        """
+
         if val.dtype != 'float':
             val = val.astype('float64')
         self._data = val
 
     def check(self):
+        """ Checks if data was loaded.
+
+        Returns
+        -------
+        bool
+        """
+
         if self.data.size == 0 or self.time.size == 0 or self.wn.size == 0:
             self.error_dialog = QtWidgets.QErrorMessage()
             self.error_dialog.showMessage('Please load data.')
@@ -61,10 +151,24 @@ class DataStorage():
         return True
 
     def init_phelper(self):
+        """ Initiliazes phelper after clean().
+
+        Returns
+        -------
+        nothing
+        """
+
         if type(self._phelper) == list:
             self._phelper = PlotHelper()
 
     def plot_data(self):
+        """ Plots a contour map.
+
+        Returns
+        -------
+        nothing
+        """
+
         self.init_phelper()
         self._phelper.plot_heatmap(
             self.data, self.time, self.wn,
@@ -73,6 +177,13 @@ class DataStorage():
         plt.xlabel('%s / %s' % (self.time_name, self.time_unit))
 
     def plot_data_3d(self):
+        """ Plots a 3D map.
+
+        Returns
+        -------
+        nothing
+        """
+
         self.init_phelper()
         self._phelper.plot_surface(
             self.data, self.time, self.wn,
@@ -104,6 +215,20 @@ class DataStorage():
 
 
 class Results():
+    """ Container for results objects.
+
+    Attributes
+    ----------
+    _phelper : PlotHelper()
+        Contains plotting routines.
+    svd : mysvd.Results()
+        SVD results.
+    gf : mygf.Results()
+        Global Fit results.
+    lda : mylda.Results()
+        LDA results.
+    """
+
     def __init__(self):
         self._phelper = PlotHelper()
         self.svd = mysvd.Results()
@@ -111,6 +236,13 @@ class Results():
         self.lda = mylda.Results()
 
     def check_svd(self, silent=False):
+        """ Checks if SVD was performed.
+
+        Returns
+        -------
+        bool
+        """
+
         if self.svd.data.size == 0:
             self.error_dialog = QtWidgets.QErrorMessage()
             if silent is False:
@@ -119,6 +251,13 @@ class Results():
         return True
 
     def check_gf(self, silent=False):
+        """ Checks if global fit was performed.
+
+        Returns
+        -------
+        bool
+        """
+
         if self.gf.data.size == 0:
             self.error_dialog = QtWidgets.QErrorMessage()
             if silent is False:
@@ -127,6 +266,13 @@ class Results():
         return True
 
     def check_lda(self, silent=False):
+        """ Checks if LDA was performed.
+
+        Returns
+        -------
+        bool
+        """
+
         if self.lda.data.size == 0:
             self.error_dialog = QtWidgets.QErrorMessage()
             if silent is False:
@@ -156,6 +302,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pb_plt_close.clicked.connect(self.close_all)
         self.pb_save_results.clicked.connect(self.save_all)
 
+        self.pb_truncate.clicked.connect(self.truncate)
         self.pb_data_plot.clicked.connect(self.plot_raw)
 
         self.pb_dosvd.clicked.connect(self.dosvd)
@@ -169,17 +316,34 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pb_lda_plot.clicked.connect(self.plot_lda)
 
     def get_file_all(self):
+        """ Loads all files.
+
+        Returns
+        -------
+        nothing
+        """
+
         self.get_file_time()
         self.get_file_wn()
         self.get_file_data()
 
     def get_file_time(self):
+        """ Loads time file. Delimiter should be ','.
+             It also sets text into the truncation field.
+
+        Returns
+        -------
+        nothing
+        """
+
         fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open time file')
         if os.path.exists(fname[0]):
             try:
                 self.data.time = np.loadtxt(fname[0], delimiter=',')
                 self.label_file_time.setText(
-                    'Time file:\n' + fname[0].split(os.path.sep)[-1][-20:])
+                    'Time file:\n' + fname[0].split(os.path.sep)[-1][-22:])
+                str_trunc = '%.1e, %.1e' % (tuple(self.data.trunc_time))
+                self.txt_trunc_time.setText(str_trunc)
             except ValueError:
                 print('Wrong file format.')
             os.chdir(os.path.dirname(fname[0]))
@@ -187,6 +351,14 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             print('File not found.')
 
     def get_file_wn(self):
+        """ Loads frequency file. Delimiter should be ','.
+            It also sets text into the truncation field.
+
+        Returns
+        -------
+        nothing
+        """
+
         fname = QtWidgets.QFileDialog.getOpenFileName(
             self,
             'Open frequency file'
@@ -195,7 +367,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             try:
                 self.data.wn = np.loadtxt(fname[0], delimiter=',')
                 self.label_file_freq.setText(
-                    'Freq file:\n' + fname[0].split(os.path.sep)[-1][-20:])
+                    'Freq file:\n' + fname[0].split(os.path.sep)[-1][-22:])
+                str_trunc = '%.1f, %.1f' % (tuple(self.data.trunc_wn))
+                self.txt_trunc_freq.setText(str_trunc)
             except ValueError:
                 print('Wrong file format.')
             os.chdir(os.path.dirname(fname[0]))
@@ -203,12 +377,19 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             print('File not found.')
 
     def get_file_data(self):
+        """ Loads data file. Delimiter should be ','.
+
+        Returns
+        -------
+        nothing
+        """
+
         fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open data file')
         if os.path.exists(fname[0]):
             try:
                 self.data.data = np.loadtxt(fname[0], delimiter=',')
                 self.label_file_data.setText(
-                    'Data file:\n...' + fname[0][-45:]
+                    'Data file:\n...' + fname[0][-50:]
                 )
             except ValueError:
                 print('Wrong file format.')
@@ -222,6 +403,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.data.wn = np.loadtxt('./data/wavenumbers.dat', delimiter=',')
 
     def change_time(self):
+        """ Open dialogs to change time name und unit.
+
+        Returns
+        -------
+        nothing
+        """
+
         text, ok = QtWidgets.QInputDialog.getText(
             self,
             'Text Input Dialog',
@@ -238,6 +426,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.data.time_unit = text
 
     def change_freq(self):
+        """ Open dialogs to change frequency name und unit.
+
+        Returns
+        -------
+        nothing
+        """
+
         text, ok = QtWidgets.QInputDialog.getText(
             self,
             'Text Input Dialog',
@@ -254,9 +449,23 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.data.wn_unit = text
 
     def close_all(self):
+        """ Closes all plots.
+
+        Returns
+        -------
+        nothing
+        """
+
         plt.close('all')
 
     def save_all(self):
+        """ Saves results to ASCII files.
+
+        Returns
+        -------
+        nothing
+        """
+
         basepath = str(
             QtWidgets.QFileDialog.getExistingDirectory(
                 self, "Select Directory"
@@ -276,14 +485,34 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             try:
                 alpha = float(self.txt_lda_plot_alpha.text())
             except ValueError:
-                print('Please enter a valied float')
+                print('Please enter a valid float')
                 return
             path = os.path.join(basepath, 'lda')
             if os.path.exists(path) is False:
                 os.mkdir(path)
             self.results.lda.save_to_files(path, alpha=alpha)
 
+    def truncate(self):
+        """ Updates truncation values.
+
+        Returns
+        -------
+        nothing
+        """
+
+        trunc_time = self.txt_trunc_time.text()
+        self.data.trunc_time = [float(s) for s in trunc_time.split(',')]
+        trunc_wn = self.txt_trunc_freq.text()
+        self.data.trunc_wn = [float(s) for s in trunc_wn.split(',')]
+
     def plot_raw(self):
+        """ Plots raw data.
+
+        Returns
+        -------
+        nothing
+        """
+
         if self.data.check() is False:
             return
 
@@ -298,6 +527,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         plt.show()
 
     def show_svs(self):
+        """ Shows singular components.
+
+        Returns
+        -------
+        nothing
+        """
+
         if self.data.check() is False:
             return
 
@@ -305,6 +541,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         plt.show()
 
     def dosvd(self):
+        """ Performes SVD.
+
+        Returns
+        -------
+        nothing
+        """
+
         if self.data.check() is False:
             return
 
@@ -319,6 +562,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         plt.show()
 
     def plot_svd(self):
+        """ Plots SVD results.
+
+        Returns
+        -------
+        nothing
+        """
+
         if self.results.check_svd() is False:
             return
 
@@ -333,6 +583,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         plt.show()
 
     def dogf(self):
+        """ Performs global fitting.
+
+        Returns
+        -------
+        nothing
+        """
+
         if self.data.check() is False:
             return
 
@@ -357,6 +614,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.print_results()
 
     def print_results(self):
+        """ Prints results to text field.
+
+        Returns
+        -------
+        nothing
+        """
+
         str = ''
         for i, t in enumerate(self.results.gf.tcs):
             str = str + '%i. %.2e (%.2e)\n' % (i+1, t, self.results.gf.var[i])
@@ -365,6 +629,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.txt_gf_results.insertPlainText(str)
 
     def plot_gf(self):
+        """ Plots global fit results.
+
+        Returns
+        -------
+        nothing
+        """
+
         if self.results.check_gf() is False:
             return
 
@@ -383,6 +654,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         plt.show()
 
     def dolda(self):
+        """ Performs LDA.
+
+        Returns
+        -------
+        nothing
+        """
+
         if self.data.check() is False:
             return
 
@@ -413,6 +691,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         plt.show()
 
     def plot_lda(self):
+        """ Plots LDA results.
+
+        Returns
+        -------
+        nothing
+        """
+
         if self.results.check_lda() is False:
             return
 
