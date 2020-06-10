@@ -6,10 +6,13 @@ import matplotlib.pyplot as plt
 import trtoolbox.mysvd as mysvd
 import trtoolbox.myglobalfit as mygf
 import trtoolbox.mylda as mylda
+from test.data_generator import DataGenerator
 from trtoolbox.plothelper import PlotHelper
 from PyQt5 import QtWidgets, uic
 
 Ui_MainWindow, QtBaseClass = uic.loadUiType("gui/interface.ui")
+
+Ui_Dialog, _ = uic.loadUiType('gui/dialog_dgen.ui')
 
 
 class DataStorage():
@@ -281,6 +284,44 @@ class Results():
         return True
 
 
+class DgenDialog(QtWidgets.QDialog, Ui_Dialog):
+    def __init__(self):
+        super(DgenDialog, self).__init__()
+        self.setupUi(self)
+
+    def get_results(self):
+        if self.exec_() == QtWidgets.QDialog.Accepted:
+            # get all values
+            txt_time = self.txt_time.text()
+            txt_wn = self.txt_wn.text()
+            sb_taus = self.sb_taus.value()
+            sb_peaks = self.sb_peaks.value()
+            txt_width = self.txt_width.text()
+            txt_std = self.txt_std.text()
+            cb_diff = self.cb_diff.isChecked()
+            cb_back = self.cb_back.isChecked()
+            cb_noise = self.cb_noise.isChecked()
+            txt_noise = self.txt_noise.text()
+
+            dgen = DataGenerator()
+            dgen.gen_data(
+                tlimit=[int(s) for s in txt_time.split(',')],
+                wnlimit=[int(s) for s in txt_wn.split(',')],
+                tcs=[-1 for i in range(sb_taus)],
+                num_das=sb_taus,
+                num_peaks=sb_peaks,
+                avg_width=float(txt_width),
+                avg_std=float(txt_std),
+                diff=cb_diff,
+                back=cb_back,
+                noise=cb_noise,
+                noise_scale=float(txt_noise)
+            )
+            return dgen
+        else:
+            return None
+
+
 class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self):
         QtWidgets.QMainWindow.__init__(self)
@@ -397,10 +438,37 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         else:
             print('File not found.')
 
+    # TODO: print taus
     def get_test_data(self):
-        self.data.data = np.loadtxt('./data/data.dat', delimiter=',')
-        self.data.time = np.loadtxt('./data/time.dat', delimiter=',')
-        self.data.wn = np.loadtxt('./data/wavenumbers.dat', delimiter=',')
+        # self.data.data = np.loadtxt('./data/data.dat', delimiter=',')
+        # self.data.time = np.loadtxt('./data/time.dat', delimiter=',')
+        # self.data.wn = np.loadtxt('./data/wavenumbers.dat', delimiter=',')
+        d = DgenDialog()
+        dgen = d.get_results()
+        if dgen:
+            self.data.__init__()
+
+            self.data.time = dgen.time
+            str_trunc = '%.1e, %.1e' % (tuple(self.data.trunc_time))
+            self.txt_trunc_time.setText(str_trunc)
+            self.label_file_time.setText(
+                'Time file:\nGenerated time'
+            )
+
+            self.data.wn = dgen.wn
+            str_trunc = '%.1f, %.1f' % (tuple(self.data.trunc_wn))
+            self.txt_trunc_freq.setText(str_trunc)
+            self.label_file_freq.setText(
+                'Freq file:\nGenerated wavenumbers'
+            )
+
+            self.data.data = dgen.data
+            self.label_file_data.setText(
+                'Data file:\nGenerated data'
+            )
+
+            self.data.plot_data()
+            plt.show()
 
     def change_time(self):
         """ Open dialogs to change time name und unit.

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Dialog</class>
- <widget class="QDialog" name="Dialog">
+ <class>dialog_dgen</class>
+ <widget class="QDialog" name="dialog_dgen">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Data Generator</string>
   </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
@@ -42,14 +42,14 @@
     <item>
      <widget class="QLabel" name="label">
       <property name="text">
-       <string>Time limits</string>
+       <string>Time limits (exponents)</string>
       </property>
      </widget>
     </item>
     <item>
      <widget class="QLineEdit" name="txt_time">
       <property name="text">
-       <string>1e-7, 1e-1</string>
+       <string>-7, -1</string>
       </property>
      </widget>
     </item>
@@ -115,7 +115,11 @@
      </widget>
     </item>
     <item>
-     <widget class="QLineEdit" name="txt_width"/>
+     <widget class="QLineEdit" name="txt_width">
+      <property name="text">
+       <string>30</string>
+      </property>
+     </widget>
     </item>
     <item>
      <widget class="QLabel" name="label_5">
@@ -125,17 +129,24 @@
      </widget>
     </item>
     <item>
-     <widget class="QLineEdit" name="txt_std"/>
+     <widget class="QLineEdit" name="txt_std">
+      <property name="text">
+       <string>5</string>
+      </property>
+     </widget>
     </item>
     <item>
      <widget class="QCheckBox" name="cb_diff">
       <property name="text">
        <string>Difference spectra</string>
       </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
      </widget>
     </item>
     <item>
-     <widget class="QCheckBox" name="cb_diff_2">
+     <widget class="QCheckBox" name="cb_back">
       <property name="text">
        <string>Back reactions</string>
       </property>
@@ -149,7 +160,7 @@
      <x>220</x>
      <y>180</y>
      <width>151</width>
-     <height>51</height>
+     <height>57</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
@@ -157,6 +168,9 @@
      <widget class="QCheckBox" name="cb_noise">
       <property name="text">
        <string>Noise</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
       </property>
      </widget>
     </item>
@@ -168,7 +182,11 @@
      </widget>
     </item>
     <item row="1" column="1">
-     <widget class="QLineEdit" name="txt_noise"/>
+     <widget class="QLineEdit" name="txt_noise">
+      <property name="text">
+       <string>0.1</string>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -178,7 +196,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>Dialog</receiver>
+   <receiver>dialog_dgen</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -194,7 +212,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>Dialog</receiver>
+   <receiver>dialog_dgen</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

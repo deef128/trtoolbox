@@ -757,7 +757,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="text">
-      <string>1e-6</string>
+      <string>1e-7</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_7">
@@ -947,7 +947,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionLoad_test_data">
    <property name="text">
-    <string>Load test data</string>
+    <string>Generate data</string>
    </property>
   </action>
   <action name="actionTime_change">

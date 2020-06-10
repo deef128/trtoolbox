@@ -38,40 +38,42 @@ class DataGenerator:
         self.back = bool()
 
     # TODO: positve expos
-    def gen_time(self, tlimit=[-7, -1]):
+    def gen_time(self, tlimit=[-7, -1], number=500):
         """ Generates time array. Just works for negative exponents.
 
         Parameters
         ----------
         tlimit : list
             Limits for 10^x exponents
+        number : int
+            Number of time samples.
 
         Returns
         -------
         nothing
         """
 
-        self.time = np.logspace(tlimit[0], tlimit[1], 500)
+        self.time = np.logspace(tlimit[0], tlimit[1], number)
         self.time = self.time.reshape((1, self.time.size))
 
-    def gen_wn(self, wnlimit=[1500, 1700], number=-1):
-        """ Generates frequency array.
+    def gen_wn(self, wnlimit=[1500, 1700], step_size=-1):
+        """ Generates frequency array. Just takes ints.
 
         Parameters
         ----------
         wnlimit : list
             Limits for frequency arry.
-        number : int
-            Number of datapoints. Negative values denote a step size of 1.
+        step_size : int
+            Step size of datapoints. Negative values denote a step size of 1.
 
         Returns
         -------
         nothing
         """
 
-        if number <= 0:
-            number = max(wnlimit) - min(wnlimit) + 1
-        self.wn = np.linspace(min(wnlimit), max(wnlimit), num=number)
+        if step_size <= 0:
+            step_size = max(wnlimit) - min(wnlimit) + 1
+        self.wn = np.linspace(min(wnlimit), max(wnlimit), num=step_size)
         self.wn = self.wn.reshape((self.wn.size, 1))
 
     def gen_das(
