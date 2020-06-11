@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
     <title>trtoolbox.myglobalfit &#8212; Time-Resolved Toolbox  documentation</title>
@@ -34,7 +34,7 @@
 <span></span><span class="c1"># TODO: fix overflow</span>
 <span class="c1"># TODO: GLA</span>
 <span class="c1"># TODO: check if back-reactions is nicely implemented</span>
-<span class="c1"># TODO: Chi Square</span>
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">odeint</span>
 <span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">least_squares</span>
 <span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">nnls</span>
@@ -81,6 +81,8 @@
 <span class="sd">        Fitted dataset.</span>
 <span class="sd">    fittraces : np.array</span>
 <span class="sd">        *optional if method=&#39;svd&#39; was chosen*. Fitted abstract time traces.</span>
+<span class="sd">    r2 : float</span>
+<span class="sd">        R^2 of fit.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -100,6 +102,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">estimates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fitdata</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fittraces</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">r2</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wn_name</span> <span class="o">=</span> <span class="s1">&#39;wavenumber&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wn_unit</span> <span class="o">=</span> <span class="s1">&#39;cm^{-1}&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">time_name</span> <span class="o">=</span> <span class="s1">&#39;time&#39;</span>
@@ -107,6 +110,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_phelper</span> <span class="o">=</span> <span class="n">PlotHelper</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Results.init_phelper"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.Results.init_phelper">[docs]</a>    <span class="k">def</span> <span class="nf">init_phelper</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Initiliazes phelper after clean().</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_phelper</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_phelper</span> <span class="o">=</span> <span class="n">PlotHelper</span><span class="p">()</span></div>
 
@@ -114,6 +120,7 @@
         <span class="sd">&quot;&quot;&quot; Prints time constants.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Obtained time constants:&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">back</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tcs</span><span class="p">)):</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%i</span><span class="s1">. </span><span class="si">%e</span><span class="s1"> with variance of </span><span class="si">%e</span><span class="s1">&#39;</span>
@@ -125,10 +132,6 @@
 
 <div class="viewcode-block" id="Results.plot_traces"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.Results.plot_traces">[docs]</a>    <span class="k">def</span> <span class="nf">plot_traces</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Plots interactive time traces.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        nothing</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">init_phelper</span><span class="p">()</span>
@@ -136,10 +139,6 @@
 
 <div class="viewcode-block" id="Results.plot_spectra"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.Results.plot_spectra">[docs]</a>    <span class="k">def</span> <span class="nf">plot_spectra</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index_alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Plots interactive spectra.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        nothing</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">init_phelper</span><span class="p">()</span>
@@ -147,10 +146,6 @@
 
 <div class="viewcode-block" id="Results.plot_profile"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.Results.plot_profile">[docs]</a>    <span class="k">def</span> <span class="nf">plot_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Plots concentration profile.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        nothing</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">num_exp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimates</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
@@ -178,10 +173,6 @@
 
 <div class="viewcode-block" id="Results.plot_das"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.Results.plot_das">[docs]</a>    <span class="k">def</span> <span class="nf">plot_das</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Plots decay associated spectra.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        nothing</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
@@ -201,10 +192,6 @@
 
 <div class="viewcode-block" id="Results.plot_fitdata"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.Results.plot_fitdata">[docs]</a>    <span class="k">def</span> <span class="nf">plot_fitdata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Plots fitted data.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        nothing</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">init_phelper</span><span class="p">()</span>
@@ -215,13 +202,21 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wn_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wn_unit</span><span class="p">))</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_unit</span><span class="p">))</span></div>
 
+<div class="viewcode-block" id="Results.plot_fitdata_3d"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.Results.plot_fitdata_3d">[docs]</a>    <span class="k">def</span> <span class="nf">plot_fitdata_3d</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; 3D plot fitted data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_phelper</span><span class="p">()</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Globally fitted data&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_phelper</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fitdata</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wn</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wn_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wn_unit</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_unit</span><span class="p">))</span></div>
+
 <div class="viewcode-block" id="Results.plot_results"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.Results.plot_results">[docs]</a>    <span class="k">def</span> <span class="nf">plot_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Plots the concentration profile, DAS, fitted data and fitted</span>
 <span class="sd">            abstract time traces if method=&#39;svd&#39; was chosen.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        nothing</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">plot_profile</span><span class="p">()</span>
@@ -265,14 +260,55 @@
         <span class="sd">&quot;&quot;&quot; Unfortunetaly, spyder messes up when the results</span>
 <span class="sd">            object is invesitgated via the variable explorer.</span>
 <span class="sd">            Running this method fixes this.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        nothing</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># self._phelper = PlotHelper()</span>
         <span class="c1"># delattr(self, &#39;_phelper&#39;)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_phelper</span> <span class="o">=</span> <span class="p">[]</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_phelper</span> <span class="o">=</span> <span class="p">[]</span></div>
+
+<div class="viewcode-block" id="Results.save_to_files"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.Results.save_to_files">[docs]</a>    <span class="k">def</span> <span class="nf">save_to_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Saving results to .dat files.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        path : str</span>
+<span class="sd">            Path for saving.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">answer</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s1">&#39;Path not found. Create (y/n)? &#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">answer</span> <span class="o">==</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span>
+
+        <span class="n">to_save</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;das&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;estimates&#39;</span><span class="p">,</span> <span class="s1">&#39;fitdata&#39;</span><span class="p">,</span> <span class="s1">&#39;profile&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">to_save</span><span class="p">:</span>
+                <span class="n">fname</span> <span class="o">=</span> <span class="n">k</span> <span class="o">+</span> <span class="s1">&#39;.dat&#39;</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Writing &#39;</span> <span class="o">+</span> <span class="n">fname</span><span class="p">)</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">fname</span><span class="p">),</span>
+                    <span class="n">i</span><span class="p">,</span>
+                    <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span>
+                    <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%.4e</span><span class="s1">&#39;</span>
+                <span class="p">)</span>
+
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;00_comments.txt&#39;</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Writing 00_comments.txt&#39;</span><span class="p">)</span>
+        <span class="n">tcs_str</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;</span><span class="se">\n\t</span><span class="si">%.2e</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tcs</span><span class="p">]</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Created with trtoolbox</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span>
+                <span class="s1">&#39;----------------------</span><span class="se">\n\n</span><span class="s1">&#39;</span> <span class="o">+</span>
+                <span class="s1">&#39;Obtained time constants: </span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tcs_str</span><span class="p">))</span> <span class="o">+</span>
+                <span class="s1">&#39;R^2: </span><span class="si">%.2f%%</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r2</span><span class="p">)</span> <span class="o">+</span>
+                <span class="s1">&#39;----------------------</span><span class="se">\n\n</span><span class="s1">&#39;</span> <span class="o">+</span>
+                <span class="s1">&#39;Files:</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span>
+                <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">- das.dat (Decay associated spectra)</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span>
+                <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">- data.dat (Raw data)</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span>
+                <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">- estimates.dat (Estimted DAS contributions)</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span>
+                <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">- fitdata.dat (Fitted data)</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span>
+                <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">- profile.dat (Obtained concentration profile)</span><span class="se">\n</span><span class="s1">&#39;</span>
+                <span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div></div>
 
 
 <div class="viewcode-block" id="check_input"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.check_input">[docs]</a><span class="k">def</span> <span class="nf">check_input</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">wn</span><span class="p">):</span>
@@ -287,10 +323,6 @@
 <span class="sd">        TIme array.</span>
 <span class="sd">    wn : np.array</span>
 <span class="sd">        Frequency array.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    nothing</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># check for right dtype</span>
@@ -314,10 +346,10 @@
 <div class="viewcode-block" id="model"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.model">[docs]</a><span class="k">def</span> <span class="nf">model</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">ks</span><span class="p">,</span> <span class="n">back</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Creates an array of differential equations according</span>
 <span class="sd">        to an unidirectional sequential exponential model.</span>
-<span class="sd">    S[0]/dt = -k0*S[0]</span>
-<span class="sd">    S[1]/dt = k0*S[0] - k1*S[1]</span>
-<span class="sd">    S[2]/dt = k1*S[1] - k2*S[2]</span>
-<span class="sd">    and so on</span>
+<span class="sd">        S[0]/dt = -k0*S[0]</span>
+<span class="sd">        S[1]/dt = k0*S[0] - k1*S[1]</span>
+<span class="sd">        S[2]/dt = k1*S[1] - k2*S[2]</span>
+<span class="sd">        and so on</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -513,6 +545,7 @@
 <div class="viewcode-block" id="opt_func_est"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.opt_func_est">[docs]</a><span class="k">def</span> <span class="nf">opt_func_est</span><span class="p">(</span><span class="n">ks</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">back</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Optimization function for residuals of concentration profile</span>
 <span class="sd">        and estimated contributions of DAS</span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    ks : np.array</span>
@@ -590,6 +623,29 @@
     <span class="k">return</span> <span class="n">var</span></div>
 
 
+<div class="viewcode-block" id="calc_r2"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.calc_r2">[docs]</a><span class="k">def</span> <span class="nf">calc_r2</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">res</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Returns R^2 in percent.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : np.array</span>
+<span class="sd">        Data matrix.</span>
+<span class="sd">    res : *scipy.optimize.OptimizeResult*</span>
+<span class="sd">        Results object obtained with least squares.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    r2 : float</span>
+<span class="sd">        R^2.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">ss_tot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">data</span> <span class="o">-</span> <span class="n">mean</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">ss_res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">fun</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">r2</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">ss_res</span><span class="o">/</span><span class="n">ss_tot</span>
+    <span class="k">return</span> <span class="n">r2</span><span class="o">*</span><span class="mi">100</span></div>
+
+
 <div class="viewcode-block" id="doglobalfit"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.myglobalfit.doglobalfit">[docs]</a><span class="k">def</span> <span class="nf">doglobalfit</span><span class="p">(</span>
         <span class="n">data</span><span class="p">,</span>
         <span class="n">time</span><span class="p">,</span>
@@ -634,7 +690,7 @@
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    gf_res : *myglobalfit.results()*</span>
+<span class="sd">    gf_res : *myglobalfit.results*</span>
 <span class="sd">        Results objects.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -733,12 +789,14 @@
     <span class="n">gf_res</span><span class="o">.</span><span class="n">profile</span> <span class="o">=</span> <span class="n">create_profile</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">ks</span><span class="p">,</span> <span class="n">back</span><span class="p">)</span>
     <span class="n">gf_res</span><span class="o">.</span><span class="n">das</span> <span class="o">=</span> <span class="n">create_das</span><span class="p">(</span><span class="n">gf_res</span><span class="o">.</span><span class="n">profile</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
     <span class="n">gf_res</span><span class="o">.</span><span class="n">estimates</span> <span class="o">=</span> <span class="n">calculate_estimate</span><span class="p">(</span><span class="n">gf_res</span><span class="o">.</span><span class="n">das</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+    <span class="n">gf_res</span><span class="o">.</span><span class="n">r2</span> <span class="o">=</span> <span class="n">calc_r2</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;svd&#39;</span><span class="p">:</span>
         <span class="n">gf_res</span><span class="o">.</span><span class="n">svdtraces</span> <span class="o">=</span> <span class="n">svdtraces</span>
         <span class="n">par</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nb_exps</span><span class="p">,</span> <span class="n">svds</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">gf_res</span><span class="o">.</span><span class="n">fittraces</span> <span class="o">=</span> <span class="n">create_tr</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span>
 
     <span class="n">gf_res</span><span class="o">.</span><span class="n">print_results</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;With an R^2 of </span><span class="si">%.2f%%</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">gf_res</span><span class="o">.</span><span class="n">r2</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">gf_res</span></div>
 </pre></div>
 
@@ -794,7 +852,7 @@
       &copy;2020, David Ehrenberg.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

@@ -1,4 +1,3 @@
-# TODO: dgen integration
 import sys
 import os
 import numpy as np
@@ -63,7 +62,8 @@ class DataStorage():
 
         Returns
         -------
-        Truncated freq array.
+        self._wn : np.array
+            Truncated freq array.
         """
 
         i1 = np.argmin(abs(self._wn - self.trunc_wn[0]))
@@ -73,10 +73,6 @@ class DataStorage():
     @wn.setter
     def wn(self, val):
         """ wn setter. It also sets trunc_wn to the min/max values.
-
-        Returns
-        -------
-        nothing
         """
 
         if val.dtype != 'float':
@@ -90,7 +86,8 @@ class DataStorage():
 
         Returns
         -------
-        Truncated time array.
+        self._time : np.array
+            Truncated time array.
         """
 
         i1 = np.argmin(abs(self._time - self.trunc_time[0]))
@@ -100,10 +97,6 @@ class DataStorage():
     @time.setter
     def time(self, val):
         """ time setter. It also sets trunc_time to the min/max values.
-
-        Returns
-        -------
-        nothing
         """
 
         if val.dtype != 'float':
@@ -117,7 +110,8 @@ class DataStorage():
 
         Returns
         -------
-        Truncated data matrix.
+        self._data : np.array
+            Truncated data matrix.
         """
 
         w1 = np.argmin(abs(self._wn - self.trunc_wn[0]))
@@ -129,10 +123,6 @@ class DataStorage():
     @data.setter
     def data(self, val):
         """ data setter.
-
-        Returns
-        -------
-        nothing
         """
 
         if val.dtype != 'float':
@@ -140,11 +130,12 @@ class DataStorage():
         self._data = val
 
     def check(self):
-        """ Checks if data was loaded.
+        """Checks if data was loaded
 
         Returns
         -------
-        bool
+        bool : bool
+            True if data was loaded
         """
 
         if self.data.size == 0 or self.time.size == 0 or self.wn.size == 0:
@@ -155,10 +146,6 @@ class DataStorage():
 
     def init_phelper(self):
         """ Initiliazes phelper after clean().
-
-        Returns
-        -------
-        nothing
         """
 
         if type(self._phelper) == list:
@@ -166,10 +153,6 @@ class DataStorage():
 
     def plot_data(self):
         """ Plots a contour map.
-
-        Returns
-        -------
-        nothing
         """
 
         self.init_phelper()
@@ -181,10 +164,6 @@ class DataStorage():
 
     def plot_data_3d(self):
         """ Plots a 3D map.
-
-        Returns
-        -------
-        nothing
         """
 
         self.init_phelper()
@@ -196,10 +175,6 @@ class DataStorage():
 
     def plot_spectra(self):
         """ Plots interactive spectra.
-
-        Returns
-        -------
-        nothing
         """
 
         self.init_phelper()
@@ -207,10 +182,6 @@ class DataStorage():
 
     def plot_traces(self):
         """ Plots interactive time traces.
-
-        Returns
-        -------
-        nothing
         """
 
         self.init_phelper()
@@ -239,11 +210,17 @@ class Results():
         self.lda = mylda.Results()
 
     def check_svd(self, silent=False):
-        """ Checks if SVD was performed.
+        """Checks if SVD was performed
+
+        Parameters
+        ----------
+        silent : bool, optional
+            Error message supressed if True, by default False
 
         Returns
         -------
-        bool
+        bool : bool
+            True if SVD was performed
         """
 
         if self.svd.data.size == 0:
@@ -254,11 +231,17 @@ class Results():
         return True
 
     def check_gf(self, silent=False):
-        """ Checks if global fit was performed.
+        """Checks if global fitting was performed
+
+        Parameters
+        ----------
+        silent : bool, optional
+            Error message supressed if True, by default False
 
         Returns
         -------
-        bool
+        bool : bool
+            True if global fitting was performed
         """
 
         if self.gf.data.size == 0:
@@ -269,11 +252,17 @@ class Results():
         return True
 
     def check_lda(self, silent=False):
-        """ Checks if LDA was performed.
+        """Checks if LDA was performed
+
+        Parameters
+        ----------
+        silent : bool, optional
+            Error message supressed if True, by default False
 
         Returns
         -------
-        bool
+        bool : bool
+            True if LDA was performed
         """
 
         if self.lda.data.size == 0:
@@ -308,7 +297,6 @@ class DgenDialog(QtWidgets.QDialog, Ui_Dialog):
                 tlimit=[int(s) for s in txt_time.split(',')],
                 wnlimit=[int(s) for s in txt_wn.split(',')],
                 tcs=[-1 for i in range(sb_taus)],
-                num_das=sb_taus,
                 num_peaks=sb_peaks,
                 avg_width=float(txt_width),
                 avg_std=float(txt_std),
@@ -358,10 +346,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def get_file_all(self):
         """ Loads all files.
-
-        Returns
-        -------
-        nothing
         """
 
         self.get_file_time()
@@ -371,10 +355,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def get_file_time(self):
         """ Loads time file. Delimiter should be ','.
              It also sets text into the truncation field.
-
-        Returns
-        -------
-        nothing
         """
 
         fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open time file')
@@ -394,10 +374,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def get_file_wn(self):
         """ Loads frequency file. Delimiter should be ','.
             It also sets text into the truncation field.
-
-        Returns
-        -------
-        nothing
         """
 
         fname = QtWidgets.QFileDialog.getOpenFileName(
@@ -419,10 +395,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def get_file_data(self):
         """ Loads data file. Delimiter should be ','.
-
-        Returns
-        -------
-        nothing
         """
 
         fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open data file')
@@ -438,11 +410,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         else:
             print('File not found.')
 
-    # TODO: print taus
     def get_test_data(self):
-        # self.data.data = np.loadtxt('./data/data.dat', delimiter=',')
-        # self.data.time = np.loadtxt('./data/time.dat', delimiter=',')
-        # self.data.wn = np.loadtxt('./data/wavenumbers.dat', delimiter=',')
+        """Generates test data.
+        """
+
         d = DgenDialog()
         dgen = d.get_results()
         if dgen:
@@ -463,19 +434,26 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             )
 
             self.data.data = dgen.data
+            str_taus = ''
+            if dgen.back is False:
+                for t in dgen.tcs:
+                    str_taus = str_taus + format(t, '.1e') + ', '
+            elif dgen.back is True:
+                for row in dgen.tcs.transpose():
+                    for t in row:
+                        str_taus = str_taus + format(t, '.1e') + ', '
+                    str_taus = str_taus[:-2] + ' / '
             self.label_file_data.setText(
-                'Data file:\nGenerated data'
+                'Generated data with taus:\n' + str_taus[:-2]
             )
 
+            plt.close('all')
             self.data.plot_data()
+            dgen.plot_profile()
             plt.show()
 
     def change_time(self):
         """ Open dialogs to change time name und unit.
-
-        Returns
-        -------
-        nothing
         """
 
         text, ok = QtWidgets.QInputDialog.getText(
@@ -495,10 +473,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def change_freq(self):
         """ Open dialogs to change frequency name und unit.
-
-        Returns
-        -------
-        nothing
         """
 
         text, ok = QtWidgets.QInputDialog.getText(
@@ -518,20 +492,12 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def close_all(self):
         """ Closes all plots.
-
-        Returns
-        -------
-        nothing
         """
 
         plt.close('all')
 
     def save_all(self):
         """ Saves results to ASCII files.
-
-        Returns
-        -------
-        nothing
         """
 
         basepath = str(
@@ -562,10 +528,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def truncate(self):
         """ Updates truncation values.
-
-        Returns
-        -------
-        nothing
         """
 
         trunc_time = self.txt_trunc_time.text()
@@ -575,10 +537,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def plot_raw(self):
         """ Plots raw data.
-
-        Returns
-        -------
-        nothing
         """
 
         if self.data.check() is False:
@@ -596,10 +554,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def show_svs(self):
         """ Shows singular components.
-
-        Returns
-        -------
-        nothing
         """
 
         if self.data.check() is False:
@@ -610,10 +564,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def dosvd(self):
         """ Performes SVD.
-
-        Returns
-        -------
-        nothing
         """
 
         if self.data.check() is False:
@@ -631,10 +581,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def plot_svd(self):
         """ Plots SVD results.
-
-        Returns
-        -------
-        nothing
         """
 
         if self.results.check_svd() is False:
@@ -652,10 +598,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def dogf(self):
         """ Performs global fitting.
-
-        Returns
-        -------
-        nothing
         """
 
         if self.data.check() is False:
@@ -683,10 +625,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def print_results(self):
         """ Prints results to text field.
-
-        Returns
-        -------
-        nothing
         """
 
         str = ''
@@ -698,10 +636,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def plot_gf(self):
         """ Plots global fit results.
-
-        Returns
-        -------
-        nothing
         """
 
         if self.results.check_gf() is False:
@@ -723,10 +657,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def dolda(self):
         """ Performs LDA.
-
-        Returns
-        -------
-        nothing
         """
 
         if self.data.check() is False:
@@ -760,10 +690,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def plot_lda(self):
         """ Plots LDA results.
-
-        Returns
-        -------
-        nothing
         """
 
         if self.results.check_lda() is False:

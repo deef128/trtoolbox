@@ -25,13 +25,13 @@ class PlotHelper():
     l2_spectra : matplotlib.lines.Line2D
     axtime : matplotlib.axes.Axes
     stime : matplotlib.widgets.Slider
-    fig_lda = matplotlib.figure.Figure()
-    axs_lda = np.array
-    map_lda = matplotlib.contour.QuadContourSet
-    ldadata = matplotlib.collections.QuadMesh
-    l1_lda = matplotlib.lines.Line2D
-    axalpha = matplotlib.axes.Axes
-    salpha = matplotlib.widgets.Slider
+    fig_lda : matplotlib.figure.Figure()
+    axs_lda : np.array
+    map_lda : matplotlib.contour.QuadContourSet
+    ldadata : matplotlib.collections.QuadMesh
+    l1_lda : matplotlib.lines.Line2D
+    axalpha : matplotlib.axes.Axes
+    salpha : matplotlib.widgets.Slider
     axcolor : str
     """
 
@@ -78,10 +78,6 @@ class PlotHelper():
             Title of plot. Default *data*.
         newfig : boolean
             Setting to False prevents the creation of a new figure.
-
-        Returns
-        -------
-        nothing
         """
 
         if newfig is True:
@@ -121,10 +117,6 @@ class PlotHelper():
             Title of plot. Default *data*.
         newfig : boolean
             Setting to False prevents the creation of a new figure.
-
-        Returns
-        -------
-        nothing
         """
 
         if newfig is True:
@@ -185,10 +177,6 @@ class PlotHelper():
             Title of plot. Default *data*.
         newfig : boolean
             Setting to False prevents the creation of a new figure.
-
-        Returns
-        -------
-        nothing
         """
 
         plt.figure()
@@ -224,10 +212,6 @@ class PlotHelper():
         -------
         res : mysvd.Results
             Contains the data to be plotted.
-
-        Returns
-        -------
-        nothing
         """
 
         if res.type == 'svd':
@@ -303,10 +287,6 @@ class PlotHelper():
         -------
         res : mysvd.Results
             Contains the data to be plotted.
-
-        Returns
-        -------
-        nothing
         """
 
         if res.type == 'svd':
@@ -428,10 +408,6 @@ class PlotHelper():
         -------
         res : mylda.Results
             Contains the results to be plotted.
-
-        Returns
-        -------
-        nothing
         """
 
         fig, axs = plt.subplots(2, 2, figsize=[6.4*2, 4.8*2])

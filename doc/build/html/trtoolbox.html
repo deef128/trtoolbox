@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
     <title>trtoolbox package &#8212; Time-Resolved Toolbox  documentation</title>
@@ -37,12 +37,12 @@
 </div>
 <div class="section" id="module-trtoolbox.myglobalfit">
 <span id="trtoolbox-myglobalfit-module"></span><h2>trtoolbox.myglobalfit module<a class="headerlink" href="#module-trtoolbox.myglobalfit" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="trtoolbox.myglobalfit.Results">
 <em class="property">class </em><code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">Results</code><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#Results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.Results" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Object containing fit results.</p>
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.myglobalfit.Results.data">
 <code class="sig-name descname">data</code><a class="headerlink" href="#trtoolbox.myglobalfit.Results.data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Data matrix subjected to fitting.</p>
@@ -53,7 +53,7 @@
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.myglobalfit.Results.time">
 <code class="sig-name descname">time</code><a class="headerlink" href="#trtoolbox.myglobalfit.Results.time" title="Permalink to this definition">¶</a></dt>
 <dd><p>Time array.</p>
@@ -64,7 +64,7 @@
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.myglobalfit.Results.wn">
 <code class="sig-name descname">wn</code><a class="headerlink" href="#trtoolbox.myglobalfit.Results.wn" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wavenumber array.</p>
@@ -75,7 +75,7 @@
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.myglobalfit.Results.offset">
 <code class="sig-name descname">offset</code><a class="headerlink" href="#trtoolbox.myglobalfit.Results.offset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Default is <em>‘no’</em>.</p>
@@ -86,7 +86,7 @@
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.myglobalfit.Results.back">
 <code class="sig-name descname">back</code><a class="headerlink" href="#trtoolbox.myglobalfit.Results.back" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determines if a model with back-reactions was used.</p>
@@ -97,7 +97,7 @@
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.myglobalfit.Results.spectral_offset">
 <code class="sig-name descname">spectral_offset</code><a class="headerlink" href="#trtoolbox.myglobalfit.Results.spectral_offset" title="Permalink to this definition">¶</a></dt>
 <dd><p><em>optional if offset was chosen</em></p>
@@ -108,7 +108,7 @@
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.myglobalfit.Results.method">
 <code class="sig-name descname">method</code><a class="headerlink" href="#trtoolbox.myglobalfit.Results.method" title="Permalink to this definition">¶</a></dt>
 <dd><p>Chosen method (default is <em>‘svd’</em>).</p>
@@ -119,7 +119,7 @@
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.myglobalfit.Results.ks">
 <code class="sig-name descname">ks</code><a class="headerlink" href="#trtoolbox.myglobalfit.Results.ks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Rate constants obtained by fitting.</p>
@@ -130,7 +130,7 @@
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.myglobalfit.Results.var">
 <code class="sig-name descname">var</code><a class="headerlink" href="#trtoolbox.myglobalfit.Results.var" title="Permalink to this definition">¶</a></dt>
 <dd><p>Variance of the rate constants.</p>
@@ -141,7 +141,7 @@
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.myglobalfit.Results.tcs">
 <code class="sig-name descname">tcs</code><a class="headerlink" href="#trtoolbox.myglobalfit.Results.tcs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Time constants obtained by fitting.</p>
@@ -152,7 +152,7 @@
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.myglobalfit.Results.das">
 <code class="sig-name descname">das</code><a class="headerlink" href="#trtoolbox.myglobalfit.Results.das" title="Permalink to this definition">¶</a></dt>
 <dd><p>Decay associated spectra.</p>
@@ -163,7 +163,7 @@
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.myglobalfit.Results.profile">
 <code class="sig-name descname">profile</code><a class="headerlink" href="#trtoolbox.myglobalfit.Results.profile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Concentration profile determined by <em>ks</em></p>
@@ -174,7 +174,7 @@
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.myglobalfit.Results.estimates">
 <code class="sig-name descname">estimates</code><a class="headerlink" href="#trtoolbox.myglobalfit.Results.estimates" title="Permalink to this definition">¶</a></dt>
 <dd><p>Contribution of <em>das</em> to the dataset for each datapoint.</p>
@@ -185,7 +185,7 @@
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.myglobalfit.Results.fitdata">
 <code class="sig-name descname">fitdata</code><a class="headerlink" href="#trtoolbox.myglobalfit.Results.fitdata" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fitted dataset.</p>
@@ -196,7 +196,7 @@
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.myglobalfit.Results.fittraces">
 <code class="sig-name descname">fittraces</code><a class="headerlink" href="#trtoolbox.myglobalfit.Results.fittraces" title="Permalink to this definition">¶</a></dt>
 <dd><p><em>optional if method=’svd’ was chosen</em>. Fitted abstract time traces.</p>
@@ -207,127 +207,116 @@
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="trtoolbox.myglobalfit.Results.clean">
-<code class="sig-name descname">clean</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#Results.clean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.Results.clean" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>Unfortunetaly, spyder messes up when the results</dt><dd><p>object is invesitgated via the variable explorer.
-Running this method fixes this.</p>
-</dd>
-</dl>
+<dl class="py attribute">
+<dt id="trtoolbox.myglobalfit.Results.r2">
+<code class="sig-name descname">r2</code><a class="headerlink" href="#trtoolbox.myglobalfit.Results.r2" title="Permalink to this definition">¶</a></dt>
+<dd><p>R^2 of fit.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p></p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>nothing</p>
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
+<dt id="trtoolbox.myglobalfit.Results.clean">
+<code class="sig-name descname">clean</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#Results.clean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.Results.clean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unfortunetaly, spyder messes up when the results
+object is invesitgated via the variable explorer.
+Running this method fixes this.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="trtoolbox.myglobalfit.Results.init_phelper">
 <code class="sig-name descname">init_phelper</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#Results.init_phelper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.Results.init_phelper" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Initiliazes phelper after clean().</p>
+</dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="trtoolbox.myglobalfit.Results.plot_das">
 <code class="sig-name descname">plot_das</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#Results.plot_das"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.Results.plot_das" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots decay associated spectra.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p></p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>nothing</p>
-</dd>
-</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="trtoolbox.myglobalfit.Results.plot_fitdata">
 <code class="sig-name descname">plot_fitdata</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#Results.plot_fitdata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.Results.plot_fitdata" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots fitted data.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p></p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>nothing</p>
-</dd>
-</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
+<dt id="trtoolbox.myglobalfit.Results.plot_fitdata_3d">
+<code class="sig-name descname">plot_fitdata_3d</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#Results.plot_fitdata_3d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.Results.plot_fitdata_3d" title="Permalink to this definition">¶</a></dt>
+<dd><p>3D plot fitted data.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="trtoolbox.myglobalfit.Results.plot_profile">
 <code class="sig-name descname">plot_profile</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#Results.plot_profile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.Results.plot_profile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots concentration profile.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p></p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>nothing</p>
-</dd>
-</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="trtoolbox.myglobalfit.Results.plot_results">
 <code class="sig-name descname">plot_results</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#Results.plot_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.Results.plot_results" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>Plots the concentration profile, DAS, fitted data and fitted</dt><dd><p>abstract time traces if method=’svd’ was chosen.</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p></p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>nothing</p>
-</dd>
-</dl>
+<dd><p>Plots the concentration profile, DAS, fitted data and fitted
+abstract time traces if method=’svd’ was chosen.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="trtoolbox.myglobalfit.Results.plot_spectra">
-<code class="sig-name descname">plot_spectra</code><span class="sig-paren">(</span><em class="sig-param">index_alpha=-1</em>, <em class="sig-param">alpha=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#Results.plot_spectra"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.Results.plot_spectra" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plot_spectra</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#Results.plot_spectra"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.Results.plot_spectra" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots interactive spectra.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p></p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>nothing</p>
-</dd>
-</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="trtoolbox.myglobalfit.Results.plot_traces">
 <code class="sig-name descname">plot_traces</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#Results.plot_traces"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.Results.plot_traces" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots interactive time traces.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p></p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>nothing</p>
-</dd>
-</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="trtoolbox.myglobalfit.Results.print_results">
 <code class="sig-name descname">print_results</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#Results.print_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.Results.print_results" title="Permalink to this definition">¶</a></dt>
 <dd><p>Prints time constants.</p>
 </dd></dl>
 
+<dl class="py method">
+<dt id="trtoolbox.myglobalfit.Results.save_to_files">
+<code class="sig-name descname">save_to_files</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#Results.save_to_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.Results.save_to_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saving results to .dat files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – Path for saving.</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="function">
+</dd></dl>
+
+<dl class="py function">
+<dt id="trtoolbox.myglobalfit.calc_r2">
+<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">calc_r2</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">res</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#calc_r2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.calc_r2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns R^2 in percent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>np.array</em>) – Data matrix.</p></li>
+<li><p><strong>res</strong> (<em>scipy.optimize.OptimizeResult</em>) – Results object obtained with least squares.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>r2</strong> – R^2.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="trtoolbox.myglobalfit.calculate_estimate">
-<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">calculate_estimate</code><span class="sig-paren">(</span><em class="sig-param">das</em>, <em class="sig-param">data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#calculate_estimate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.calculate_estimate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">calculate_estimate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">das</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#calculate_estimate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.calculate_estimate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes contributions of DAS in the raw data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -345,9 +334,9 @@ Running this method fixes this.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="trtoolbox.myglobalfit.calculate_fitdata">
-<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">calculate_fitdata</code><span class="sig-paren">(</span><em class="sig-param">ks</em>, <em class="sig-param">time</em>, <em class="sig-param">data</em>, <em class="sig-param">back=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#calculate_fitdata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.calculate_fitdata" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">calculate_fitdata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ks</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">back</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#calculate_fitdata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.calculate_fitdata" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the final fitted dataset.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -366,9 +355,9 @@ Running this method fixes this.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="trtoolbox.myglobalfit.calculate_sigma">
-<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">calculate_sigma</code><span class="sig-paren">(</span><em class="sig-param">res</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#calculate_sigma"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.calculate_sigma" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">calculate_sigma</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">res</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#calculate_sigma"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.calculate_sigma" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the variance of the optimized parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -383,9 +372,9 @@ Running this method fixes this.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="trtoolbox.myglobalfit.check_input">
-<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">check_input</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">time</em>, <em class="sig-param">wn</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#check_input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.check_input" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">check_input</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">wn</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#check_input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.check_input" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Ensures that all np.arrays have float dtype and that</dt><dd><p>time spans over columns, frequency over rows.</p>
 </dd>
@@ -398,18 +387,12 @@ Running this method fixes this.</p>
 <li><p><strong>wn</strong> (<em>np.array</em>) – Frequency array.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>nothing</p>
-</dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="trtoolbox.myglobalfit.create_das">
-<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">create_das</code><span class="sig-paren">(</span><em class="sig-param">profile</em>, <em class="sig-param">data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#create_das"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.create_das" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">create_das</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">profile</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#create_das"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.create_das" title="Permalink to this definition">¶</a></dt>
 <dd><p>Obtains decay associated spectra.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -427,9 +410,9 @@ Running this method fixes this.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="trtoolbox.myglobalfit.create_profile">
-<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">create_profile</code><span class="sig-paren">(</span><em class="sig-param">time</em>, <em class="sig-param">ks</em>, <em class="sig-param">back=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#create_profile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.create_profile" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">create_profile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">ks</span></em>, <em class="sig-param"><span class="n">back</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#create_profile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.create_profile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes a concentration profile according to the <em>model()</em> function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -447,9 +430,9 @@ Running this method fixes this.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="trtoolbox.myglobalfit.create_tr">
-<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">create_tr</code><span class="sig-paren">(</span><em class="sig-param">par</em>, <em class="sig-param">time</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#create_tr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.create_tr" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">create_tr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">par</span></em>, <em class="sig-param"><span class="n">time</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#create_tr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.create_tr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function returning exponential time traces for a given set of parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -468,9 +451,9 @@ columns are prefactors (rate constants x SVD components)</p></li>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="trtoolbox.myglobalfit.doglobalfit">
-<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">doglobalfit</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">time</em>, <em class="sig-param">wn</em>, <em class="sig-param">tcs</em>, <em class="sig-param">method='svd'</em>, <em class="sig-param">svds=5</em>, <em class="sig-param">offset=False</em>, <em class="sig-param">offindex=-1</em>, <em class="sig-param">back=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#doglobalfit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.doglobalfit" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">doglobalfit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">wn</span></em>, <em class="sig-param"><span class="n">tcs</span></em>, <em class="sig-param"><span class="n">method</span><span class="o">=</span><span class="default_value">'svd'</span></em>, <em class="sig-param"><span class="n">svds</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">offset</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">offindex</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">back</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#doglobalfit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.doglobalfit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wrapper for global fit routine.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -499,22 +482,22 @@ Therefore ks[-1] is not used.</p></li>
 <dd class="field-even"><p><strong>gf_res</strong> – Results objects.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><em>myglobalfit.results()</em></p>
+<dd class="field-odd"><p><em>myglobalfit.results</em></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="trtoolbox.myglobalfit.model">
-<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">model</code><span class="sig-paren">(</span><em class="sig-param">s</em>, <em class="sig-param">time</em>, <em class="sig-param">ks</em>, <em class="sig-param">back=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.model" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">model</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">s</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">ks</span></em>, <em class="sig-param"><span class="n">back</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.model" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
-<dt>Creates an array of differential equations according</dt><dd><p>to an unidirectional sequential exponential model.</p>
-</dd>
-</dl>
-<p>S[0]/dt = -k0*S[0]
+<dt>Creates an array of differential equations according</dt><dd><p>to an unidirectional sequential exponential model.
+S[0]/dt = -k0*S[0]
 S[1]/dt = k0*S[0] - k1*S[1]
 S[2]/dt = k1*S[1] - k2*S[2]
 and so on</p>
+</dd>
+</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -538,9 +521,9 @@ Therefore ks[-1] is not used.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="trtoolbox.myglobalfit.opt_func_est">
-<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">opt_func_est</code><span class="sig-paren">(</span><em class="sig-param">ks</em>, <em class="sig-param">time</em>, <em class="sig-param">data</em>, <em class="sig-param">back</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#opt_func_est"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.opt_func_est" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">opt_func_est</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ks</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">back</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#opt_func_est"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.opt_func_est" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Optimization function for residuals of concentration profile</dt><dd><p>and estimated contributions of DAS</p>
 </dd>
@@ -562,9 +545,9 @@ Therefore ks[-1] is not used.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="trtoolbox.myglobalfit.opt_func_raw">
-<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">opt_func_raw</code><span class="sig-paren">(</span><em class="sig-param">ks</em>, <em class="sig-param">time</em>, <em class="sig-param">data</em>, <em class="sig-param">back</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#opt_func_raw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.opt_func_raw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">opt_func_raw</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ks</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">back</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#opt_func_raw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.opt_func_raw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Optimization function for residuals of fitted data - input data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -583,9 +566,9 @@ Therefore ks[-1] is not used.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="trtoolbox.myglobalfit.opt_func_svd">
-<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">opt_func_svd</code><span class="sig-paren">(</span><em class="sig-param">par</em>, <em class="sig-param">time</em>, <em class="sig-param">data</em>, <em class="sig-param">svdtraces</em>, <em class="sig-param">nb_exps</em>, <em class="sig-param">back</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#opt_func_svd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.opt_func_svd" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">opt_func_svd</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">par</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">svdtraces</span></em>, <em class="sig-param"><span class="n">nb_exps</span></em>, <em class="sig-param"><span class="n">back</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#opt_func_svd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.opt_func_svd" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Optimization function for residuals of SVD</dt><dd><p>abstract time traces - fitted traces.</p>
 </dd>
@@ -613,12 +596,12 @@ flattened paramater array.</p></li>
 </div>
 <div class="section" id="module-trtoolbox.mylda">
 <span id="trtoolbox-mylda-module"></span><h2>trtoolbox.mylda module<a class="headerlink" href="#module-trtoolbox.mylda" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="trtoolbox.mylda.Results">
 <em class="property">class </em><code class="sig-prename descclassname">trtoolbox.mylda.</code><code class="sig-name descname">Results</code><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Object containing fit results.</p>
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.mylda.Results.type">
 <code class="sig-name descname">type</code><a class="headerlink" href="#trtoolbox.mylda.Results.type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Results object type.</p>
@@ -629,10 +612,10 @@ flattened paramater array.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.mylda.Results.data">
 <code class="sig-name descname">data</code><a class="headerlink" href="#trtoolbox.mylda.Results.data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Data matrix subjected to fitting.</p>
+<dd><p>Data matrix subjected to LDA.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>np.array</p>
@@ -640,7 +623,7 @@ flattened paramater array.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.mylda.Results.time">
 <code class="sig-name descname">time</code><a class="headerlink" href="#trtoolbox.mylda.Results.time" title="Permalink to this definition">¶</a></dt>
 <dd><p>Time array</p>
@@ -651,7 +634,7 @@ flattened paramater array.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.mylda.Results.wn">
 <code class="sig-name descname">wn</code><a class="headerlink" href="#trtoolbox.mylda.Results.wn" title="Permalink to this definition">¶</a></dt>
 <dd><p>Frequency array.</p>
@@ -662,7 +645,7 @@ flattened paramater array.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.mylda.Results.taus">
 <code class="sig-name descname">taus</code><a class="headerlink" href="#trtoolbox.mylda.Results.taus" title="Permalink to this definition">¶</a></dt>
 <dd><p>Time constants used for constructing D-matrix.</p>
@@ -673,7 +656,7 @@ flattened paramater array.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.mylda.Results.dmatrix">
 <code class="sig-name descname">dmatrix</code><a class="headerlink" href="#trtoolbox.mylda.Results.dmatrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>D-matrix.</p>
@@ -684,7 +667,7 @@ flattened paramater array.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.mylda.Results.alphas">
 <code class="sig-name descname">alphas</code><a class="headerlink" href="#trtoolbox.mylda.Results.alphas" title="Permalink to this definition">¶</a></dt>
 <dd><p>Used alpha values for computation (tik method).</p>
@@ -695,7 +678,7 @@ flattened paramater array.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.mylda.Results.lmatrix">
 <code class="sig-name descname">lmatrix</code><a class="headerlink" href="#trtoolbox.mylda.Results.lmatrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>L-matrix (tik method).</p>
@@ -706,7 +689,7 @@ flattened paramater array.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.mylda.Results.lcurve">
 <code class="sig-name descname">lcurve</code><a class="headerlink" href="#trtoolbox.mylda.Results.lcurve" title="Permalink to this definition">¶</a></dt>
 <dd><p>L-curve.</p>
@@ -717,7 +700,7 @@ flattened paramater array.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.mylda.Results.k">
 <code class="sig-name descname">k</code><a class="headerlink" href="#trtoolbox.mylda.Results.k" title="Permalink to this definition">¶</a></dt>
 <dd><p>Used SVD Components (tsvd method).</p>
@@ -728,7 +711,7 @@ flattened paramater array.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.mylda.Results.method">
 <code class="sig-name descname">method</code><a class="headerlink" href="#trtoolbox.mylda.Results.method" title="Permalink to this definition">¶</a></dt>
 <dd><p>Used method (tik or tsvd).</p>
@@ -739,7 +722,7 @@ flattened paramater array.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.mylda.Results.x_k">
 <code class="sig-name descname">x_k</code><a class="headerlink" href="#trtoolbox.mylda.Results.x_k" title="Permalink to this definition">¶</a></dt>
 <dd><p>Resulting exponential pre-factors.</p>
@@ -750,7 +733,7 @@ flattened paramater array.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.mylda.Results.fitdata">
 <code class="sig-name descname">fitdata</code><a class="headerlink" href="#trtoolbox.mylda.Results.fitdata" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructed data (dmatrix.dot(x_k))</p>
@@ -761,7 +744,7 @@ flattened paramater array.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.mylda.Results.wn_name">
 <code class="sig-name descname">wn_name</code><a class="headerlink" href="#trtoolbox.mylda.Results.wn_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Name of the frequency unit (default: wavenumber).</p>
@@ -772,7 +755,7 @@ flattened paramater array.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.mylda.Results.wn_unit">
 <code class="sig-name descname">wn_unit</code><a class="headerlink" href="#trtoolbox.mylda.Results.wn_unit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Frequency unit (default cm^{-1}).</p>
@@ -783,7 +766,7 @@ flattened paramater array.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.mylda.Results.t_name">
 <code class="sig-name descname">t_name</code><a class="headerlink" href="#trtoolbox.mylda.Results.t_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Time name (default: time).</p>
@@ -794,9 +777,9 @@ flattened paramater array.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="trtoolbox.mylda.Results.time_uni">
-<code class="sig-name descname">time_uni</code><a class="headerlink" href="#trtoolbox.mylda.Results.time_uni" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt id="trtoolbox.mylda.Results.time_unit">
+<code class="sig-name descname">time_unit</code><a class="headerlink" href="#trtoolbox.mylda.Results.time_unit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Time uni (default: s).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -805,27 +788,17 @@ flattened paramater array.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="trtoolbox.mylda.Results.clean">
 <code class="sig-name descname">clean</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.clean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.clean" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>Unfortunetaly, spyder messes up when the results</dt><dd><p>object is invesitgated via the variable explorer.
+<dd><p>Unfortunetaly, spyder messes up when the results
+object is investigated via the variable explorer.
 Running this method fixes this.</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p></p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>nothing</p>
-</dd>
-</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="trtoolbox.mylda.Results.get_alpha">
-<code class="sig-name descname">get_alpha</code><span class="sig-paren">(</span><em class="sig-param">index_alpha=-1</em>, <em class="sig-param">alpha=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.get_alpha"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.get_alpha" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_alpha</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.get_alpha"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.get_alpha" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets alpha value and index.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -844,9 +817,9 @@ Running this method fixes this.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="trtoolbox.mylda.Results.get_xk">
-<code class="sig-name descname">get_xk</code><span class="sig-paren">(</span><em class="sig-param">index_alpha=-1</em>, <em class="sig-param">alpha=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.get_xk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.get_xk" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_xk</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.get_xk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.get_xk" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets selected LDA map.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -865,28 +838,49 @@ Running this method fixes this.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="trtoolbox.mylda.Results.init_phelper">
 <code class="sig-name descname">init_phelper</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.init_phelper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.init_phelper" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Initiliazes phelper after clean().</p>
+</dd></dl>
 
-<dl class="method">
-<dt id="trtoolbox.mylda.Results.plot_lcurve">
-<code class="sig-name descname">plot_lcurve</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.plot_lcurve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.plot_lcurve" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plots L-curve.</p>
+<dl class="py method">
+<dt id="trtoolbox.mylda.Results.plot_fitdata">
+<code class="sig-name descname">plot_fitdata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.plot_fitdata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.plot_fitdata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots a nice looking heatmap of fitted data.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p></p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>nothing</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index_alpha</strong> (<em>int</em>) – Plot for specified alpha at index.</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – Plot for the closest alpha as specified.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
+<dt id="trtoolbox.mylda.Results.plot_fitdata_3d">
+<code class="sig-name descname">plot_fitdata_3d</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.plot_fitdata_3d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.plot_fitdata_3d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots a 3D surface of fitted data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index_alpha</strong> (<em>int</em>) – Plot for specified alpha at index.</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – Plot for the closest alpha as specified.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="trtoolbox.mylda.Results.plot_lcurve">
+<code class="sig-name descname">plot_lcurve</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.plot_lcurve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.plot_lcurve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots L-curve.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="trtoolbox.mylda.Results.plot_ldamap">
-<code class="sig-name descname">plot_ldamap</code><span class="sig-paren">(</span><em class="sig-param">index_alpha=-1</em>, <em class="sig-param">alpha=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.plot_ldamap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.plot_ldamap" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plot_ldamap</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.plot_ldamap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.plot_ldamap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots a nice looking contourmap.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -895,76 +889,53 @@ Running this method fixes this.</p>
 <li><p><strong>alpha</strong> (<em>float</em>) – Plot for the closest alpha as specified.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>nothing</p>
-</dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="trtoolbox.mylda.Results.plot_results">
 <code class="sig-name descname">plot_results</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.plot_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.plot_results" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots interactive contourmaps of original and LDA data,</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p></p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>nothing</p>
-</dd>
-</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="trtoolbox.mylda.Results.plot_solutionvector">
-<code class="sig-name descname">plot_solutionvector</code><span class="sig-paren">(</span><em class="sig-param">index_alpha=-1</em>, <em class="sig-param">alpha=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.plot_solutionvector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.plot_solutionvector" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plot_solutionvector</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.plot_solutionvector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.plot_solutionvector" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots the sum of amplituted over time constants.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p></p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>nothing</p>
-</dd>
-</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="trtoolbox.mylda.Results.plot_spectra">
-<code class="sig-name descname">plot_spectra</code><span class="sig-paren">(</span><em class="sig-param">index_alpha=-1</em>, <em class="sig-param">alpha=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.plot_spectra"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.plot_spectra" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plot_spectra</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.plot_spectra"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.plot_spectra" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots interactive spectra.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p></p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>nothing</p>
-</dd>
-</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="trtoolbox.mylda.Results.plot_traces">
-<code class="sig-name descname">plot_traces</code><span class="sig-paren">(</span><em class="sig-param">index_alpha=-1</em>, <em class="sig-param">alpha=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.plot_traces"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.plot_traces" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plot_traces</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.plot_traces"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.plot_traces" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots interactive time traces.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="trtoolbox.mylda.Results.save_to_files">
+<code class="sig-name descname">save_to_files</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.save_to_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.save_to_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saving results to .dat files.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p></p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>nothing</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – Path for saving.</p></li>
+<li><p><strong>index_alpha</strong> (<em>int</em>) – Plot for specified alpha at index.</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – Plot for the closest alpha as specified.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="trtoolbox.mylda.calc_lcurve">
-<code class="sig-prename descclassname">trtoolbox.mylda.</code><code class="sig-name descname">calc_lcurve</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">dmatrix</em>, <em class="sig-param">lmatrix</em>, <em class="sig-param">x_ks</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#calc_lcurve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.calc_lcurve" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.mylda.</code><code class="sig-name descname">calc_lcurve</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">dmatrix</span></em>, <em class="sig-param"><span class="n">lmatrix</span></em>, <em class="sig-param"><span class="n">x_ks</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#calc_lcurve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.calc_lcurve" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates L-curve.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -985,9 +956,9 @@ Second column is smoothed norm.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="trtoolbox.mylda.check_input">
-<code class="sig-prename descclassname">trtoolbox.mylda.</code><code class="sig-name descname">check_input</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">time</em>, <em class="sig-param">wn</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#check_input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.check_input" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.mylda.</code><code class="sig-name descname">check_input</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">wn</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#check_input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.check_input" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Ensures that all np.arrays have float dtype and that</dt><dd><p>time spans over columns, frequency over rows.</p>
 </dd>
@@ -1000,18 +971,12 @@ Second column is smoothed norm.</p>
 <li><p><strong>wn</strong> (<em>np.array</em>) – Frequency array.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>nothing</p>
-</dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="trtoolbox.mylda.dolda">
-<code class="sig-prename descclassname">trtoolbox.mylda.</code><code class="sig-name descname">dolda</code><span class="sig-paren">(</span><em class="sig-param">data, time, wn, tlimits=[], tnum=100, alimits=[0.1, 5], anum=100, method='tik', seqmodel=False, k=5, prompt=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#dolda"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.dolda" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.mylda.</code><code class="sig-name descname">dolda</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">wn</span></em>, <em class="sig-param"><span class="n">tlimits</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">tnum</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">alimits</span><span class="o">=</span><span class="default_value">[0.1, 5]</span></em>, <em class="sig-param"><span class="n">anum</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">method</span><span class="o">=</span><span class="default_value">'tik'</span></em>, <em class="sig-param"><span class="n">seqmodel</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">k</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">prompt</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#dolda"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.dolda" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wrapper for doing a LDA.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1034,14 +999,14 @@ and n as time. But it is actually not important.</p></li>
 <dd class="field-even"><p><strong>res</strong> – Results object.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><em>mylda.results()</em></p>
+<dd class="field-odd"><p><em>mylda.results</em></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="trtoolbox.mylda.gen_alphas">
-<code class="sig-prename descclassname">trtoolbox.mylda.</code><code class="sig-name descname">gen_alphas</code><span class="sig-paren">(</span><em class="sig-param">a1</em>, <em class="sig-param">a2</em>, <em class="sig-param">n</em>, <em class="sig-param">space='log'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#gen_alphas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.gen_alphas" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.mylda.</code><code class="sig-name descname">gen_alphas</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a1</span></em>, <em class="sig-param"><span class="n">a2</span></em>, <em class="sig-param"><span class="n">n</span></em>, <em class="sig-param"><span class="n">space</span><span class="o">=</span><span class="default_value">'log'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#gen_alphas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.gen_alphas" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates logarihmic spaced alpha values.
 Adds [1e-5, 1e-4, 1e-3, 1e-2] and [10, 40, 70, 100]
 for a better visualization of the L-curve.</p>
@@ -1063,9 +1028,9 @@ for a better visualization of the L-curve.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="trtoolbox.mylda.gen_dmatrix">
-<code class="sig-prename descclassname">trtoolbox.mylda.</code><code class="sig-name descname">gen_dmatrix</code><span class="sig-paren">(</span><em class="sig-param">time</em>, <em class="sig-param">taus</em>, <em class="sig-param">seqmodel=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#gen_dmatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.gen_dmatrix" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.mylda.</code><code class="sig-name descname">gen_dmatrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">taus</span></em>, <em class="sig-param"><span class="n">seqmodel</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#gen_dmatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.gen_dmatrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates D-matrix.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1083,9 +1048,9 @@ for a better visualization of the L-curve.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="trtoolbox.mylda.gen_lmatrix">
-<code class="sig-prename descclassname">trtoolbox.mylda.</code><code class="sig-name descname">gen_lmatrix</code><span class="sig-paren">(</span><em class="sig-param">dmatrix</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#gen_lmatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.gen_lmatrix" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.mylda.</code><code class="sig-name descname">gen_lmatrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dmatrix</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#gen_lmatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.gen_lmatrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates L-matrix</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1100,9 +1065,9 @@ for a better visualization of the L-curve.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="trtoolbox.mylda.gen_taus">
-<code class="sig-prename descclassname">trtoolbox.mylda.</code><code class="sig-name descname">gen_taus</code><span class="sig-paren">(</span><em class="sig-param">t1</em>, <em class="sig-param">t2</em>, <em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#gen_taus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.gen_taus" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.mylda.</code><code class="sig-name descname">gen_taus</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">t1</span></em>, <em class="sig-param"><span class="n">t2</span></em>, <em class="sig-param"><span class="n">n</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#gen_taus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.gen_taus" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates logarihmic spaced time constants.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1121,16 +1086,16 @@ for a better visualization of the L-curve.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="trtoolbox.mylda.inversesvd">
-<code class="sig-prename descclassname">trtoolbox.mylda.</code><code class="sig-name descname">inversesvd</code><span class="sig-paren">(</span><em class="sig-param">dmatrix</em>, <em class="sig-param">k=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#inversesvd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.inversesvd" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.mylda.</code><code class="sig-name descname">inversesvd</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dmatrix</span></em>, <em class="sig-param"><span class="n">k</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#inversesvd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.inversesvd" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the inverse of matrix computed via SVD.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>dmatrix</strong> (<em>np.array</em>) – Matrix to be inversed</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Inverse of input matrix.</p>
+<dd class="field-even"><p><strong>v</strong> – Inverse of input matrix.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>np.array</p>
@@ -1138,9 +1103,9 @@ for a better visualization of the L-curve.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="trtoolbox.mylda.tik">
-<code class="sig-prename descclassname">trtoolbox.mylda.</code><code class="sig-name descname">tik</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">dmatrix</em>, <em class="sig-param">alpha</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#tik"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.tik" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.mylda.</code><code class="sig-name descname">tik</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">dmatrix</span></em>, <em class="sig-param"><span class="n">alpha</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#tik"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.tik" title="Permalink to this definition">¶</a></dt>
 <dd><dl>
 <dt>Function for Tikhonov regularization:</dt><dd><p>min_x ||Dx - A|| + alpha*||Lx||
 D-matrix contains exponential profiles,
@@ -1172,9 +1137,9 @@ PLoS computational biology 13.5 (2017)</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="trtoolbox.mylda.tik_lstsq">
-<code class="sig-prename descclassname">trtoolbox.mylda.</code><code class="sig-name descname">tik_lstsq</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">dmatrix</em>, <em class="sig-param">alpha</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#tik_lstsq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.tik_lstsq" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.mylda.</code><code class="sig-name descname">tik_lstsq</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">dmatrix</span></em>, <em class="sig-param"><span class="n">alpha</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#tik_lstsq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.tik_lstsq" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Different implementation of the tik function.</dt><dd><p>Uses the ordinary lstsq solver of numpy.</p>
 </dd>
@@ -1196,9 +1161,9 @@ PLoS computational biology 13.5 (2017)</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="trtoolbox.mylda.tiks">
-<code class="sig-prename descclassname">trtoolbox.mylda.</code><code class="sig-name descname">tiks</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">dmatrix</em>, <em class="sig-param">alphas</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#tiks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.tiks" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.mylda.</code><code class="sig-name descname">tiks</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">dmatrix</span></em>, <em class="sig-param"><span class="n">alphas</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#tiks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.tiks" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Wrapper for computing LDA for</dt><dd><p>various alpha values.</p>
 </dd>
@@ -1220,9 +1185,9 @@ PLoS computational biology 13.5 (2017)</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="trtoolbox.mylda.tsvd">
-<code class="sig-prename descclassname">trtoolbox.mylda.</code><code class="sig-name descname">tsvd</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">dmatrix</em>, <em class="sig-param">k</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#tsvd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.tsvd" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.mylda.</code><code class="sig-name descname">tsvd</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">dmatrix</span></em>, <em class="sig-param"><span class="n">k</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#tsvd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.tsvd" title="Permalink to this definition">¶</a></dt>
 <dd><dl>
 <dt>Truncated SVD for LDA. Similar to Tikhonov regularization</dt><dd><p>but here we have a clear cut-off after a specified singular value.</p>
 <p>Details can be found in
@@ -1251,12 +1216,12 @@ Bit. 1987</p>
 </div>
 <div class="section" id="module-trtoolbox.mysvd">
 <span id="trtoolbox-mysvd-module"></span><h2>trtoolbox.mysvd module<a class="headerlink" href="#module-trtoolbox.mysvd" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="trtoolbox.mysvd.Results">
 <em class="property">class </em><code class="sig-prename descclassname">trtoolbox.mysvd.</code><code class="sig-name descname">Results</code><a class="reference internal" href="_modules/trtoolbox/mysvd.html#Results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.Results" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Object containing fit results.</p>
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.mysvd.Results.type">
 <code class="sig-name descname">type</code><a class="headerlink" href="#trtoolbox.mysvd.Results.type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Results object type.</p>
@@ -1267,7 +1232,7 @@ Bit. 1987</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.mysvd.Results.data">
 <code class="sig-name descname">data</code><a class="headerlink" href="#trtoolbox.mysvd.Results.data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Data matrix subjected to fitting.</p>
@@ -1278,7 +1243,7 @@ Bit. 1987</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.mysvd.Results.u">
 <code class="sig-name descname">u</code><a class="headerlink" href="#trtoolbox.mysvd.Results.u" title="Permalink to this definition">¶</a></dt>
 <dd><p>U matrix. Represents abstract spectra</p>
@@ -1289,7 +1254,7 @@ Bit. 1987</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.mysvd.Results.s">
 <code class="sig-name descname">s</code><a class="headerlink" href="#trtoolbox.mysvd.Results.s" title="Permalink to this definition">¶</a></dt>
 <dd><p>Singular values.</p>
@@ -1300,7 +1265,7 @@ Bit. 1987</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.mysvd.Results.vt">
 <code class="sig-name descname">vt</code><a class="headerlink" href="#trtoolbox.mysvd.Results.vt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transposed V matrix. Represents abstract time traces.</p>
@@ -1311,7 +1276,7 @@ Bit. 1987</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.mysvd.Results.n">
 <code class="sig-name descname">n</code><a class="headerlink" href="#trtoolbox.mysvd.Results.n" title="Permalink to this definition">¶</a></dt>
 <dd><p>Number of singular components used for data reconstruction.</p>
@@ -1322,7 +1287,7 @@ Bit. 1987</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.mysvd.Results.svddata">
 <code class="sig-name descname">svddata</code><a class="headerlink" href="#trtoolbox.mysvd.Results.svddata" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reconstructed data.</p>
@@ -1333,7 +1298,7 @@ Bit. 1987</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.mysvd.Results.wn">
 <code class="sig-name descname">wn</code><a class="headerlink" href="#trtoolbox.mysvd.Results.wn" title="Permalink to this definition">¶</a></dt>
 <dd><p>Frequency array.</p>
@@ -1344,7 +1309,7 @@ Bit. 1987</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.mysvd.Results.wn_name">
 <code class="sig-name descname">wn_name</code><a class="headerlink" href="#trtoolbox.mysvd.Results.wn_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Name of the frequency unit (default: wavenumber).</p>
@@ -1355,7 +1320,7 @@ Bit. 1987</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.mysvd.Results.wn_unit">
 <code class="sig-name descname">wn_unit</code><a class="headerlink" href="#trtoolbox.mysvd.Results.wn_unit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Frequency unit (default cm^{-1}).</p>
@@ -1366,7 +1331,7 @@ Bit. 1987</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.mysvd.Results.time">
 <code class="sig-name descname">time</code><a class="headerlink" href="#trtoolbox.mysvd.Results.time" title="Permalink to this definition">¶</a></dt>
 <dd><p>Time array.</p>
@@ -1377,7 +1342,7 @@ Bit. 1987</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.mysvd.Results.t_name">
 <code class="sig-name descname">t_name</code><a class="headerlink" href="#trtoolbox.mysvd.Results.t_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Time name (default: time).</p>
@@ -1388,7 +1353,7 @@ Bit. 1987</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.mysvd.Results.time_uni">
 <code class="sig-name descname">time_uni</code><a class="headerlink" href="#trtoolbox.mysvd.Results.time_uni" title="Permalink to this definition">¶</a></dt>
 <dd><p>Time uni (default: s).</p>
@@ -1399,7 +1364,7 @@ Bit. 1987</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.mysvd.Results.__phelper">
 <code class="sig-name descname">__phelper</code><a class="headerlink" href="#trtoolbox.mysvd.Results.__phelper" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot helper class for interactive plots.</p>
@@ -1410,110 +1375,78 @@ Bit. 1987</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="trtoolbox.mysvd.Results.clean">
 <code class="sig-name descname">clean</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mysvd.html#Results.clean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.Results.clean" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>Unfortunetaly, spyder messes up when the results</dt><dd><p>object is invesitgated via the variable explorer.
+<dd><p>Unfortunetaly, spyder messes up when the results
+object is invesitgated via the variable explorer.
 Running this method fixes this.</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p></p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>nothing</p>
-</dd>
-</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="trtoolbox.mysvd.Results.init_phelper">
 <code class="sig-name descname">init_phelper</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mysvd.html#Results.init_phelper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.Results.init_phelper" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="trtoolbox.mysvd.Results.plot_data">
-<code class="sig-name descname">plot_data</code><span class="sig-paren">(</span><em class="sig-param">newfig=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mysvd.html#Results.plot_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.Results.plot_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plots a nice looking heatmap of the raw data.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p></p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>nothing</p>
-</dd>
-</dl>
+<dd><p>Initiliazes phelper after clean().</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
+<dt id="trtoolbox.mysvd.Results.plot_data">
+<code class="sig-name descname">plot_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">newfig</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mysvd.html#Results.plot_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.Results.plot_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots a nice looking heatmap of the raw data.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="trtoolbox.mysvd.Results.plot_results">
 <code class="sig-name descname">plot_results</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mysvd.html#Results.plot_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.Results.plot_results" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots heatmaps of original and SVD data,
 interactive time traces and spectra.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p></p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>nothing</p>
-</dd>
-</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="trtoolbox.mysvd.Results.plot_spectra">
 <code class="sig-name descname">plot_spectra</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mysvd.html#Results.plot_spectra"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.Results.plot_spectra" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots interactive spectra.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p></p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>nothing</p>
-</dd>
-</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="trtoolbox.mysvd.Results.plot_svddata">
-<code class="sig-name descname">plot_svddata</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mysvd.html#Results.plot_svddata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.Results.plot_svddata" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plot_svddata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">newfig</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mysvd.html#Results.plot_svddata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.Results.plot_svddata" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots a nice looking heatmap of the reconstructed data.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p></p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>nothing</p>
-</dd>
-</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
+<dt id="trtoolbox.mysvd.Results.plot_svddata_3d">
+<code class="sig-name descname">plot_svddata_3d</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mysvd.html#Results.plot_svddata_3d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.Results.plot_svddata_3d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots 3D surface of the reconstructed data.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="trtoolbox.mysvd.Results.plot_traces">
 <code class="sig-name descname">plot_traces</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mysvd.html#Results.plot_traces"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.Results.plot_traces" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots interactive time traces.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="trtoolbox.mysvd.Results.save_to_files">
+<code class="sig-name descname">save_to_files</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mysvd.html#Results.save_to_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.Results.save_to_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saving results to .dat files.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p></p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>nothing</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – Path for saving.</p>
 </dd>
 </dl>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="trtoolbox.mysvd.check_input">
-<code class="sig-prename descclassname">trtoolbox.mysvd.</code><code class="sig-name descname">check_input</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">time</em>, <em class="sig-param">wn</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mysvd.html#check_input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.check_input" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.mysvd.</code><code class="sig-name descname">check_input</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">wn</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mysvd.html#check_input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.check_input" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="trtoolbox.mysvd.dosvd">
-<code class="sig-prename descclassname">trtoolbox.mysvd.</code><code class="sig-name descname">dosvd</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">time</em>, <em class="sig-param">wn</em>, <em class="sig-param">n=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mysvd.html#dosvd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.dosvd" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.mysvd.</code><code class="sig-name descname">dosvd</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">wn</span></em>, <em class="sig-param"><span class="n">n</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mysvd.html#dosvd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.dosvd" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wrapper for inspecting SVD components with reconstruction.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1531,14 +1464,14 @@ Meaning first component equals 1.</p></li>
 <dd class="field-even"><p><strong>res</strong> – Results object.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><em>mysvd.results()</em></p>
+<dd class="field-odd"><p><em>mysvd.results</em></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="trtoolbox.mysvd.reconstruct">
-<code class="sig-prename descclassname">trtoolbox.mysvd.</code><code class="sig-name descname">reconstruct</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mysvd.html#reconstruct"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.reconstruct" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.mysvd.</code><code class="sig-name descname">reconstruct</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">n</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mysvd.html#reconstruct"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.reconstruct" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reconstructs data with n singular components.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1554,14 +1487,14 @@ Meaning first component equals 1.</p></li>
 <dd class="field-even"><p><strong>res</strong> – Results object.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><em>mysvd.results()</em></p>
+<dd class="field-odd"><p><em>mysvd.results</em></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="trtoolbox.mysvd.show_svs">
-<code class="sig-prename descclassname">trtoolbox.mysvd.</code><code class="sig-name descname">show_svs</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">time</em>, <em class="sig-param">wn</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mysvd.html#show_svs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.show_svs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.mysvd.</code><code class="sig-name descname">show_svs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">wn</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mysvd.html#show_svs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.show_svs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots singular values and variance explained.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1572,18 +1505,12 @@ and n as time. But it is actually not important.</p></li>
 <li><p><strong>wn</strong> (<em>np.array</em>) – Frequency array.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>nothing</p>
-</dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="trtoolbox.mysvd.wrapper_svd">
-<code class="sig-prename descclassname">trtoolbox.mysvd.</code><code class="sig-name descname">wrapper_svd</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mysvd.html#wrapper_svd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.wrapper_svd" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.mysvd.</code><code class="sig-name descname">wrapper_svd</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mysvd.html#wrapper_svd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.wrapper_svd" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simple wrapper for the <em>scipy.linalg.svd()</em> function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1604,12 +1531,12 @@ and n as time. But it is actually not important.</p>
 </div>
 <div class="section" id="module-trtoolbox.plothelper">
 <span id="trtoolbox-plothelper-module"></span><h2>trtoolbox.plothelper module<a class="headerlink" href="#module-trtoolbox.plothelper" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="trtoolbox.plothelper.MidpointNormalize">
-<em class="property">class </em><code class="sig-prename descclassname">trtoolbox.plothelper.</code><code class="sig-name descname">MidpointNormalize</code><span class="sig-paren">(</span><em class="sig-param">vmin=None</em>, <em class="sig-param">vmax=None</em>, <em class="sig-param">midpoint=None</em>, <em class="sig-param">clip=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/plothelper.html#MidpointNormalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.plothelper.MidpointNormalize" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">trtoolbox.plothelper.</code><code class="sig-name descname">MidpointNormalize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">vmin</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">vmax</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">midpoint</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">clip</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/plothelper.html#MidpointNormalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.plothelper.MidpointNormalize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.colors.Normalize</span></code></p>
 <p>Class for setting 0 as midpoint in the colormap.</p>
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.plothelper.MidpointNormalize.midpoint">
 <code class="sig-name descname">midpoint</code><a class="headerlink" href="#trtoolbox.plothelper.MidpointNormalize.midpoint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Midpoint of colormap</p>
@@ -1622,14 +1549,14 @@ and n as time. But it is actually not important.</p>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="trtoolbox.plothelper.PlotHelper">
 <em class="property">class </em><code class="sig-prename descclassname">trtoolbox.plothelper.</code><code class="sig-name descname">PlotHelper</code><a class="reference internal" href="_modules/trtoolbox/plothelper.html#PlotHelper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Object for interactive plotting. This class ensures that
 all the matplotlib objects are kept referenced which ensures
 proper function of the sliders.</p>
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.plothelper.PlotHelper.fig_traces">
 <code class="sig-name descname">fig_traces</code><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.fig_traces" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
@@ -1639,7 +1566,7 @@ proper function of the sliders.</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.plothelper.PlotHelper.ax_traces">
 <code class="sig-name descname">ax_traces</code><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.ax_traces" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
@@ -1649,7 +1576,7 @@ proper function of the sliders.</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.plothelper.PlotHelper.l1_traces">
 <code class="sig-name descname">l1_traces</code><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.l1_traces" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
@@ -1659,7 +1586,7 @@ proper function of the sliders.</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.plothelper.PlotHelper.l2_traces">
 <code class="sig-name descname">l2_traces</code><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.l2_traces" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
@@ -1669,7 +1596,7 @@ proper function of the sliders.</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.plothelper.PlotHelper.axfreq">
 <code class="sig-name descname">axfreq</code><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.axfreq" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
@@ -1679,7 +1606,7 @@ proper function of the sliders.</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.plothelper.PlotHelper.sfreq">
 <code class="sig-name descname">sfreq</code><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.sfreq" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
@@ -1689,7 +1616,7 @@ proper function of the sliders.</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.plothelper.PlotHelper.fig_spectra">
 <code class="sig-name descname">fig_spectra</code><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.fig_spectra" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
@@ -1699,7 +1626,7 @@ proper function of the sliders.</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.plothelper.PlotHelper.ax_spectra">
 <code class="sig-name descname">ax_spectra</code><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.ax_spectra" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
@@ -1709,7 +1636,7 @@ proper function of the sliders.</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.plothelper.PlotHelper.l1_spectra">
 <code class="sig-name descname">l1_spectra</code><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.l1_spectra" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
@@ -1719,7 +1646,7 @@ proper function of the sliders.</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.plothelper.PlotHelper.l2_spectra">
 <code class="sig-name descname">l2_spectra</code><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.l2_spectra" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
@@ -1729,7 +1656,7 @@ proper function of the sliders.</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.plothelper.PlotHelper.axtime">
 <code class="sig-name descname">axtime</code><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.axtime" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
@@ -1739,7 +1666,7 @@ proper function of the sliders.</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.plothelper.PlotHelper.stime">
 <code class="sig-name descname">stime</code><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.stime" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
@@ -1749,42 +1676,77 @@ proper function of the sliders.</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt>
-<code class="sig-name descname">fig_lda = matplotlib.figure.Figure()</code></dt>
-<dd></dd></dl>
+<dl class="py attribute">
+<dt id="trtoolbox.plothelper.PlotHelper.fig_lda">
+<code class="sig-name descname">fig_lda</code><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.fig_lda" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>matplotlib.figure.Figure()</p>
+</dd>
+</dl>
+</dd></dl>
 
-<dl class="attribute">
-<dt>
-<code class="sig-name descname">axs_lda = np.array</code></dt>
-<dd></dd></dl>
+<dl class="py attribute">
+<dt id="trtoolbox.plothelper.PlotHelper.axs_lda">
+<code class="sig-name descname">axs_lda</code><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.axs_lda" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
 
-<dl class="attribute">
-<dt>
-<code class="sig-name descname">map_lda = matplotlib.contour.QuadContourSet</code></dt>
-<dd></dd></dl>
+<dl class="py attribute">
+<dt id="trtoolbox.plothelper.PlotHelper.map_lda">
+<code class="sig-name descname">map_lda</code><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.map_lda" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>matplotlib.contour.QuadContourSet</p>
+</dd>
+</dl>
+</dd></dl>
 
-<dl class="attribute">
-<dt>
-<code class="sig-name descname">ldadata = matplotlib.collections.QuadMesh</code></dt>
-<dd></dd></dl>
+<dl class="py attribute">
+<dt id="trtoolbox.plothelper.PlotHelper.ldadata">
+<code class="sig-name descname">ldadata</code><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.ldadata" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>matplotlib.collections.QuadMesh</p>
+</dd>
+</dl>
+</dd></dl>
 
-<dl class="attribute">
-<dt>
-<code class="sig-name descname">l1_lda = matplotlib.lines.Line2D</code></dt>
-<dd></dd></dl>
+<dl class="py attribute">
+<dt id="trtoolbox.plothelper.PlotHelper.l1_lda">
+<code class="sig-name descname">l1_lda</code><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.l1_lda" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>matplotlib.lines.Line2D</p>
+</dd>
+</dl>
+</dd></dl>
 
-<dl class="attribute">
-<dt>
-<code class="sig-name descname">axalpha = matplotlib.axes.Axes</code></dt>
-<dd></dd></dl>
+<dl class="py attribute">
+<dt id="trtoolbox.plothelper.PlotHelper.axalpha">
+<code class="sig-name descname">axalpha</code><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.axalpha" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>matplotlib.axes.Axes</p>
+</dd>
+</dl>
+</dd></dl>
 
-<dl class="attribute">
-<dt>
-<code class="sig-name descname">salpha = matplotlib.widgets.Slider</code></dt>
-<dd></dd></dl>
+<dl class="py attribute">
+<dt id="trtoolbox.plothelper.PlotHelper.salpha">
+<code class="sig-name descname">salpha</code><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.salpha" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>matplotlib.widgets.Slider</p>
+</dd>
+</dl>
+</dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="trtoolbox.plothelper.PlotHelper.axcolor">
 <code class="sig-name descname">axcolor</code><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.axcolor" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
@@ -1794,9 +1756,9 @@ proper function of the sliders.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="trtoolbox.plothelper.PlotHelper.append_ldamap">
-<code class="sig-name descname">append_ldamap</code><span class="sig-paren">(</span><em class="sig-param">res</em>, <em class="sig-param">index_alpha=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/plothelper.html#PlotHelper.append_ldamap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.append_ldamap" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">append_ldamap</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">res</span></em>, <em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/plothelper.html#PlotHelper.append_ldamap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.append_ldamap" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Appends NaN values in order to expand the taus array</dt><dd><p>to match the time array span.</p>
 </dd>
@@ -1818,9 +1780,9 @@ proper function of the sliders.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="trtoolbox.plothelper.PlotHelper.plot_contourmap">
-<code class="sig-name descname">plot_contourmap</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">time</em>, <em class="sig-param">wn</em>, <em class="sig-param">title='data'</em>, <em class="sig-param">newfig=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/plothelper.html#PlotHelper.plot_contourmap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.plot_contourmap" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plot_contourmap</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">wn</span></em>, <em class="sig-param"><span class="n">title</span><span class="o">=</span><span class="default_value">'data'</span></em>, <em class="sig-param"><span class="n">newfig</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/plothelper.html#PlotHelper.plot_contourmap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.plot_contourmap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots a nice looking contourmap.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1833,18 +1795,12 @@ and n as time. But it is actually not important.</p></li>
 <li><p><strong>newfig</strong> (<em>boolean</em>) – Setting to False prevents the creation of a new figure.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>nothing</p>
-</dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="trtoolbox.plothelper.PlotHelper.plot_heatmap">
-<code class="sig-name descname">plot_heatmap</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">time</em>, <em class="sig-param">wn</em>, <em class="sig-param">title='data'</em>, <em class="sig-param">newfig=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/plothelper.html#PlotHelper.plot_heatmap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.plot_heatmap" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plot_heatmap</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">wn</span></em>, <em class="sig-param"><span class="n">title</span><span class="o">=</span><span class="default_value">'data'</span></em>, <em class="sig-param"><span class="n">newfig</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/plothelper.html#PlotHelper.plot_heatmap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.plot_heatmap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots a nice looking heatmap.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1857,62 +1813,56 @@ and n as time. But it is actually not important.</p></li>
 <li><p><strong>newfig</strong> (<em>boolean</em>) – Setting to False prevents the creation of a new figure.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>nothing</p>
-</dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="trtoolbox.plothelper.PlotHelper.plot_ldaresults">
-<code class="sig-name descname">plot_ldaresults</code><span class="sig-paren">(</span><em class="sig-param">res</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/plothelper.html#PlotHelper.plot_ldaresults"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.plot_ldaresults" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plot_ldaresults</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">res</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/plothelper.html#PlotHelper.plot_ldaresults"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.plot_ldaresults" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots interactive resaults of LDA.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>res</strong> (<a class="reference internal" href="#trtoolbox.mylda.Results" title="trtoolbox.mylda.Results"><em>mylda.Results</em></a>) – Contains the results to be plotted.</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>nothing</p>
-</dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="trtoolbox.plothelper.PlotHelper.plot_spectra">
-<code class="sig-name descname">plot_spectra</code><span class="sig-paren">(</span><em class="sig-param">res</em>, <em class="sig-param">index_alpha=-1</em>, <em class="sig-param">alpha=-1</em>, <em class="sig-param">rev=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/plothelper.html#PlotHelper.plot_spectra"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.plot_spectra" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plot_spectra</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">res</span></em>, <em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">rev</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/plothelper.html#PlotHelper.plot_spectra"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.plot_spectra" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots interactive spectra.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>res</strong> (<a class="reference internal" href="#trtoolbox.mysvd.Results" title="trtoolbox.mysvd.Results"><em>mysvd.Results</em></a>) – Contains the data to be plotted.</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>nothing</p>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="trtoolbox.plothelper.PlotHelper.plot_surface">
+<code class="sig-name descname">plot_surface</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">wn</span></em>, <em class="sig-param"><span class="n">title</span><span class="o">=</span><span class="default_value">'data'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/plothelper.html#PlotHelper.plot_surface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.plot_surface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots a nice looking heatmap.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>np.array</em>) – Data matrix subjected to SVD. Assuming <em>m x n</em> with m as frequency
+and n as time. But it is actually not important.</p></li>
+<li><p><strong>time</strong> (<em>np.array</em>) – Time array.</p></li>
+<li><p><strong>wn</strong> (<em>np.array</em>) – Frequency array.</p></li>
+<li><p><strong>title</strong> (<em>np.array</em>) – Title of plot. Default <em>data</em>.</p></li>
+<li><p><strong>newfig</strong> (<em>boolean</em>) – Setting to False prevents the creation of a new figure.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="trtoolbox.plothelper.PlotHelper.plot_traces">
-<code class="sig-name descname">plot_traces</code><span class="sig-paren">(</span><em class="sig-param">res</em>, <em class="sig-param">index_alpha=-1</em>, <em class="sig-param">alpha=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/plothelper.html#PlotHelper.plot_traces"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.plot_traces" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plot_traces</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">res</span></em>, <em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/plothelper.html#PlotHelper.plot_traces"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.plot_traces" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots interactive time traces.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>res</strong> (<a class="reference internal" href="#trtoolbox.mysvd.Results" title="trtoolbox.mysvd.Results"><em>mysvd.Results</em></a>) – Contains the data to be plotted.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>nothing</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1976,7 +1926,7 @@ and n as time. But it is actually not important.</p></li>
       &copy;2020, David Ehrenberg.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

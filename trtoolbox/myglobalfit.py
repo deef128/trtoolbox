@@ -77,6 +77,9 @@ class Results:
         self._phelper = PlotHelper()
 
     def init_phelper(self):
+        """ Initiliazes phelper after clean().
+        """
+
         if type(self._phelper) == list:
             self._phelper = PlotHelper()
 
@@ -96,10 +99,6 @@ class Results:
 
     def plot_traces(self):
         """ Plots interactive time traces.
-
-        Returns
-        -------
-        nothing
         """
 
         self.init_phelper()
@@ -107,10 +106,6 @@ class Results:
 
     def plot_spectra(self, index_alpha=-1, alpha=-1):
         """ Plots interactive spectra.
-
-        Returns
-        -------
-        nothing
         """
 
         self.init_phelper()
@@ -118,10 +113,6 @@ class Results:
 
     def plot_profile(self):
         """ Plots concentration profile.
-
-        Returns
-        -------
-        nothing
         """
 
         num_exp = np.shape(self.estimates)[0]
@@ -149,10 +140,6 @@ class Results:
 
     def plot_das(self):
         """ Plots decay associated spectra.
-
-        Returns
-        -------
-        nothing
         """
 
         plt.figure()
@@ -172,10 +159,6 @@ class Results:
 
     def plot_fitdata(self):
         """ Plots fitted data.
-
-        Returns
-        -------
-        nothing
         """
 
         self.init_phelper()
@@ -188,10 +171,6 @@ class Results:
 
     def plot_fitdata_3d(self):
         """ 3D plot fitted data.
-
-        Returns
-        -------
-        nothing
         """
 
         self.init_phelper()
@@ -205,10 +184,6 @@ class Results:
     def plot_results(self):
         """ Plots the concentration profile, DAS, fitted data and fitted
             abstract time traces if method='svd' was chosen.
-
-        Returns
-        -------
-        nothing
         """
 
         self.plot_profile()
@@ -252,26 +227,18 @@ class Results:
         """ Unfortunetaly, spyder messes up when the results
             object is invesitgated via the variable explorer.
             Running this method fixes this.
-
-        Returns
-        -------
-        nothing
         """
         # self._phelper = PlotHelper()
         # delattr(self, '_phelper')
         self._phelper = []
 
     def save_to_files(self, path):
-        """ Saving results to *.dat files.
+        """ Saving results to .dat files.
 
         Parameters
         ----------
         path : str
             Path for saving.
-
-        Returns
-        -------
-        nothing
         """
 
         if os.path.exists(path) is False:
@@ -323,10 +290,6 @@ def check_input(data, time, wn):
         TIme array.
     wn : np.array
         Frequency array.
-
-    Returns
-    -------
-    nothing
     """
 
     # check for right dtype
@@ -350,10 +313,10 @@ def check_input(data, time, wn):
 def model(s, time, ks, back=False):
     """ Creates an array of differential equations according
         to an unidirectional sequential exponential model.
-    S[0]/dt = -k0*S[0]
-    S[1]/dt = k0*S[0] - k1*S[1]
-    S[2]/dt = k1*S[1] - k2*S[2]
-    and so on
+        S[0]/dt = -k0*S[0]
+        S[1]/dt = k0*S[0] - k1*S[1]
+        S[2]/dt = k1*S[1] - k2*S[2]
+        and so on
 
     Parameters
     ----------
@@ -549,6 +512,7 @@ def opt_func_raw(ks, time, data, back):
 def opt_func_est(ks, time, data, back):
     """ Optimization function for residuals of concentration profile
         and estimated contributions of DAS
+
     Parameters
     ----------
     ks : np.array
@@ -693,7 +657,7 @@ def doglobalfit(
 
     Returns
     -------
-    gf_res : *myglobalfit.results()*
+    gf_res : *myglobalfit.results*
         Results objects.
     """
 

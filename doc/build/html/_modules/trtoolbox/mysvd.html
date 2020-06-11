@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
     <title>trtoolbox.mysvd &#8212; Time-Resolved Toolbox  documentation</title>
@@ -32,6 +32,7 @@
             
   <h1>Source code for trtoolbox.mysvd</h1><div class="highlight"><pre>
 <span></span><span class="c1"># TODO: plot abstract spectra and traces</span>
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">svd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -101,15 +102,14 @@
     <span class="c1">#     self._wn = val.reshape((val.size, 1))</span>
 
 <div class="viewcode-block" id="Results.init_phelper"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mysvd.Results.init_phelper">[docs]</a>    <span class="k">def</span> <span class="nf">init_phelper</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Initiliazes phelper after clean().</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_phelper</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_phelper</span> <span class="o">=</span> <span class="n">PlotHelper</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Results.plot_data"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mysvd.Results.plot_data">[docs]</a>    <span class="k">def</span> <span class="nf">plot_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">newfig</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Plots a nice looking heatmap of the raw data.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        nothing</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">init_phelper</span><span class="p">()</span>
@@ -119,12 +119,8 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wn_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wn_unit</span><span class="p">))</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_unit</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="Results.plot_svddata"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mysvd.Results.plot_svddata">[docs]</a>    <span class="k">def</span> <span class="nf">plot_svddata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Results.plot_svddata"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mysvd.Results.plot_svddata">[docs]</a>    <span class="k">def</span> <span class="nf">plot_svddata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">newfig</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Plots a nice looking heatmap of the reconstructed data.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        nothing</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">init_phelper</span><span class="p">()</span>
@@ -132,16 +128,25 @@
         <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Reconstructed data using &#39;</span> <span class="o">+</span> <span class="n">nstr</span> <span class="o">+</span> <span class="s1">&#39; components&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_phelper</span><span class="o">.</span><span class="n">plot_heatmap</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">svddata</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wn</span><span class="p">,</span>
-            <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">newfig</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">newfig</span><span class="o">=</span><span class="n">newfig</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wn_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wn_unit</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_unit</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Results.plot_svddata_3d"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mysvd.Results.plot_svddata_3d">[docs]</a>    <span class="k">def</span> <span class="nf">plot_svddata_3d</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Plots 3D surface of the reconstructed data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_phelper</span><span class="p">()</span>
+        <span class="n">nstr</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Reconstructed data using &#39;</span> <span class="o">+</span> <span class="n">nstr</span> <span class="o">+</span> <span class="s1">&#39; components&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_phelper</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">svddata</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wn</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wn_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wn_unit</span><span class="p">))</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_unit</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="Results.plot_traces"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mysvd.Results.plot_traces">[docs]</a>    <span class="k">def</span> <span class="nf">plot_traces</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Plots interactive time traces.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        nothing</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">init_phelper</span><span class="p">()</span>
@@ -149,10 +154,6 @@
 
 <div class="viewcode-block" id="Results.plot_spectra"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mysvd.Results.plot_spectra">[docs]</a>    <span class="k">def</span> <span class="nf">plot_spectra</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Plots interactive spectra.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        nothing</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">init_phelper</span><span class="p">()</span>
@@ -161,10 +162,6 @@
 <div class="viewcode-block" id="Results.plot_results"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mysvd.Results.plot_results">[docs]</a>    <span class="k">def</span> <span class="nf">plot_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Plots heatmaps of original and SVD data,</span>
 <span class="sd">        interactive time traces and spectra.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        nothing</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">init_phelper</span><span class="p">()</span>
@@ -196,12 +193,48 @@
         <span class="sd">&quot;&quot;&quot; Unfortunetaly, spyder messes up when the results</span>
 <span class="sd">            object is invesitgated via the variable explorer.</span>
 <span class="sd">            Running this method fixes this.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        nothing</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_phelper</span> <span class="o">=</span> <span class="p">[]</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_phelper</span> <span class="o">=</span> <span class="p">[]</span></div>
+
+<div class="viewcode-block" id="Results.save_to_files"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mysvd.Results.save_to_files">[docs]</a>    <span class="k">def</span> <span class="nf">save_to_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Saving results to .dat files.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        path : str</span>
+<span class="sd">            Path for saving.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">answer</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s1">&#39;Path not found. Create (y/n)? &#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">answer</span> <span class="o">==</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span>
+
+        <span class="n">to_save</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;svddata&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">to_save</span><span class="p">:</span>
+                <span class="n">fname</span> <span class="o">=</span> <span class="n">k</span> <span class="o">+</span> <span class="s1">&#39;.dat&#39;</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Writing &#39;</span> <span class="o">+</span> <span class="n">fname</span><span class="p">)</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">fname</span><span class="p">),</span>
+                    <span class="n">i</span><span class="p">,</span>
+                    <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span>
+                    <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%.4e</span><span class="s1">&#39;</span>
+                <span class="p">)</span>
+
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;00_comments.txt&#39;</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Writing 00_comments.txt&#39;</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Created with trtoolbox</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span>
+                <span class="s1">&#39;----------------------</span><span class="se">\n\n</span><span class="s1">&#39;</span> <span class="o">+</span>
+                <span class="s1">&#39;SVD components used: </span><span class="si">%i</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">)</span> <span class="o">+</span>
+                <span class="s1">&#39;----------------------</span><span class="se">\n\n</span><span class="s1">&#39;</span> <span class="o">+</span>
+                <span class="s1">&#39;Files:</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span>
+                <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">- data.dat (Raw data)</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span>
+                <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">- svddata.data (Reconstructed data)</span><span class="se">\n</span><span class="s1">&#39;</span>
+                <span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div></div>
 
 
 <div class="viewcode-block" id="check_input"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mysvd.check_input">[docs]</a><span class="k">def</span> <span class="nf">check_input</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">wn</span><span class="p">):</span>
@@ -258,10 +291,6 @@
 <span class="sd">        Time array.</span>
 <span class="sd">    wn : np.array</span>
 <span class="sd">        Frequency array.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    nothing</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">data</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">wn</span> <span class="o">=</span> <span class="n">check_input</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">wn</span><span class="p">)</span>
@@ -325,7 +354,7 @@
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    res : *mysvd.results()*</span>
+<span class="sd">    res : *mysvd.results*</span>
 <span class="sd">        Results object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -375,7 +404,7 @@
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    res : *mysvd.results()*</span>
+<span class="sd">    res : *mysvd.results*</span>
 <span class="sd">        Results object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -402,7 +431,6 @@
     <span class="n">res</span> <span class="o">=</span> <span class="n">reconstruct</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
     <span class="n">res</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">time</span>
     <span class="n">res</span><span class="o">.</span><span class="n">wn</span> <span class="o">=</span> <span class="n">wn</span>
-    <span class="c1"># res.plot_results()</span>
     <span class="k">return</span> <span class="n">res</span></div>
 </pre></div>
 
@@ -458,7 +486,7 @@
       &copy;2020, David Ehrenberg.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

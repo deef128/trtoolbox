@@ -71,10 +71,6 @@ class Results:
 
     def init_phelper(self):
         """ Initiliazes phelper after clean().
-
-        Returns
-        -------
-        nothing
         """
 
         if type(self._phelper) == list:
@@ -145,10 +141,6 @@ class Results:
             Plot for specified alpha at index.
         alpha : float
             Plot for the closest alpha as specified.
-
-        Returns
-        -------
-        nothing
         """
 
         self.init_phelper()
@@ -180,10 +172,6 @@ class Results:
             Plot for specified alpha at index.
         alpha : float
             Plot for the closest alpha as specified.
-
-        Returns
-        -------
-        nothing
         """
 
         self.init_phelper()
@@ -215,10 +203,6 @@ class Results:
             Plot for specified alpha at index.
         alpha : float
             Plot for the closest alpha as specified.
-
-        Returns
-        -------
-        nothing
         """
 
         self.init_phelper()
@@ -236,10 +220,6 @@ class Results:
 
     def plot_traces(self, index_alpha=-1, alpha=-1):
         """ Plots interactive time traces.
-
-        Returns
-        -------
-        nothing
         """
 
         self.init_phelper()
@@ -247,10 +227,6 @@ class Results:
 
     def plot_spectra(self, index_alpha=-1, alpha=-1):
         """ Plots interactive spectra.
-
-        Returns
-        -------
-        nothing
         """
 
         self.init_phelper()
@@ -258,10 +234,6 @@ class Results:
 
     def plot_lcurve(self):
         """ Plots L-curve.
-
-        Returns
-        -------
-        nothing
         """
 
         plt.figure()
@@ -269,10 +241,6 @@ class Results:
 
     def plot_solutionvector(self, index_alpha=-1, alpha=-1):
         """ Plots the sum of amplituted over time constants.
-
-        Returns
-        -------
-        nothing
         """
 
         plt.figure()
@@ -292,10 +260,6 @@ class Results:
 
     def plot_results(self):
         """ Plots interactive contourmaps of original and LDA data,
-
-        Returns
-        -------
-        nothing
         """
 
         self.init_phelper()
@@ -305,16 +269,12 @@ class Results:
         """ Unfortunetaly, spyder messes up when the results
             object is investigated via the variable explorer.
             Running this method fixes this.
-
-        Returns
-        -------
-        nothing
         """
 
         self._phelper = []
 
     def save_to_files(self, path, index_alpha=-1, alpha=-1):
-        """ Saving results to *.dat files.
+        """ Saving results to .dat files.
 
         Parameters
         ----------
@@ -324,10 +284,6 @@ class Results:
             Plot for specified alpha at index.
         alpha : float
             Plot for the closest alpha as specified.
-
-        Returns
-        -------
-        nothing
         """
 
         if os.path.exists(path) is False:
@@ -400,10 +356,6 @@ def check_input(data, time, wn):
         TIme array.
     wn : np.array
         Frequency array.
-
-    Returns
-    -------
-    nothing
     """
 
     # check for right dtype
@@ -545,7 +497,7 @@ def inversesvd(dmatrix, k=-1):
 
     Returns
     -------
-     : np.array
+    v : np.array
         Inverse of input matrix.
     """
 
@@ -774,7 +726,7 @@ def dolda(
 
     Returns
     -------
-    res : *mylda.results()*
+    res : *mylda.results*
         Results object.
     """
 

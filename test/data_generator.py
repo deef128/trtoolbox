@@ -37,7 +37,6 @@ class DataGenerator:
         self.profile = np.array([])
         self.back = bool()
 
-    # TODO: positve expos
     def gen_time(self, tlimit=[-7, -1], number=500):
         """ Generates time array. Just works for negative exponents.
 
@@ -47,10 +46,6 @@ class DataGenerator:
             Limits for 10^x exponents
         number : int
             Number of time samples.
-
-        Returns
-        -------
-        nothing
         """
 
         self.time = np.logspace(tlimit[0], tlimit[1], number)
@@ -65,10 +60,6 @@ class DataGenerator:
             Limits for frequency arry.
         step_size : int
             Step size of datapoints. Negative values denote a step size of 1.
-
-        Returns
-        -------
-        nothing
         """
 
         if step_size <= 0:
@@ -98,10 +89,6 @@ class DataGenerator:
             Std
         diff : bool
             Peaks can be negative if True.
-
-        Returns
-        -------
-        nothing
         """
 
         self.das = np.zeros((self.wn.shape[0], num_das))
@@ -134,10 +121,6 @@ class DataGenerator:
             List of tcs. -1 is placeholder for random tcs.
         back : bool
             Determines if back reactions are used.
-
-        Returns
-        -------
-        nothing
         """
 
         if -1 in tcs:
@@ -167,24 +150,19 @@ class DataGenerator:
             List of tcs. -1 is placeholder for random tcs.
         back : bool
             Determines if back reactions are used.
-
-        Returns
-        -------
-        nothing
         """
 
         self.profile = create_profile(self.time, 1/self.tcs, back=back)
         self.data = self.das.dot(self.profile.T)
         self.back = back
 
-    # TODO: number of datapoints missing
-    # TODO: num_das should be len(tcs) or len(tcs)/2 if back
     def gen_data(
             self,
             tlimit=[-7, -1],
+            number=500,
             wnlimit=[1500, 1700],
+            wnstep=-1,
             tcs=[-1, -1, -1],
-            num_das=3,
             num_peaks=1,
             avg_width=30,
             avg_std=5,
@@ -199,12 +177,12 @@ class DataGenerator:
         ----------
         tlimit : list
             Limits for 10^x exponents
+        number : int
+            Number of datapoints.
         wnlimit : list
             Limits for frequency arry.
-        number : int
-            Number of datapoints. Negative values denote a step size of 1.
-        num_das : int
-            Number of DAS.
+        wnstep : int
+            Step size. Negative values denote a step size of 1.
         num_peaks : int
             Number of peaks per DAS.
         avg_width : int
@@ -221,14 +199,14 @@ class DataGenerator:
             Addition of noise.
         noise_scale : float
             Scaling factor for noise.
-
-        Returns
-        -------
-        nothing
         """
 
-        self.gen_time(tlimit)
-        self.gen_wn(wnlimit)
+        if back is False:
+            num_das = len(tcs)
+        elif back is True:
+            num_das = int(len(tcs))
+        self.gen_time(tlimit, number)
+        self.gen_wn(wnlimit, wnstep)
         self.gen_das(num_das, num_peaks, avg_width, avg_std, diff=diff)
         self.gen_tcs(tcs, back=back)
         self.gen_data_das(back=back)
@@ -238,10 +216,6 @@ class DataGenerator:
 
     def print_tcs(self):
         """ Prints time constants.
-
-        Returns
-        -------
-        nothing
         """
 
         if self.back is False:
@@ -254,10 +228,6 @@ class DataGenerator:
 
     def plot_profile(self):
         """ Plots concentration profile.
-
-        Returns
-        -------
-        nothing
         """
 
         plt.figure()
@@ -269,10 +239,6 @@ class DataGenerator:
 
     def plot_data(self):
         """ Plots data.
-
-        Returns
-        -------
-        nothing
         """
 
         phelper = PlotHelper()
@@ -285,10 +251,6 @@ class DataGenerator:
 
     def plot_das(self):
         """ Plots decay associated spectra.
-
-        Returns
-        -------
-        nothing
         """
 
         plt.figure()

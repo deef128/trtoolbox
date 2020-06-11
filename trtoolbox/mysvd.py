@@ -69,15 +69,14 @@ class Results:
     #     self._wn = val.reshape((val.size, 1))
 
     def init_phelper(self):
+        """ Initiliazes phelper after clean().
+        """
+
         if type(self._phelper) == list:
             self._phelper = PlotHelper()
 
     def plot_data(self, newfig=True):
         """ Plots a nice looking heatmap of the raw data.
-
-        Returns
-        -------
-        nothing
         """
 
         self.init_phelper()
@@ -89,10 +88,6 @@ class Results:
 
     def plot_svddata(self, newfig=False):
         """ Plots a nice looking heatmap of the reconstructed data.
-
-        Returns
-        -------
-        nothing
         """
 
         self.init_phelper()
@@ -106,10 +101,6 @@ class Results:
 
     def plot_svddata_3d(self):
         """ Plots 3D surface of the reconstructed data.
-
-        Returns
-        -------
-        nothing
         """
 
         self.init_phelper()
@@ -123,10 +114,6 @@ class Results:
 
     def plot_traces(self):
         """ Plots interactive time traces.
-
-        Returns
-        -------
-        nothing
         """
 
         self.init_phelper()
@@ -134,10 +121,6 @@ class Results:
 
     def plot_spectra(self):
         """ Plots interactive spectra.
-
-        Returns
-        -------
-        nothing
         """
 
         self.init_phelper()
@@ -146,10 +129,6 @@ class Results:
     def plot_results(self):
         """ Plots heatmaps of original and SVD data,
         interactive time traces and spectra.
-
-        Returns
-        -------
-        nothing
         """
 
         self.init_phelper()
@@ -181,24 +160,16 @@ class Results:
         """ Unfortunetaly, spyder messes up when the results
             object is invesitgated via the variable explorer.
             Running this method fixes this.
-
-        Returns
-        -------
-        nothing
         """
         self._phelper = []
 
     def save_to_files(self, path):
-        """ Saving results to *.dat files.
+        """ Saving results to .dat files.
 
         Parameters
         ----------
         path : str
             Path for saving.
-
-        Returns
-        -------
-        nothing
         """
 
         if os.path.exists(path) is False:
@@ -287,10 +258,6 @@ def show_svs(data, time, wn):
         Time array.
     wn : np.array
         Frequency array.
-
-    Returns
-    -------
-    nothing
     """
 
     data, time, wn = check_input(data, time, wn)
@@ -354,7 +321,7 @@ def reconstruct(data, n):
 
     Returns
     -------
-    res : *mysvd.results()*
+    res : *mysvd.results*
         Results object.
     """
 
@@ -404,7 +371,7 @@ def dosvd(data, time, wn, n=-1):
 
     Returns
     -------
-    res : *mysvd.results()*
+    res : *mysvd.results*
         Results object.
     """
 
@@ -431,5 +398,4 @@ def dosvd(data, time, wn, n=-1):
     res = reconstruct(data, n)
     res.time = time
     res.wn = wn
-    # res.plot_results()
     return res
