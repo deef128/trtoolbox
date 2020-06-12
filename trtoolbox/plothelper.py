@@ -205,7 +205,7 @@ class PlotHelper():
         plt.title(title)
         return surf
 
-    def plot_traces(self, res, index_alpha=-1, alpha=-1):
+    def plot_traces(self, res, alpha=-1, index_alpha=-1):
         """ Plots interactive time traces.
 
         Parameters
@@ -219,7 +219,7 @@ class PlotHelper():
             procdata = res.svddata
         elif res.type == 'lda':
             if res.method == 'tik':
-                index_alpha, alpha = res.get_alpha(index_alpha, alpha)
+                alpha, index_alpha = res.get_alpha(alpha, index_alpha)
                 procdata = res.fitdata[:, :, index_alpha]
                 title = 'Time traces\nblue: Raw, red: LDA '\
                         '(alpha=%.2f)' % (alpha)
@@ -280,7 +280,7 @@ class PlotHelper():
         self.axfreq = axfreq
         self.sfreq = sfreq
 
-    def plot_spectra(self, res, index_alpha=-1, alpha=-1, rev=True):
+    def plot_spectra(self, res, alpha=-1, index_alpha=-1, rev=True):
         """ Plots interactive spectra.
 
         Parameters
@@ -294,7 +294,7 @@ class PlotHelper():
             procdata = res.svddata
         elif res.type == 'lda':
             if res.method == 'tik':
-                index_alpha, alpha = res.get_alpha(index_alpha, alpha)
+                alpha, index_alpha = res.get_alpha(alpha, index_alpha)
                 procdata = res.fitdata[:, :, index_alpha]
                 title = 'Spectra\nblue: Raw, red: LDA '\
                         '(alpha=%.2f)' % (alpha)

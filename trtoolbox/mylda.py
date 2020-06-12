@@ -76,15 +76,15 @@ class Results:
         if type(self._phelper) == list:
             self._phelper = PlotHelper()
 
-    def get_alpha(self, index_alpha=-1, alpha=-1):
+    def get_alpha(self, alpha=-1, index_alpha=-1):
         """ Gets alpha value and index.
 
         Parameters
         ----------
-        index_alpha : int
-            Plot for specified alpha at index.
         alpha : float
             Plot for the closest alpha as specified.
+        index_alpha : int
+            Plot for specified alpha at index.
 
         Returns
         -------
@@ -101,17 +101,17 @@ class Results:
             # search for closest alpha value
             index_alpha = (np.abs(self.alphas - alpha)).argmin()
         alpha = self.alphas[index_alpha]
-        return index_alpha, alpha
+        return alpha, index_alpha
 
-    def get_xk(self, index_alpha=-1, alpha=-1):
+    def get_xk(self, alpha=-1, index_alpha=-1):
         """ Gets selected LDA map.
 
         Parameters
         ----------
-        index_alpha : int
-            Plot for specified alpha at index.
         alpha : float
             Plot for the closest alpha as specified.
+        index_alpha : int
+            Plot for specified alpha at index.
 
         Returns
         -------
@@ -123,7 +123,7 @@ class Results:
 
         # check for used method
         if len(self.x_k.shape) == 3:
-            index_alpha, _ = self.get_alpha(index_alpha, alpha)
+            _, index_alpha = self.get_alpha(alpha, index_alpha)
             x_k = self.x_k[:, :, index_alpha]
             title = 'LDA map at alpha = %f' % (self.alphas[index_alpha])
         else:
@@ -132,15 +132,15 @@ class Results:
 
         return x_k, title
 
-    def plot_fitdata(self, index_alpha=-1, alpha=-1):
+    def plot_fitdata(self, alpha=-1, index_alpha=-1):
         """ Plots a nice looking heatmap of fitted data.
 
         Parameters
         ----------
-        index_alpha : int
-            Plot for specified alpha at index.
         alpha : float
             Plot for the closest alpha as specified.
+        index_alpha : int
+            Plot for specified alpha at index.
         """
 
         self.init_phelper()
@@ -149,7 +149,7 @@ class Results:
             return
 
         if len(self.fitdata.shape) == 3:
-            index_alpha, _ = self.get_alpha(index_alpha, alpha)
+            _, index_alpha = self.get_alpha(alpha, index_alpha)
             fitdata = self.fitdata[:, :, index_alpha]
             title = 'Fitted data at alpha = %f' % (self.alphas[index_alpha])
         else:
@@ -163,15 +163,15 @@ class Results:
         plt.xlabel('%s / %s' % (self.time_name, self.time_unit))
         plt.title(title)
 
-    def plot_fitdata_3d(self, index_alpha=-1, alpha=-1):
+    def plot_fitdata_3d(self, alpha=-1, index_alpha=-1):
         """ Plots a 3D surface of fitted data.
 
         Parameters
         ----------
-        index_alpha : int
-            Plot for specified alpha at index.
         alpha : float
             Plot for the closest alpha as specified.
+        index_alpha : int
+            Plot for specified alpha at index.
         """
 
         self.init_phelper()
@@ -180,7 +180,7 @@ class Results:
             return
 
         if len(self.fitdata.shape) == 3:
-            index_alpha, _ = self.get_alpha(index_alpha, alpha)
+            _, index_alpha = self.get_alpha(alpha, index_alpha)
             fitdata = self.fitdata[:, :, index_alpha]
             title = 'Fitted data at alpha = %f' % (self.alphas[index_alpha])
         else:
@@ -194,22 +194,22 @@ class Results:
         plt.xlabel('%s / %s' % (self.time_name, self.time_unit))
         plt.title(title)
 
-    def plot_ldamap(self, index_alpha=-1, alpha=-1):
+    def plot_ldamap(self, alpha=-1, index_alpha=-1):
         """ Plots a nice looking contourmap.
 
         Parameters
         ----------
-        index_alpha : int
-            Plot for specified alpha at index.
         alpha : float
             Plot for the closest alpha as specified.
+        index_alpha : int
+            Plot for specified alpha at index.
         """
 
         self.init_phelper()
         if self.x_k.size == 0:
             print('First start a LDA.')
             return
-        x_k, title = self.get_xk(index_alpha, alpha)
+        x_k, title = self.get_xk(alpha, index_alpha)
 
         self._phelper.plot_contourmap(
             x_k, self.taus, self.wn,
@@ -218,19 +218,19 @@ class Results:
         plt.xlabel('%s / %s' % ('tau', self.time_unit))
         plt.title(title)
 
-    def plot_traces(self, index_alpha=-1, alpha=-1):
+    def plot_traces(self, alpha=-1, index_alpha=-1):
         """ Plots interactive time traces.
         """
 
         self.init_phelper()
-        self._phelper.plot_traces(self, index_alpha, alpha)
+        self._phelper.plot_traces(self, alpha, index_alpha)
 
-    def plot_spectra(self, index_alpha=-1, alpha=-1):
+    def plot_spectra(self, alpha=-1, index_alpha=-1):
         """ Plots interactive spectra.
         """
 
         self.init_phelper()
-        self._phelper.plot_spectra(self, index_alpha, alpha)
+        self._phelper.plot_spectra(self, alpha, index_alpha)
 
     def plot_lcurve(self):
         """ Plots L-curve.
@@ -239,12 +239,12 @@ class Results:
         plt.figure()
         plt.plot(self.lcurve[:, 0], self.lcurve[:, 1], 'o-', markersize=2)
 
-    def plot_solutionvector(self, index_alpha=-1, alpha=-1):
+    def plot_solutionvector(self, alpha=-1, index_alpha=-1):
         """ Plots the sum of amplituted over time constants.
         """
 
         plt.figure()
-        x_k, title = self.get_xk(index_alpha, alpha)
+        x_k, title = self.get_xk(alpha, index_alpha)
         # plt.plot(
         #     [np.min(self.taus), np.max(self.taus)],
         #     [0, 0],
@@ -273,17 +273,17 @@ class Results:
 
         self._phelper = []
 
-    def save_to_files(self, path, index_alpha=-1, alpha=-1):
+    def save_to_files(self, path, alpha=-1, index_alpha=-1):
         """ Saving results to .dat files.
 
         Parameters
         ----------
         path : str
             Path for saving.
-        index_alpha : int
-            Plot for specified alpha at index.
         alpha : float
             Plot for the closest alpha as specified.
+        index_alpha : int
+            Plot for specified alpha at index.
         """
 
         if os.path.exists(path) is False:
@@ -305,7 +305,9 @@ class Results:
                     fmt='%.4e'
                 )
 
-        index_alpha, alpha = self.get_alpha(index_alpha, alpha)
+        fname = 'fitdata.dat'
+        print('Writing ' + fname)
+        alpha, index_alpha = self.get_alpha(alpha, index_alpha)
         fitdata = self.fitdata[:, :, index_alpha]
         np.savetxt(
                     os.path.join(path, fname),
@@ -316,7 +318,7 @@ class Results:
 
         fname = 'ldamap.dat'
         print('Writing ' + fname)
-        x_k, _ = self.get_xk(index_alpha, alpha)
+        x_k, _ = self.get_xk(alpha, index_alpha)
         np.savetxt(
                     os.path.join(path, fname),
                     x_k,
