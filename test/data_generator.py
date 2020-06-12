@@ -218,6 +218,7 @@ class DataGenerator:
         """ Prints time constants.
         """
 
+        print('Time constants for data generation:')
         if self.back is False:
             for i in range(len(self.tcs)):
                 print('%i. %e' % (i+1, self.tcs[i]))

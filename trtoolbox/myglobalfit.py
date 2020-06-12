@@ -115,7 +115,7 @@ class Results:
         """ Plots concentration profile.
         """
 
-        num_exp = np.shape(self.estimates)[0]
+        num_exp = np.shape(self.estimates)[1]
         cm = plt.get_cmap('tab10')
         # nice for choosing aequidistant colors
         # cm = [cm(1.*i/num_exp) for i in range(num_exp)]
@@ -129,7 +129,7 @@ class Results:
             )
             plt.plot(
                 self.time.T,
-                self.estimates[i, :]*100,
+                self.estimates[:, i]*100,
                 'o', markersize=2,
                 color=cm(i)
             )
@@ -307,6 +307,10 @@ def check_input(data, time, wn):
     time = time.reshape((1, time.size))
     wn = wn.reshape((wn.size, 1))
 
+    if data.shape[0] != wn.shape[0] or \
+       data.shape[1] != time.shape[1]:
+        raise ValueError('Dimensions mismatch!')
+
     return data, time, wn
 
 
@@ -346,8 +350,6 @@ def model(s, time, ks, back=False):
             arr.append(ks[i-1] * s[i-1] - ks[i] * s[i])
 
     elif back is True:
-        if ks.shape[0] < ks.shape[1]:
-            ks = ks.T
         arr = [-ks[0, 0] * s[0] + ks[0, 1] * s[1]]
         for i in range(1, len(ks)-1):
             arr.append(
@@ -374,6 +376,15 @@ def create_profile(time, ks, back=False):
     profile : np.array
         Concentration profile matrix.
     """
+
+    # checking for correct ks input
+    if back is True:
+        if ks.ndim == 1:
+            raise ValueError('Time constant array dimensions mismatch')
+        if ks.shape[1] != 2 and ks.shape[0] == 2:
+            ks = ks.T
+        if ks.shape[1] != 2:
+            raise ValueError('Time constant array dimensions mismatch')
 
     # assuming a starting population of 100% for the first species
     s0 = np.zeros(len(ks))
@@ -409,6 +420,7 @@ def create_tr(par, time):
     svds = np.shape(par)[1]-1
     time = time.reshape((1, time.size))
     fit_tr = np.empty((svds, time.size))
+    # par[:, svds] : rate constants
     for isvds in range(0, svds):
         individual = par[:, isvds] * np.exp(-1*par[:, svds]*time.T)
         fit_tr[isvds, :] = np.sum(individual, axis=1)
@@ -454,6 +466,10 @@ def calculate_fitdata(ks, time, data, back=False):
         Fitted dataset.
     """
 
+    # check that time spans columns
+    if data.shape[1] != time.size:
+        data = data.T
+
     profile = create_profile(time, ks, back)
     das = create_das(profile, data)
     fitdata = das.dot(profile.T)
@@ -479,7 +495,7 @@ def calculate_estimate(das, data):
     est = np.empty([np.shape(data)[1], np.shape(das)[1]])
     for i in range(np.shape(data)[1]):
         est[i, :] = nnls(das, data[:, i])[0]
-    return est.T
+    return est
 
 
 def opt_func_raw(ks, time, data, back):
@@ -535,7 +551,7 @@ def opt_func_est(ks, time, data, back):
     profile = create_profile(time, ks, back)
     das = create_das(profile, data)
     est = calculate_estimate(das, data)
-    r = profile.T - est
+    r = profile - est
     return r.flatten()**2
 
 
@@ -623,7 +639,8 @@ def doglobalfit(
         offset=False,
         offindex=-1,
         back=False):
-    """ Wrapper for global fit routine.
+    """ Wrapper for global fit routine. Implementation of back reactions
+        is still experimental and just available for the svd method.
 
     Parameters
     ----------
@@ -665,13 +682,17 @@ def doglobalfit(
     tcs = np.array(tcs)
 
     if len(tcs) < 1:
-        print('I need at least two time constants.')
-        return
+        raise ValueError('I need at least two time constants.')
     else:
         start_ks = 1./tcs
         # ensuring that start_ks has two columns if back is True
-        if back is True and start_ks.shape[1] != 2:
-            start_ks = start_ks.T
+        if back is True:
+            if start_ks.ndim == 1:
+                raise ValueError('Time constant array dimensions mismatch')
+            if start_ks.shape[1] != 2 and start_ks.shape[0] == 2:
+                start_ks = start_ks.T
+            if start_ks.shape[1] != 2:
+                raise ValueError('Time constant array dimensions mismatch')
 
     if offset is True:
         spectral_offset = data[:, offindex]
@@ -682,32 +703,30 @@ def doglobalfit(
         data = data-spectral_offset_matrix
 
     if method == 'raw':
+        if back is True:
+            raise ValueError('Back reactions are not implemented \
+                for this method. Take svd')
         res = least_squares(
             opt_func_raw,
             start_ks.flatten(),
             args=(time, data, back)
             )
         if back is False:
-            ks = res.x
+            ks = -np.sort(-res.x)
             var = calculate_sigma(res)
-        elif back is True:
-            ks = res.x.reshape(start_ks.shape)
-            # TODO: variance singular!
-            var = -1
 
     elif method == 'est':
+        if back is True:
+            raise ValueError('Back reactions are not implemented \
+                for this method. Take svd')
         res = least_squares(
             opt_func_est,
             start_ks.flatten(),
             args=(time, data, back)
             )
         if back is False:
-            ks = res.x
+            ks = -np.sort(-res.x)
             var = calculate_sigma(res)
-        elif back is True:
-            ks = res.x.reshape(start_ks.shape)
-            # TODO: variance singular!
-            var = -1
 
     elif method == 'svd':
         u, s, vt = mysvd.wrapper_svd(data)

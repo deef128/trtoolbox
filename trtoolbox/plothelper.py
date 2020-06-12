@@ -82,7 +82,6 @@ class PlotHelper():
 
         if newfig is True:
             plt.figure()
-        # ensuring that time spans columns
         if data.shape[1] != time.size:
             data = np.transpose(data)
 

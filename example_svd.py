@@ -1,24 +1,46 @@
+# %% import stuff
 import trtoolbox.mysvd as mysvd
-import numpy as np
+from test.data_generator import DataGenerator
 import matplotlib.pyplot as plt
-
 plt.close('all')
 
-# load data
-data = np.loadtxt('./data/data.dat', delimiter=',')
-wn = np.loadtxt('./data/wavenumbers.dat', delimiter=',')
-time = np.loadtxt('./data/time.dat', delimiter=',')
+# %% change ipython backend
+try:
+    get_ipython().run_line_magic('matplotlib', 'widget')
+except NameError:
+    pass
 
-# if time and frequency are manually added
-# time has to span columns and frequency rows.
-# wn = wn.reshape((wn.size, 1))
-# time = time.reshape((1, time.size))
+# %% generate data
+dgen = DataGenerator()
+dgen.gen_data(
+    wnlimit=[1200, 1700],
+    num_peaks=3,
+    tcs=[-2, -6, -1],
+    diff=True,
+    avg_width=150,
+    avg_std=10,
+    noise=True,
+    noise_scale=0.15
+)
 
-res = mysvd.dosvd(data, time, wn, n=5)
+# %% plot generated data
+dgen.print_tcs()
+dgen.plot_das()
+dgen.plot_profile()
+dgen.plot_data()
+
+# %% show singular values
+mysvd.show_svs(dgen.data, dgen.time, dgen.wn)
+
+# %% reconstruct data with n singular values
+res = mysvd.dosvd(dgen.data, dgen.time, dgen.wn, n=4)
+res.plot_results()
 plt.show()
 
-res.save_to_files('/home/dave/Downloads/svd')
+# %% save files
+# res.save_to_files(path)
 
+# NOTE:
 # for inspecting the Results class in Spyder after interactive plotting
 # please run the clean() method!
 # res.clean()

@@ -220,6 +220,10 @@ def check_input(data, time, wn):
     time = time.reshape((1, time.size))
     wn = wn.reshape((wn.size, 1))
 
+    if data.shape[0] != wn.shape[0] or \
+       data.shape[1] != time.shape[1]:
+        raise ValueError('Dimensions mismatch!')
+
     return data, time, wn
 
 
@@ -333,6 +337,11 @@ def reconstruct(data, n):
         nlist = n-1
     elif type(n) == np.ndarray:
         nlist = n-1
+
+    if any(i < 0 for i in nlist) is True:
+        raise ValueError('Please chose just positive singular values')
+    if len(set(nlist)) != len(nlist):
+        raise ValueError('Please choose different singular values.')
 
     # create m x n singular values matrix
     sigma = np.zeros((u.shape[0], vt.shape[0]))

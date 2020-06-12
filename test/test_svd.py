@@ -2,15 +2,20 @@ import unittest
 import numpy as np
 import matplotlib.pyplot as plt
 import trtoolbox.mysvd as mysvd
+from data_generator import DataGenerator
 
 
 class TestSVD(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.data = np.loadtxt('./data/data.dat', delimiter=',')
-        cls.wn = np.loadtxt('./data/wavenumbers.dat', delimiter=',')
-        cls.time = np.loadtxt('./data/time.dat', delimiter=',')
+        # generate data
+        dgen = DataGenerator()
+        dgen.gen_data()
+        cls.data = dgen.data
+        cls.wn = dgen.wn
+        cls.time = dgen.time
+
         # prevents plt.show() from blocking execution
         plt.ion()
 
@@ -19,19 +24,46 @@ class TestSVD(unittest.TestCase):
         self.assertEqual(data.shape, self.data.shape)
 
         data, time, wn = mysvd.check_input(self.data, self.time.T, self.wn)
+        self.assertEqual(data.shape, self.data.shape)
+        self.assertEqual(wn.shape, self.wn.shape)
         self.assertEqual(time.shape[1], self.data.shape[1])
 
         data, time, wn = mysvd.check_input(self.data, self.time.T, self.wn.T)
+        self.assertEqual(data.shape, self.data.shape)
         self.assertEqual(time.shape[1], self.data.shape[1])
         self.assertEqual(wn.shape[0], self.data.shape[0])
 
         data, time, wn = mysvd.check_input(self.data.T, self.time, self.wn)
         self.assertEqual(data.shape, self.data.shape)
+        self.assertEqual(time.shape, self.time.shape)
+        self.assertEqual(wn.shape, self.wn.shape)
 
         data, time, wn = mysvd.check_input(self.data.T, self.time.T, self.wn.T)
         self.assertEqual(data.shape, self.data.shape)
         self.assertEqual(time.shape[1], self.data.shape[1])
         self.assertEqual(wn.shape[0], self.data.shape[0])
+
+        data, time, wn = mysvd.check_input(
+            self.data,
+            self.time.flatten(),
+            self.wn.flatten()
+        )
+        self.assertEqual(data.shape, self.data.shape)
+        self.assertEqual(time.shape[1], self.data.shape[1])
+        self.assertEqual(wn.shape[0], self.data.shape[0])
+
+        with self.assertRaises(ValueError):
+            data, time, wn = mysvd.check_input(self.data, self.time, self.wn[2:])
+
+        with self.assertRaises(ValueError):
+            data, time, wn = mysvd.check_input(self.data, self.time[2:], self.wn)
+
+        with self.assertRaises(ValueError):
+            data, time, wn = mysvd.check_input(
+                self.data[2:, :-3],
+                self.time,
+                self.wn
+            )
 
     def test_wrapper_svd(self):
         u, s, vt = mysvd.wrapper_svd(self.data)
@@ -46,6 +78,10 @@ class TestSVD(unittest.TestCase):
         self.assertEqual(u.shape[0], tdata.shape[0])
         self.assertEqual(s.shape[0], self.data.shape[0])
         self.assertEqual(vt.shape[0], tdata.shape[1])
+
+    def test_show_svs(self):
+        mysvd.show_svs(self.data, self.time, self.wn)
+        plt.close('all')
 
     def test_reconstruct(self):
         res = mysvd.reconstruct(self.data, 5)
@@ -63,33 +99,17 @@ class TestSVD(unittest.TestCase):
         self.assertEqual(res.vt.shape[0], tdata.shape[1])
         self.assertEqual(res.svddata.shape, tdata.shape)
 
-    def test_show_svs(self):
-        mysvd.show_svs(self.data, self.time, self.wn)
-        plt.close('all')
-        mysvd.show_svs(np.transpose(self.data), self.time, self.wn)
-        plt.close('all')
+        n = [i+1 for i in range(5)]
+        res = mysvd.reconstruct(self.data, n)
 
-        mysvd.show_svs(self.data.T, self.time, self.wn)
-        plt.close('all')
-        mysvd.show_svs(self.data, self.time.T, self.wn)
-        plt.close('all')
+        n = [i for i in range(5)]
+        with self.assertRaises(ValueError):
+            res = mysvd.reconstruct(self.data, n)
+
+        n = [1]*5
+        with self.assertRaises(ValueError):
+            res = mysvd.reconstruct(self.data, n)
 
     def test_dosvd(self):
-        mysvd.dosvd(self.data, self.time, self.wn, 5)
-        plt.close('all')
-        n = [1, 2, 3, 5]
-        mysvd.dosvd(self.data, self.time, self.wn, n)
-        plt.close('all')
-        n = np.array(n)
-        mysvd.dosvd(self.data, self.time, self.wn, n)
-        plt.close('all')
-
-        tdata = np.transpose(self.data)
-        mysvd.dosvd(tdata, self.time, self.wn, 5)
-        plt.close('all')
-        n = [1, 2, 3, 5]
-        mysvd.dosvd(tdata, self.time, self.wn.T, n)
-        plt.close('all')
-        n = np.array(n)
-        mysvd.dosvd(tdata, self.time.T, self.wn, n)
-        plt.close('all')     
+        res = mysvd.dosvd(self.data, self.time, self.wn, 5)
+        np.testing.assert_almost_equal(res.svddata, self.data)

@@ -1,23 +1,48 @@
+# %% import stuff
 import trtoolbox.myglobalfit as mygf
+from test.data_generator import DataGenerator
 import numpy as np
 import matplotlib.pyplot as plt
-
 plt.close('all')
 
-# load data
-data = np.loadtxt('./data/data.dat', delimiter=',')
-wn = np.loadtxt('./data/wavenumbers.dat', delimiter=',')
-time = np.loadtxt('./data/time.dat', delimiter=',')
+# %% change ipython backend
+try:
+    get_ipython().run_line_magic('matplotlib', 'widget')
+except NameError:
+    pass
 
-tcs = [1e-6, 1e-5, 1e-4, 1e-3, 1e-2]
-res = mygf.doglobalfit(data, time, wn, tcs, svds=5)
-# res.plot_results()
-# res.plot_traces()
-# res.plot_spectra()
-# plt.show()
+# %% generate data
+dgen = DataGenerator()
+dgen.gen_data(
+    wnlimit=[800, 1900],
+    num_peaks=5,
+    tcs=[-2, -6, -1],
+    diff=True,
+    avg_width=200,
+    avg_std=15,
+    noise=True,
+    noise_scale=0.175
+)
 
-res.save_to_files('/home/dave/Downloads/gf')
+# %% plot generated data
+dgen.print_tcs()
+dgen.plot_das()
+dgen.plot_profile()
+dgen.plot_data()
 
+# %% do global fitting
+rdnm = 5 - 5 * np.random.random(dgen.tcs.shape)
+start_tcs = dgen.tcs * rdnm
+res = mygf.doglobalfit(dgen.data, dgen.time, dgen.wn, dgen.tcs, svds=3)
+res.plot_results()
+res.plot_traces()
+res.plot_spectra()
+plt.show()
+
+# %% save files
+# res.save_to_files(path)
+
+# NOTE:
 # for inspecting the Results class in Spyder after interactive plotting
 # please run the clean() method!
 # res.clean()
