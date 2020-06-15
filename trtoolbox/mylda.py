@@ -375,11 +375,15 @@ def check_input(data, time, wn):
     time = time.reshape((1, time.size))
     wn = wn.reshape((wn.size, 1))
 
+    if data.shape[0] != wn.shape[0] or \
+       data.shape[1] != time.shape[1]:
+        raise ValueError('Dimensions mismatch!')
+
     return data, time, wn
 
 
 def gen_taus(t1, t2, n):
-    """ Generates logarihmic spaced time constants.
+    """ Generates logarithmic spaced time constants.
 
     Parameters
     ----------
@@ -395,6 +399,16 @@ def gen_taus(t1, t2, n):
     taus : np.array
         Generated time constants.
     """
+
+    if t1 == t2:
+        raise ValueError('Choose different limits!')
+    if t1 > t2:
+        t = t1
+        t1 = t2
+        t2 = t
+    if n <= 0:
+        print('Choose positive number. Take 100 now...')
+        n = 100
 
     taus = np.logspace(np.log10(t1), np.log10(t2), n)
     return taus
@@ -475,6 +489,16 @@ def gen_alphas(a1, a2, n, space='log'):
     alphas : np.array
         Generated alpha values.
     """
+
+    if a1 == a2:
+        raise ValueError('Choose different limits!')
+    if a1 > a2:
+        a = a1
+        a1 = a2
+        a2 = a
+    if n <= 0:
+        print('Choose positive number. Take 100 now...')
+        n = 100
 
     if space == 'log':
         alphas = np.logspace(np.log10(a1), np.log10(a2), n)
@@ -642,6 +666,7 @@ def tik_lstsq(data, dmatrix, alpha):
     res : np.array
         Expontential prefactors/amplitudes.
     """
+
     lmatrix = gen_lmatrix(dmatrix)
 
     if alpha != 0:
@@ -654,7 +679,7 @@ def tik_lstsq(data, dmatrix, alpha):
         a_aug = data
 
     res = np.linalg.lstsq(d_aug, np.transpose(a_aug), rcond=None)
-    return res
+    return res[0]
 
 
 def tsvd(data, dmatrix, k):

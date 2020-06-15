@@ -1,34 +1,154 @@
 
+
 <!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>trtoolbox package &mdash; Time-Resolved Toolbox  documentation</title>
+  
 
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>trtoolbox package &#8212; Time-Resolved Toolbox  documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
    
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
-  </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
           
 
-          <div class="body" role="main">
+          
+            <a href="index.html" class="icon icon-home"> Time-Resolved Toolbox
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="svd.html">Singular value decomposition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gf.html">Global fit routine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lda.html">Lifetime density analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">Using the GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dgen.html">Data generator</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Time-Resolved Toolbox</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>trtoolbox package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/trtoolbox.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="trtoolbox-package">
 <h1>trtoolbox package<a class="headerlink" href="#trtoolbox-package" title="Permalink to this headline">¶</a></h1>
@@ -454,7 +574,10 @@ columns are prefactors (rate constants x SVD components)</p></li>
 <dl class="py function">
 <dt id="trtoolbox.myglobalfit.doglobalfit">
 <code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">doglobalfit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">wn</span></em>, <em class="sig-param"><span class="n">tcs</span></em>, <em class="sig-param"><span class="n">method</span><span class="o">=</span><span class="default_value">'svd'</span></em>, <em class="sig-param"><span class="n">svds</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">offset</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">offindex</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">back</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#doglobalfit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.doglobalfit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wrapper for global fit routine.</p>
+<dd><dl class="simple">
+<dt>Wrapper for global fit routine. Implementation of back reactions</dt><dd><p>is still experimental and just available for the svd method.</p>
+</dd>
+</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -523,7 +646,7 @@ Therefore ks[-1] is not used.</p></li>
 
 <dl class="py function">
 <dt id="trtoolbox.myglobalfit.opt_func_est">
-<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">opt_func_est</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ks</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">back</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#opt_func_est"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.opt_func_est" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">opt_func_est</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ks</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#opt_func_est"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.opt_func_est" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Optimization function for residuals of concentration profile</dt><dd><p>and estimated contributions of DAS</p>
 </dd>
@@ -547,7 +670,7 @@ Therefore ks[-1] is not used.</p></li>
 
 <dl class="py function">
 <dt id="trtoolbox.myglobalfit.opt_func_raw">
-<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">opt_func_raw</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ks</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">back</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#opt_func_raw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.opt_func_raw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.myglobalfit.</code><code class="sig-name descname">opt_func_raw</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ks</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/myglobalfit.html#opt_func_raw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.myglobalfit.opt_func_raw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Optimization function for residuals of fitted data - input data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -582,6 +705,7 @@ Therefore ks[-1] is not used.</p></li>
 <li><p><strong>svdtraces</strong> (<em>np.array</em>) – SVD traces</p></li>
 <li><p><strong>nb_exps</strong> (<em>int</em>) – Number of exponential decay processes. Needed for reshaping the
 flattened paramater array.</p></li>
+<li><p><strong>back</strong> (<em>boolean</em>) – Determines if a model with back-reactions is used.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -798,13 +922,13 @@ Running this method fixes this.</p>
 
 <dl class="py method">
 <dt id="trtoolbox.mylda.Results.get_alpha">
-<code class="sig-name descname">get_alpha</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.get_alpha"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.get_alpha" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_alpha</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.get_alpha"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.get_alpha" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets alpha value and index.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>index_alpha</strong> (<em>int</em>) – Plot for specified alpha at index.</p></li>
 <li><p><strong>alpha</strong> (<em>float</em>) – Plot for the closest alpha as specified.</p></li>
+<li><p><strong>index_alpha</strong> (<em>int</em>) – Plot for specified alpha at index.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -819,13 +943,13 @@ Running this method fixes this.</p>
 
 <dl class="py method">
 <dt id="trtoolbox.mylda.Results.get_xk">
-<code class="sig-name descname">get_xk</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.get_xk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.get_xk" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_xk</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.get_xk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.get_xk" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets selected LDA map.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>index_alpha</strong> (<em>int</em>) – Plot for specified alpha at index.</p></li>
 <li><p><strong>alpha</strong> (<em>float</em>) – Plot for the closest alpha as specified.</p></li>
+<li><p><strong>index_alpha</strong> (<em>int</em>) – Plot for specified alpha at index.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -846,13 +970,13 @@ Running this method fixes this.</p>
 
 <dl class="py method">
 <dt id="trtoolbox.mylda.Results.plot_fitdata">
-<code class="sig-name descname">plot_fitdata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.plot_fitdata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.plot_fitdata" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plot_fitdata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.plot_fitdata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.plot_fitdata" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots a nice looking heatmap of fitted data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>index_alpha</strong> (<em>int</em>) – Plot for specified alpha at index.</p></li>
 <li><p><strong>alpha</strong> (<em>float</em>) – Plot for the closest alpha as specified.</p></li>
+<li><p><strong>index_alpha</strong> (<em>int</em>) – Plot for specified alpha at index.</p></li>
 </ul>
 </dd>
 </dl>
@@ -860,13 +984,13 @@ Running this method fixes this.</p>
 
 <dl class="py method">
 <dt id="trtoolbox.mylda.Results.plot_fitdata_3d">
-<code class="sig-name descname">plot_fitdata_3d</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.plot_fitdata_3d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.plot_fitdata_3d" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plot_fitdata_3d</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.plot_fitdata_3d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.plot_fitdata_3d" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots a 3D surface of fitted data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>index_alpha</strong> (<em>int</em>) – Plot for specified alpha at index.</p></li>
 <li><p><strong>alpha</strong> (<em>float</em>) – Plot for the closest alpha as specified.</p></li>
+<li><p><strong>index_alpha</strong> (<em>int</em>) – Plot for specified alpha at index.</p></li>
 </ul>
 </dd>
 </dl>
@@ -880,13 +1004,13 @@ Running this method fixes this.</p>
 
 <dl class="py method">
 <dt id="trtoolbox.mylda.Results.plot_ldamap">
-<code class="sig-name descname">plot_ldamap</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.plot_ldamap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.plot_ldamap" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plot_ldamap</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.plot_ldamap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.plot_ldamap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots a nice looking contourmap.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>index_alpha</strong> (<em>int</em>) – Plot for specified alpha at index.</p></li>
 <li><p><strong>alpha</strong> (<em>float</em>) – Plot for the closest alpha as specified.</p></li>
+<li><p><strong>index_alpha</strong> (<em>int</em>) – Plot for specified alpha at index.</p></li>
 </ul>
 </dd>
 </dl>
@@ -900,32 +1024,32 @@ Running this method fixes this.</p>
 
 <dl class="py method">
 <dt id="trtoolbox.mylda.Results.plot_solutionvector">
-<code class="sig-name descname">plot_solutionvector</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.plot_solutionvector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.plot_solutionvector" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plot_solutionvector</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.plot_solutionvector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.plot_solutionvector" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots the sum of amplituted over time constants.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="trtoolbox.mylda.Results.plot_spectra">
-<code class="sig-name descname">plot_spectra</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.plot_spectra"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.plot_spectra" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plot_spectra</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.plot_spectra"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.plot_spectra" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots interactive spectra.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="trtoolbox.mylda.Results.plot_traces">
-<code class="sig-name descname">plot_traces</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.plot_traces"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.plot_traces" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plot_traces</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.plot_traces"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.plot_traces" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots interactive time traces.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="trtoolbox.mylda.Results.save_to_files">
-<code class="sig-name descname">save_to_files</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.save_to_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.save_to_files" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">save_to_files</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.save_to_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.save_to_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Saving results to .dat files.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>path</strong> (<em>str</em>) – Path for saving.</p></li>
-<li><p><strong>index_alpha</strong> (<em>int</em>) – Plot for specified alpha at index.</p></li>
 <li><p><strong>alpha</strong> (<em>float</em>) – Plot for the closest alpha as specified.</p></li>
+<li><p><strong>index_alpha</strong> (<em>int</em>) – Plot for specified alpha at index.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1068,7 +1192,7 @@ for a better visualization of the L-curve.</p>
 <dl class="py function">
 <dt id="trtoolbox.mylda.gen_taus">
 <code class="sig-prename descclassname">trtoolbox.mylda.</code><code class="sig-name descname">gen_taus</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">t1</span></em>, <em class="sig-param"><span class="n">t2</span></em>, <em class="sig-param"><span class="n">n</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#gen_taus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.gen_taus" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates logarihmic spaced time constants.</p>
+<dd><p>Generates logarithmic spaced time constants.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -1388,6 +1512,16 @@ Running this method fixes this.</p>
 <code class="sig-name descname">init_phelper</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mysvd.html#Results.init_phelper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.Results.init_phelper" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initiliazes phelper after clean().</p>
 </dd></dl>
+
+<dl class="py method">
+<dt id="trtoolbox.mysvd.Results.plot_abstract_spectra">
+<code class="sig-name descname">plot_abstract_spectra</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mysvd.html#Results.plot_abstract_spectra"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.Results.plot_abstract_spectra" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="trtoolbox.mysvd.Results.plot_abstract_traces">
+<code class="sig-name descname">plot_abstract_traces</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mysvd.html#Results.plot_abstract_traces"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mysvd.Results.plot_abstract_traces" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt id="trtoolbox.mysvd.Results.plot_data">
@@ -1829,7 +1963,7 @@ and n as time. But it is actually not important.</p></li>
 
 <dl class="py method">
 <dt id="trtoolbox.plothelper.PlotHelper.plot_spectra">
-<code class="sig-name descname">plot_spectra</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">res</span></em>, <em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">rev</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/plothelper.html#PlotHelper.plot_spectra"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.plot_spectra" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plot_spectra</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">res</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">rev</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/plothelper.html#PlotHelper.plot_spectra"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.plot_spectra" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots interactive spectra.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1858,7 +1992,7 @@ and n as time. But it is actually not important.</p></li>
 
 <dl class="py method">
 <dt id="trtoolbox.plothelper.PlotHelper.plot_traces">
-<code class="sig-name descname">plot_traces</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">res</span></em>, <em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/plothelper.html#PlotHelper.plot_traces"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.plot_traces" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plot_traces</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">res</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/plothelper.html#PlotHelper.plot_traces"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.plot_traces" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots interactive time traces.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1876,66 +2010,43 @@ and n as time. But it is actually not important.</p></li>
 </div>
 
 
+           </div>
+           
           </div>
-          
-        </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="index.html">Time-Resolved Toolbox</a></h1>
+          <footer>
+  
 
+  <hr/>
 
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, David Ehrenberg
 
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-
-
-
-
-<h3>Navigation</h3>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="index.html">Documentation overview</a><ul>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
-
-
-
-
-
-
-
+</footer>
 
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2020, David Ehrenberg.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="_sources/trtoolbox.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
 
-    
+    </section>
 
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
     
-  </body>
+   
+
+</body>
 </html>

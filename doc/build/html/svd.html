@@ -1,0 +1,217 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Singular value decomposition &mdash; Time-Resolved Toolbox  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Global fit routine" href="gf.html" />
+    <link rel="prev" title="Introduction" href="introduction.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Time-Resolved Toolbox
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Singular value decomposition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gf.html">Global fit routine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lda.html">Lifetime density analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">Using the GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dgen.html">Data generator</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Time-Resolved Toolbox</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Singular value decomposition</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/svd.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="singular-value-decomposition">
+<h1>Singular value decomposition<a class="headerlink" href="#singular-value-decomposition" title="Permalink to this headline">¶</a></h1>
+<p>Dimensional reduction via SVD is widely used in machine learning but can also be used for image compression. Applying SVD to spectrocopic data can reduce noise significantly by choosing an appropiate number of singular values for reconstructing the data.</p>
+<a class="reference internal image-reference" href="_images/svd.png"><img alt="_images/svd.png" src="_images/svd.png" style="width: 600px;" /></a>
+<p>The image above illustrates what this means in terms of the matrices <strong>U</strong>, <strong>S</strong>, <strong>V</strong>. The matrix <strong>U</strong> contains abstract spectral components sorted by the significance represented by the singular values of <strong>S</strong>. It becomes clear that terms with a low singular value can be omitted due to their low contribution to the original dataset. Hence, the signal-to-noise ratio can be increased by choosing an appropriate cut-off value without loosing significant spectral information. Time information is stored in the <strong>V</strong> matrix which can be subjected to a global fitting procedure.</p>
+<p>It is advised to run the <a class="reference internal" href="trtoolbox.html#trtoolbox.mysvd.show_svs" title="trtoolbox.mysvd.show_svs"><code class="xref py py-meth docutils literal notranslate"><span class="pre">trtoolbox.mysvd.show_svs()</span></code></a> routine prior the reconstruction of the data. It will show abstract time traces, spectra and how much variance is explained by singular values. Careful inspection of this information shall help to decide how many singular values should be used for recontruction with the <a class="reference internal" href="trtoolbox.html#trtoolbox.mysvd.dosvd" title="trtoolbox.mysvd.dosvd"><code class="xref py py-meth docutils literal notranslate"><span class="pre">trtoolbox.mysvd.dosvd()</span></code></a> routine. <em>n</em> is here the number of singular values. It can also be a list of values.</p>
+<p>The returned objext is <a class="reference internal" href="trtoolbox.html#trtoolbox.mysvd.Results" title="trtoolbox.mysvd.Results"><code class="xref py py-class docutils literal notranslate"><span class="pre">trtoolbox.mysvd.Results</span></code></a>.</p>
+<div class="line-block">
+<div class="line">Reference:</div>
+<div class="line">Lórenz-Fonfría, Víctor A., and Hideki Kandori. “Spectroscopic and kinetic evidence on how bacteriorhodopsin accomplishes vectorial proton transport under functional conditions.” Journal of the American Chemical Society 131.16 (2009): 5891-5901.</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="gf.html" class="btn btn-neutral float-right" title="Global fit routine" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="introduction.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, David Ehrenberg
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

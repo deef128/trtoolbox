@@ -1,4 +1,3 @@
-# TODO: plot abstract spectra and traces
 import os
 from scipy.linalg import svd
 import numpy as np
@@ -125,6 +124,41 @@ class Results:
 
         self.init_phelper()
         self._phelper.plot_spectra(self)
+
+    def plot_abstract_traces(self):
+        if type(self.n) == int:
+            nlist = list(range(self.n))
+        else:
+            nlist = self.n
+
+        cols = int(np.ceil(len(nlist)/2))
+        fig, axs = plt.subplots(2, cols)
+        fig.suptitle('Abstract traces')
+        r = 0
+        offset = 0
+        for i in range(len(nlist)):
+            if i == cols:
+                r = 1
+                offset = 4
+            axs[r, i-offset].plot(self.time.T, self.vt[i, :])
+            axs[r, i-offset].set_xscale('log')
+
+    def plot_abstract_spectra(self):
+        if type(self.n) == int:
+            nlist = list(range(self.n))
+        else:
+            nlist = self.n
+
+        cols = int(np.ceil(len(nlist)/2))
+        fig, axs = plt.subplots(2, cols)
+        fig.suptitle('Abstract spectra')
+        r = 0
+        offset = 0
+        for i in range(len(nlist)):
+            if i == cols:
+                r = 1
+                offset = 4
+            axs[r, i-offset].plot(self.wn, self.u[:, i])
 
     def plot_results(self):
         """ Plots heatmaps of original and SVD data,

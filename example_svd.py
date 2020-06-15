@@ -15,7 +15,7 @@ dgen = DataGenerator()
 dgen.gen_data(
     wnlimit=[1200, 1700],
     num_peaks=3,
-    tcs=[-2, -6, -1],
+    tcs=[1e-6, -1, -1, 1e-1],
     diff=True,
     avg_width=150,
     avg_std=10,
@@ -35,6 +35,8 @@ mysvd.show_svs(dgen.data, dgen.time, dgen.wn)
 # %% reconstruct data with n singular values
 res = mysvd.dosvd(dgen.data, dgen.time, dgen.wn, n=4)
 res.plot_results()
+# res.plot_abstract_traces()
+# res.plot_abstract_spectra()
 plt.show()
 
 # %% save files

@@ -15,8 +15,8 @@ except NameError:
 dgen = DataGenerator()
 dgen.gen_data(
     wnlimit=[800, 1900],
+    tcs=4,
     num_peaks=5,
-    tcs=[-2, -6, -1],
     diff=True,
     avg_width=200,
     avg_std=15,

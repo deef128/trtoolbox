@@ -1,34 +1,152 @@
 
+
 <!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>trtoolbox.mylda &mdash; Time-Resolved Toolbox  documentation</title>
+  
 
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>trtoolbox.mylda &#8212; Time-Resolved Toolbox  documentation</title>
-    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/language_data.js"></script>
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
    
-  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
-  </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
           
 
-          <div class="body" role="main">
+          
+            <a href="../../index.html" class="icon icon-home"> Time-Resolved Toolbox
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../svd.html">Singular value decomposition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../gf.html">Global fit routine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lda.html">Lifetime density analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../gui.html">Using the GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dgen.html">Data generator</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Time-Resolved Toolbox</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>trtoolbox.mylda</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <h1>Source code for trtoolbox.mylda</h1><div class="highlight"><pre>
 <span></span><span class="c1"># TODO: species associated spectra</span>
@@ -109,15 +227,15 @@
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_phelper</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_phelper</span> <span class="o">=</span> <span class="n">PlotHelper</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Results.get_alpha"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mylda.Results.get_alpha">[docs]</a>    <span class="k">def</span> <span class="nf">get_alpha</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index_alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="Results.get_alpha"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mylda.Results.get_alpha">[docs]</a>    <span class="k">def</span> <span class="nf">get_alpha</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">index_alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Gets alpha value and index.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        index_alpha : int</span>
-<span class="sd">            Plot for specified alpha at index.</span>
 <span class="sd">        alpha : float</span>
 <span class="sd">            Plot for the closest alpha as specified.</span>
+<span class="sd">        index_alpha : int</span>
+<span class="sd">            Plot for specified alpha at index.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -134,17 +252,17 @@
             <span class="c1"># search for closest alpha value</span>
             <span class="n">index_alpha</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alphas</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">))</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
         <span class="n">alpha</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alphas</span><span class="p">[</span><span class="n">index_alpha</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">index_alpha</span><span class="p">,</span> <span class="n">alpha</span></div>
+        <span class="k">return</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">index_alpha</span></div>
 
-<div class="viewcode-block" id="Results.get_xk"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mylda.Results.get_xk">[docs]</a>    <span class="k">def</span> <span class="nf">get_xk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index_alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="Results.get_xk"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mylda.Results.get_xk">[docs]</a>    <span class="k">def</span> <span class="nf">get_xk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">index_alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Gets selected LDA map.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        index_alpha : int</span>
-<span class="sd">            Plot for specified alpha at index.</span>
 <span class="sd">        alpha : float</span>
 <span class="sd">            Plot for the closest alpha as specified.</span>
+<span class="sd">        index_alpha : int</span>
+<span class="sd">            Plot for specified alpha at index.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -156,7 +274,7 @@
 
         <span class="c1"># check for used method</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_k</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-            <span class="n">index_alpha</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_alpha</span><span class="p">(</span><span class="n">index_alpha</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">index_alpha</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_alpha</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">index_alpha</span><span class="p">)</span>
             <span class="n">x_k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_k</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">index_alpha</span><span class="p">]</span>
             <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;LDA map at alpha = </span><span class="si">%f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alphas</span><span class="p">[</span><span class="n">index_alpha</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
@@ -165,15 +283,15 @@
 
         <span class="k">return</span> <span class="n">x_k</span><span class="p">,</span> <span class="n">title</span></div>
 
-<div class="viewcode-block" id="Results.plot_fitdata"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mylda.Results.plot_fitdata">[docs]</a>    <span class="k">def</span> <span class="nf">plot_fitdata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index_alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="Results.plot_fitdata"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mylda.Results.plot_fitdata">[docs]</a>    <span class="k">def</span> <span class="nf">plot_fitdata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">index_alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Plots a nice looking heatmap of fitted data.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        index_alpha : int</span>
-<span class="sd">            Plot for specified alpha at index.</span>
 <span class="sd">        alpha : float</span>
 <span class="sd">            Plot for the closest alpha as specified.</span>
+<span class="sd">        index_alpha : int</span>
+<span class="sd">            Plot for specified alpha at index.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">init_phelper</span><span class="p">()</span>
@@ -182,7 +300,7 @@
             <span class="k">return</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fitdata</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-            <span class="n">index_alpha</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_alpha</span><span class="p">(</span><span class="n">index_alpha</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">index_alpha</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_alpha</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">index_alpha</span><span class="p">)</span>
             <span class="n">fitdata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fitdata</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">index_alpha</span><span class="p">]</span>
             <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Fitted data at alpha = </span><span class="si">%f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alphas</span><span class="p">[</span><span class="n">index_alpha</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
@@ -196,15 +314,15 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_unit</span><span class="p">))</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Results.plot_fitdata_3d"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mylda.Results.plot_fitdata_3d">[docs]</a>    <span class="k">def</span> <span class="nf">plot_fitdata_3d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index_alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="Results.plot_fitdata_3d"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mylda.Results.plot_fitdata_3d">[docs]</a>    <span class="k">def</span> <span class="nf">plot_fitdata_3d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">index_alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Plots a 3D surface of fitted data.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        index_alpha : int</span>
-<span class="sd">            Plot for specified alpha at index.</span>
 <span class="sd">        alpha : float</span>
 <span class="sd">            Plot for the closest alpha as specified.</span>
+<span class="sd">        index_alpha : int</span>
+<span class="sd">            Plot for specified alpha at index.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">init_phelper</span><span class="p">()</span>
@@ -213,7 +331,7 @@
             <span class="k">return</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fitdata</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-            <span class="n">index_alpha</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_alpha</span><span class="p">(</span><span class="n">index_alpha</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">index_alpha</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_alpha</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">index_alpha</span><span class="p">)</span>
             <span class="n">fitdata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fitdata</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">index_alpha</span><span class="p">]</span>
             <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Fitted data at alpha = </span><span class="si">%f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alphas</span><span class="p">[</span><span class="n">index_alpha</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
@@ -227,22 +345,22 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_unit</span><span class="p">))</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Results.plot_ldamap"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mylda.Results.plot_ldamap">[docs]</a>    <span class="k">def</span> <span class="nf">plot_ldamap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index_alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="Results.plot_ldamap"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mylda.Results.plot_ldamap">[docs]</a>    <span class="k">def</span> <span class="nf">plot_ldamap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">index_alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Plots a nice looking contourmap.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        index_alpha : int</span>
-<span class="sd">            Plot for specified alpha at index.</span>
 <span class="sd">        alpha : float</span>
 <span class="sd">            Plot for the closest alpha as specified.</span>
+<span class="sd">        index_alpha : int</span>
+<span class="sd">            Plot for specified alpha at index.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">init_phelper</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_k</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;First start a LDA.&#39;</span><span class="p">)</span>
             <span class="k">return</span>
-        <span class="n">x_k</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_xk</span><span class="p">(</span><span class="n">index_alpha</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+        <span class="n">x_k</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_xk</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">index_alpha</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_phelper</span><span class="o">.</span><span class="n">plot_contourmap</span><span class="p">(</span>
             <span class="n">x_k</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">taus</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wn</span><span class="p">,</span>
@@ -251,19 +369,19 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> / </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="s1">&#39;tau&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_unit</span><span class="p">))</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Results.plot_traces"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mylda.Results.plot_traces">[docs]</a>    <span class="k">def</span> <span class="nf">plot_traces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index_alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="Results.plot_traces"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mylda.Results.plot_traces">[docs]</a>    <span class="k">def</span> <span class="nf">plot_traces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">index_alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Plots interactive time traces.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">init_phelper</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_phelper</span><span class="o">.</span><span class="n">plot_traces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index_alpha</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_phelper</span><span class="o">.</span><span class="n">plot_traces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">index_alpha</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Results.plot_spectra"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mylda.Results.plot_spectra">[docs]</a>    <span class="k">def</span> <span class="nf">plot_spectra</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index_alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="Results.plot_spectra"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mylda.Results.plot_spectra">[docs]</a>    <span class="k">def</span> <span class="nf">plot_spectra</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">index_alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Plots interactive spectra.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">init_phelper</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_phelper</span><span class="o">.</span><span class="n">plot_spectra</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index_alpha</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_phelper</span><span class="o">.</span><span class="n">plot_spectra</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">index_alpha</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Results.plot_lcurve"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mylda.Results.plot_lcurve">[docs]</a>    <span class="k">def</span> <span class="nf">plot_lcurve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Plots L-curve.</span>
@@ -272,12 +390,12 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lcurve</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">lcurve</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;o-&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Results.plot_solutionvector"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mylda.Results.plot_solutionvector">[docs]</a>    <span class="k">def</span> <span class="nf">plot_solutionvector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index_alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="Results.plot_solutionvector"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mylda.Results.plot_solutionvector">[docs]</a>    <span class="k">def</span> <span class="nf">plot_solutionvector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">index_alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Plots the sum of amplituted over time constants.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-        <span class="n">x_k</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_xk</span><span class="p">(</span><span class="n">index_alpha</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+        <span class="n">x_k</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_xk</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">index_alpha</span><span class="p">)</span>
         <span class="c1"># plt.plot(</span>
         <span class="c1">#     [np.min(self.taus), np.max(self.taus)],</span>
         <span class="c1">#     [0, 0],</span>
@@ -306,17 +424,17 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_phelper</span> <span class="o">=</span> <span class="p">[]</span></div>
 
-<div class="viewcode-block" id="Results.save_to_files"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mylda.Results.save_to_files">[docs]</a>    <span class="k">def</span> <span class="nf">save_to_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">index_alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="Results.save_to_files"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mylda.Results.save_to_files">[docs]</a>    <span class="k">def</span> <span class="nf">save_to_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">index_alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Saving results to .dat files.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        path : str</span>
 <span class="sd">            Path for saving.</span>
-<span class="sd">        index_alpha : int</span>
-<span class="sd">            Plot for specified alpha at index.</span>
 <span class="sd">        alpha : float</span>
 <span class="sd">            Plot for the closest alpha as specified.</span>
+<span class="sd">        index_alpha : int</span>
+<span class="sd">            Plot for specified alpha at index.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
@@ -338,7 +456,9 @@
                     <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%.4e</span><span class="s1">&#39;</span>
                 <span class="p">)</span>
 
-        <span class="n">index_alpha</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_alpha</span><span class="p">(</span><span class="n">index_alpha</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+        <span class="n">fname</span> <span class="o">=</span> <span class="s1">&#39;fitdata.dat&#39;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Writing &#39;</span> <span class="o">+</span> <span class="n">fname</span><span class="p">)</span>
+        <span class="n">alpha</span><span class="p">,</span> <span class="n">index_alpha</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_alpha</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">index_alpha</span><span class="p">)</span>
         <span class="n">fitdata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fitdata</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">index_alpha</span><span class="p">]</span>
         <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span>
                     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">fname</span><span class="p">),</span>
@@ -349,7 +469,7 @@
 
         <span class="n">fname</span> <span class="o">=</span> <span class="s1">&#39;ldamap.dat&#39;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Writing &#39;</span> <span class="o">+</span> <span class="n">fname</span><span class="p">)</span>
-        <span class="n">x_k</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_xk</span><span class="p">(</span><span class="n">index_alpha</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+        <span class="n">x_k</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_xk</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">index_alpha</span><span class="p">)</span>
         <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span>
                     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">fname</span><span class="p">),</span>
                     <span class="n">x_k</span><span class="p">,</span>
@@ -406,11 +526,15 @@
     <span class="n">time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">size</span><span class="p">))</span>
     <span class="n">wn</span> <span class="o">=</span> <span class="n">wn</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">wn</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 
+    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">wn</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> \
+       <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">time</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Dimensions mismatch!&#39;</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">wn</span></div>
 
 
 <div class="viewcode-block" id="gen_taus"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mylda.gen_taus">[docs]</a><span class="k">def</span> <span class="nf">gen_taus</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Generates logarihmic spaced time constants.</span>
+    <span class="sd">&quot;&quot;&quot; Generates logarithmic spaced time constants.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -426,6 +550,16 @@
 <span class="sd">    taus : np.array</span>
 <span class="sd">        Generated time constants.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">t1</span> <span class="o">==</span> <span class="n">t2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Choose different limits!&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">t1</span> <span class="o">&gt;</span> <span class="n">t2</span><span class="p">:</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">t1</span>
+        <span class="n">t1</span> <span class="o">=</span> <span class="n">t2</span>
+        <span class="n">t2</span> <span class="o">=</span> <span class="n">t</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Choose positive number. Take 100 now...&#39;</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="mi">100</span>
 
     <span class="n">taus</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">t1</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">t2</span><span class="p">),</span> <span class="n">n</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">taus</span></div>
@@ -506,6 +640,16 @@
 <span class="sd">    alphas : np.array</span>
 <span class="sd">        Generated alpha values.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">a1</span> <span class="o">==</span> <span class="n">a2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Choose different limits!&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">a1</span> <span class="o">&gt;</span> <span class="n">a2</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">a1</span>
+        <span class="n">a1</span> <span class="o">=</span> <span class="n">a2</span>
+        <span class="n">a2</span> <span class="o">=</span> <span class="n">a</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Choose positive number. Take 100 now...&#39;</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="mi">100</span>
 
     <span class="k">if</span> <span class="n">space</span> <span class="o">==</span> <span class="s1">&#39;log&#39;</span><span class="p">:</span>
         <span class="n">alphas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">a1</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">a2</span><span class="p">),</span> <span class="n">n</span><span class="p">)</span>
@@ -673,6 +817,7 @@
 <span class="sd">    res : np.array</span>
 <span class="sd">        Expontential prefactors/amplitudes.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">lmatrix</span> <span class="o">=</span> <span class="n">gen_lmatrix</span><span class="p">(</span><span class="n">dmatrix</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">alpha</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
@@ -685,7 +830,7 @@
         <span class="n">a_aug</span> <span class="o">=</span> <span class="n">data</span>
 
     <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span><span class="n">d_aug</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">a_aug</span><span class="p">),</span> <span class="n">rcond</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">res</span></div>
+    <span class="k">return</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="tsvd"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.mylda.tsvd">[docs]</a><span class="k">def</span> <span class="nf">tsvd</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dmatrix</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
@@ -869,65 +1014,43 @@
 <span class="c1">#     return angle, diff, knee</span>
 </pre></div>
 
+           </div>
+           
           </div>
-          
-        </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../../index.html">Time-Resolved Toolbox</a></h1>
+          <footer>
+  
 
+  <hr/>
 
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, David Ehrenberg
 
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-
-
-
-
-<h3>Navigation</h3>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../../index.html">Documentation overview</a><ul>
-  <li><a href="../index.html">Module code</a><ul>
-  </ul></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
-
-
-
-
-
-
-
+</footer>
 
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2020, David Ehrenberg.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-    </div>
 
-    
+    </section>
 
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
     
-  </body>
+   
+
+</body>
 </html>

@@ -37,8 +37,8 @@ class DataGenerator:
         self.profile = np.array([])
         self.back = bool()
 
-    def gen_time(self, tlimit=[-7, -1], number=500):
-        """ Generates time array. Just works for negative exponents.
+    def gen_time(self, tlimit=[1e-7, 1e-1], number=500):
+        """ Generates time array.
 
         Parameters
         ----------
@@ -48,7 +48,7 @@ class DataGenerator:
             Number of time samples.
         """
 
-        self.time = np.logspace(tlimit[0], tlimit[1], number)
+        self.time = np.logspace(np.log10(tlimit[0]), np.log10(tlimit[1]), number)
         self.time = self.time.reshape((1, self.time.size))
 
     def gen_wn(self, wnlimit=[1500, 1700], step_size=-1):
@@ -111,17 +111,20 @@ class DataGenerator:
                 das[pos:pos+width] = das[pos:pos+width] + pre*gaus*sc
             self.das[:, i] = das.T
 
-    # TODO: make that just -1 are replaced
     def gen_tcs(self, tcs=[-1, -1, -1], back=False):
         """ Generates time constants
 
         Parameters
         ----------
-        tcs : list
-            List of tcs. -1 is placeholder for random tcs.
+        tcs : list or int
+            List of tcs. -1 is placeholder for random tcs. Number of generated tcs can be
+            specified if tcs is an integer.
         back : bool
             Determines if back reactions are used.
         """
+
+        if isinstance(tcs, int):
+            tcs = [-1 for i in range(tcs)]
 
         if -1 in tcs:
             min_expo = np.log10(np.min(self.time))
@@ -136,10 +139,14 @@ class DataGenerator:
                 replace=False)
             expo = np.sort(expo)
             pre = -9 * nrand.random(size=(len(tcs),)) + 9
-            self.tcs = np.array([pre[i]*10.**expo[i] for i in range(len(tcs))])
-            if back is True:
-                sc = -9 * nrand.random(size=(len(tcs),)) + 9
-                self.tcs = np.vstack((self.tcs, self.tcs*sc)).T
+            gen_tcs = np.array([pre[i]*10.**expo[i] for i in range(len(tcs))])
+            self.tcs = [gen_tcs[i] if x == -1 else x for i, x in enumerate(tcs)]
+            self.tcs = np.array(self.tcs)
+        else:
+            self.tcs = np.array(tcs)
+        if back is True:
+            sc = -9 * nrand.random(size=(len(tcs),)) + 9
+            self.tcs = np.vstack((self.tcs, self.tcs*sc)).T
 
     def gen_data_das(self, tcs=[-1, -1, -1], back=False):
         """ Generates data.
@@ -158,7 +165,7 @@ class DataGenerator:
 
     def gen_data(
             self,
-            tlimit=[-7, -1],
+            tlimit=[1e-7, 1e-1],
             number=500,
             wnlimit=[1500, 1700],
             wnstep=-1,
@@ -191,8 +198,9 @@ class DataGenerator:
             Std
         diff : bool
             Peaks can be negative if True.
-        tcs : list
-            List of tcs. -1 is placeholder for random tcs.
+        tcs : list or int
+            List of tcs. -1 is placeholder for random tcs. Number of generated tcs can be
+            specified if tcs is an integer.
         back : bool
             Determines if back reactions are used.
         noise : bool
@@ -200,6 +208,9 @@ class DataGenerator:
         noise_scale : float
             Scaling factor for noise.
         """
+
+        if isinstance(tcs, int):
+            tcs = [-1 for i in range(tcs)]
 
         if back is False:
             num_das = len(tcs)

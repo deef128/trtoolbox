@@ -42,21 +42,21 @@
     <item>
      <widget class="QLabel" name="label">
       <property name="text">
-       <string>Time limits (exponents)</string>
+       <string>Time limits</string>
       </property>
      </widget>
     </item>
     <item>
      <widget class="QLineEdit" name="txt_time">
       <property name="text">
-       <string>-7, -1</string>
+       <string>1e-7, 1e-1</string>
       </property>
      </widget>
     </item>
     <item>
      <widget class="QLabel" name="label_2">
       <property name="text">
-       <string>Wavenumber limits</string>
+       <string>Wavenumber limits (int)</string>
       </property>
      </widget>
     </item>

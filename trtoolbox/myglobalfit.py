@@ -1,6 +1,5 @@
 # TODO: fix overflow
 # TODO: GLA
-# TODO: check if back-reactions is nicely implemented
 import os
 from scipy.integrate import odeint
 from scipy.optimize import least_squares
@@ -498,7 +497,7 @@ def calculate_estimate(das, data):
     return est
 
 
-def opt_func_raw(ks, time, data, back):
+def opt_func_raw(ks, time, data):
     """ Optimization function for residuals of fitted data - input data.
 
     Parameters
@@ -525,7 +524,7 @@ def opt_func_raw(ks, time, data, back):
     return r.flatten()**2
 
 
-def opt_func_est(ks, time, data, back):
+def opt_func_est(ks, time, data):
     """ Optimization function for residuals of concentration profile
         and estimated contributions of DAS
 
@@ -555,7 +554,6 @@ def opt_func_est(ks, time, data, back):
     return r.flatten()**2
 
 
-# TODO: check results for back-reactions
 def opt_func_svd(par, time, data, svdtraces, nb_exps, back):
     """ Optimization function for residuals of SVD
         abstract time traces - fitted traces.
@@ -573,6 +571,8 @@ def opt_func_svd(par, time, data, svdtraces, nb_exps, back):
     nb_exps : int
         Number of exponential decay processes. Needed for reshaping the
         flattened paramater array.
+    back : boolean
+        Determines if a model with back-reactions is used. 
 
     Returns
     -------

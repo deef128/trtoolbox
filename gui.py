@@ -294,7 +294,7 @@ class DgenDialog(QtWidgets.QDialog, Ui_Dialog):
 
             dgen = DataGenerator()
             dgen.gen_data(
-                tlimit=[int(s) for s in txt_time.split(',')],
+                tlimit=[float(s) for s in txt_time.split(',')],
                 wnlimit=[int(s) for s in txt_wn.split(',')],
                 tcs=[-1 for i in range(sb_taus)],
                 num_peaks=sb_peaks,

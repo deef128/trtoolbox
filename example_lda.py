@@ -1,31 +1,51 @@
+# %% import stuff
 import trtoolbox.mylda as mylda
-import trtoolbox.mysvd as mysvd
+from test.data_generator import DataGenerator
 import numpy as np
 import matplotlib.pyplot as plt
-
 plt.close('all')
 
-# load data
-data = np.loadtxt('./data/data.dat', delimiter=',')
-wn = np.loadtxt('./data/wavenumbers.dat', delimiter=',')
-time = np.loadtxt('./data/time.dat', delimiter=',')
+# %% change ipython backend
+try:
+    get_ipython().run_line_magic('matplotlib', 'widget')
+except NameError:
+    pass
 
-# data = mysvd.reconstruct(data, 10).svddata
+# %% generate data
+dgen = DataGenerator()
+dgen.gen_data(
+    wnlimit=[1500, 1800],
+    num_peaks=4,
+    diff=True,
+    avg_width=100,
+    avg_std=10,
+    noise=True,
+    noise_scale=0.15
+)
 
-res = mylda.dolda(data, time, wn, tlimits=[1e-6, 1e-1], tnum=50)
+# %% plot generated data
+dgen.print_tcs()
+dgen.plot_das()
+dgen.plot_profile()
+dgen.plot_data()
+
+# %% do lda
+res = mylda.dolda(
+    dgen.data,
+    dgen.time,
+    dgen.wn,
+)
 # res.plot_results()
-# res.plot_spectra(alpha=2)
-# res.plot_traces(alpha=2)
-res.plot_solutionvector(alpha=1)
-# res.plot_fitdata()
-
-# res2 = mylda.dolda(data, time, wn, seqmodel=True)
-# res2.plot_results()
-# 
+res.plot_fitdata(alpha=0.9)
+res.plot_ldamap(alpha=0.9)
+res.plot_traces()
+res.plot_spectra()
 plt.show()
 
-# res.save_to_files('/home/dave/Downloads/lda', alpha=1.1)
+# %% save files
+# res.save_to_files(path)
 
+# NOTE:
 # for inspecting the Results class in Spyder after interactive plotting
 # please run the clean() method!
 # res.clean()
