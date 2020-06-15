@@ -53,10 +53,18 @@ class TestSVD(unittest.TestCase):
         self.assertEqual(wn.shape[0], self.data.shape[0])
 
         with self.assertRaises(ValueError):
-            data, time, wn = mysvd.check_input(self.data, self.time, self.wn[2:])
+            data, time, wn = mysvd.check_input(
+                self.data,
+                self.time,
+                self.wn[2:]
+            )
 
         with self.assertRaises(ValueError):
-            data, time, wn = mysvd.check_input(self.data, self.time[2:], self.wn)
+            data, time, wn = mysvd.check_input(
+                self.data,
+                self.time[2:],
+                self.wn
+            )
 
         with self.assertRaises(ValueError):
             data, time, wn = mysvd.check_input(

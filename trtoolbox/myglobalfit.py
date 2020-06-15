@@ -516,10 +516,10 @@ def opt_func_raw(ks, time, data):
     """
 
     # deflattens array
-    if back is True and ks.ndim == 1:
-        ks = ks.reshape(int(ks.shape[0]/2), 2)
+    # if back is True and ks.ndim == 1:
+    #     ks = ks.reshape(int(ks.shape[0]/2), 2)
 
-    fitdata = calculate_fitdata(ks, time, data, back)
+    fitdata = calculate_fitdata(ks, time, data)
     r = fitdata - data
     return r.flatten()**2
 
@@ -544,10 +544,10 @@ def opt_func_est(ks, time, data):
     """
 
     # deflattens array
-    if back is True and ks.ndim == 1:
-        ks = ks.reshape(int(ks.shape[0]/2), 2)
+    # if back is True and ks.ndim == 1:
+    #     ks = ks.reshape(int(ks.shape[0]/2), 2)
 
-    profile = create_profile(time, ks, back)
+    profile = create_profile(time, ks)
     das = create_das(profile, data)
     est = calculate_estimate(das, data)
     r = profile - est
@@ -572,7 +572,7 @@ def opt_func_svd(par, time, data, svdtraces, nb_exps, back):
         Number of exponential decay processes. Needed for reshaping the
         flattened paramater array.
     back : boolean
-        Determines if a model with back-reactions is used. 
+        Determines if a model with back-reactions is used.
 
     Returns
     -------
@@ -709,7 +709,7 @@ def doglobalfit(
         res = least_squares(
             opt_func_raw,
             start_ks.flatten(),
-            args=(time, data, back)
+            args=(time, data)
             )
         if back is False:
             ks = -np.sort(-res.x)
@@ -722,7 +722,7 @@ def doglobalfit(
         res = least_squares(
             opt_func_est,
             start_ks.flatten(),
-            args=(time, data, back)
+            args=(time, data)
             )
         if back is False:
             ks = -np.sort(-res.x)

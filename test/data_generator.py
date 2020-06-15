@@ -48,7 +48,11 @@ class DataGenerator:
             Number of time samples.
         """
 
-        self.time = np.logspace(np.log10(tlimit[0]), np.log10(tlimit[1]), number)
+        self.time = np.logspace(
+            np.log10(tlimit[0]),
+            np.log10(tlimit[1]),
+            number
+        )
         self.time = self.time.reshape((1, self.time.size))
 
     def gen_wn(self, wnlimit=[1500, 1700], step_size=-1):
@@ -117,8 +121,8 @@ class DataGenerator:
         Parameters
         ----------
         tcs : list or int
-            List of tcs. -1 is placeholder for random tcs. Number of generated tcs can be
-            specified if tcs is an integer.
+            List of tcs. -1 is placeholder for random tcs. Number of
+            generated tcs can be specified if tcs is an integer.
         back : bool
             Determines if back reactions are used.
         """
@@ -140,7 +144,8 @@ class DataGenerator:
             expo = np.sort(expo)
             pre = -9 * nrand.random(size=(len(tcs),)) + 9
             gen_tcs = np.array([pre[i]*10.**expo[i] for i in range(len(tcs))])
-            self.tcs = [gen_tcs[i] if x == -1 else x for i, x in enumerate(tcs)]
+            self.tcs = \
+                [gen_tcs[i] if x == -1 else x for i, x in enumerate(tcs)]
             self.tcs = np.array(self.tcs)
         else:
             self.tcs = np.array(tcs)
@@ -199,8 +204,8 @@ class DataGenerator:
         diff : bool
             Peaks can be negative if True.
         tcs : list or int
-            List of tcs. -1 is placeholder for random tcs. Number of generated tcs can be
-            specified if tcs is an integer.
+            List of tcs. -1 is placeholder for random tcs. Number of
+            generated tcs can be specified if tcs is an integer.
         back : bool
             Determines if back reactions are used.
         noise : bool

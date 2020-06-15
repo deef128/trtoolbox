@@ -57,10 +57,18 @@ class TestGF(unittest.TestCase):
         self.assertEqual(wn.shape[0], self.data.shape[0])
 
         with self.assertRaises(ValueError):
-            data, time, wn = mygf.check_input(self.data, self.time, self.wn[2:])
+            data, time, wn = mygf.check_input(
+                self.data,
+                self.time,
+                self.wn[2:]
+            )
 
         with self.assertRaises(ValueError):
-            data, time, wn = mygf.check_input(self.data, self.time[2:], self.wn)
+            data, time, wn = mygf.check_input(
+                self.data,
+                self.time[2:],
+                self.wn
+            )
 
         with self.assertRaises(ValueError):
             data, time, wn = mygf.check_input(
@@ -178,20 +186,20 @@ class TestGF(unittest.TestCase):
         self.assertEqual(est.shape, self.profile.shape)
 
     def test_opt_func_raw(self):
-        r = mygf.opt_func_raw(1/self.tcs, self.time, self.data, False)
+        r = mygf.opt_func_raw(1/self.tcs, self.time, self.data)
         self.assertEqual(r.shape, self.data.flatten().shape)
 
-        back_tcs = 1/np.c_[self.tcs, self.tcs]
-        r = mygf.opt_func_raw(back_tcs, self.time, self.data, True)
-        self.assertEqual(r.shape, self.data.flatten().shape)
+        # back_tcs = 1/np.c_[self.tcs, self.tcs]
+        # r = mygf.opt_func_raw(back_tcs, self.time, self.data, False)
+        # self.assertEqual(r.shape, self.data.flatten().shape)
 
     def test_opt_func_est(self):
-        r = mygf.opt_func_est(1/self.tcs, self.time, self.data, False)
+        r = mygf.opt_func_est(1/self.tcs, self.time, self.data)
         self.assertEqual(r.shape, self.profile.flatten().shape)
 
-        back_tcs = 1/np.c_[self.tcs, self.tcs]
-        r = mygf.opt_func_est(back_tcs, self.time, self.data, True)
-        self.assertEqual(r.shape, self.profile.flatten().shape)
+        # back_tcs = 1/np.c_[self.tcs, self.tcs]
+        # r = mygf.opt_func_est(back_tcs, self.time, self.data)
+        # self.assertEqual(r.shape, self.profile.flatten().shape)
 
     def test_opt_func_svd(self):
         pre = np.ones((self.tcs.size, 4))
