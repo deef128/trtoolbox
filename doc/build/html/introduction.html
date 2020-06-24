@@ -25,6 +25,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -155,7 +156,7 @@
   <div class="section" id="introduction">
 <h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
 <p>All analysis routines can be found in ./trtoolbox/*.py. The overall theme of this package is that the main routines can be run with <em>module.do*(data, time, freq, kwargs)</em> and requires numpy arrays as input. The data layout in mind while writing the code is that frequency spans over rows and time over columns. It should also work if axis are swapped but it could well be that I forgot somewhere to check for that. The routines will return a corresponding results object containing results and important information as attributes. Additionally, it provides convient methods for plotting the results callable via <em>resobj.plot_*()</em>.</p>
-<p>Example scripts are provided for each module for a hands-on experience on how to use this toolbox. The <em>data_generator</em> module found in ./test can be used to generate some spectroscopic data which is helpful to train yourself in analyzing your data with this toolbox.</p>
+<p>Example scripts are provided for each module for a hands-on experience on how to use this toolbox. The <code class="xref py py-class docutils literal notranslate"><span class="pre">trtoolbox.test.DataGenerator</span></code> module found in ./test can be used to generate some spectroscopic data which is helpful to train yourself in analyzing your data with this toolbox.</p>
 <dl class="simple">
 <dt>Using this toolbox requires following packages:</dt><dd><ul class="simple">
 <li><p>numpy (&gt;=1.18.1)</p></li>

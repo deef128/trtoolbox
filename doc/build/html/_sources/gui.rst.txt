@@ -3,8 +3,4 @@
 Using the GUI
 =============
 
-This document is meant to give a tutorial-like overview of all common tasks
-while using Sphinx.
-
-The green arrows designate "more info" links leading to advanced sections about
-the described task. 
+To start the GUI simply run *gui.py* in the trtoolbox folder. The two script files (*trtoolbox.sh* for bash/Linux and *trtoolbox.bat* for Windows) are a convenient way to activate an Anaconda environment and start the GUI. Do no forget to set the environment name and the Anaconda path in case of Windows.

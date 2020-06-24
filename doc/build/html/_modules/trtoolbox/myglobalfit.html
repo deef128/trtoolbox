@@ -25,6 +25,7 @@
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -667,10 +668,10 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># deflattens array</span>
-    <span class="k">if</span> <span class="n">back</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">and</span> <span class="n">ks</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">ks</span> <span class="o">=</span> <span class="n">ks</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">ks</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="c1"># if back is True and ks.ndim == 1:</span>
+    <span class="c1">#     ks = ks.reshape(int(ks.shape[0]/2), 2)</span>
 
-    <span class="n">fitdata</span> <span class="o">=</span> <span class="n">calculate_fitdata</span><span class="p">(</span><span class="n">ks</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">back</span><span class="p">)</span>
+    <span class="n">fitdata</span> <span class="o">=</span> <span class="n">calculate_fitdata</span><span class="p">(</span><span class="n">ks</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
     <span class="n">r</span> <span class="o">=</span> <span class="n">fitdata</span> <span class="o">-</span> <span class="n">data</span>
     <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">**</span><span class="mi">2</span></div>
 
@@ -695,10 +696,10 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># deflattens array</span>
-    <span class="k">if</span> <span class="n">back</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">and</span> <span class="n">ks</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">ks</span> <span class="o">=</span> <span class="n">ks</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">ks</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="c1"># if back is True and ks.ndim == 1:</span>
+    <span class="c1">#     ks = ks.reshape(int(ks.shape[0]/2), 2)</span>
 
-    <span class="n">profile</span> <span class="o">=</span> <span class="n">create_profile</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">ks</span><span class="p">,</span> <span class="n">back</span><span class="p">)</span>
+    <span class="n">profile</span> <span class="o">=</span> <span class="n">create_profile</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">ks</span><span class="p">)</span>
     <span class="n">das</span> <span class="o">=</span> <span class="n">create_das</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
     <span class="n">est</span> <span class="o">=</span> <span class="n">calculate_estimate</span><span class="p">(</span><span class="n">das</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
     <span class="n">r</span> <span class="o">=</span> <span class="n">profile</span> <span class="o">-</span> <span class="n">est</span>
@@ -723,7 +724,7 @@
 <span class="sd">        Number of exponential decay processes. Needed for reshaping the</span>
 <span class="sd">        flattened paramater array.</span>
 <span class="sd">    back : boolean</span>
-<span class="sd">        Determines if a model with back-reactions is used. </span>
+<span class="sd">        Determines if a model with back-reactions is used.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -860,7 +861,7 @@
         <span class="n">res</span> <span class="o">=</span> <span class="n">least_squares</span><span class="p">(</span>
             <span class="n">opt_func_raw</span><span class="p">,</span>
             <span class="n">start_ks</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
-            <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">back</span><span class="p">)</span>
+            <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="n">back</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
             <span class="n">ks</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="o">-</span><span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
@@ -873,7 +874,7 @@
         <span class="n">res</span> <span class="o">=</span> <span class="n">least_squares</span><span class="p">(</span>
             <span class="n">opt_func_est</span><span class="p">,</span>
             <span class="n">start_ks</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
-            <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">back</span><span class="p">)</span>
+            <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="n">back</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
             <span class="n">ks</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="o">-</span><span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>

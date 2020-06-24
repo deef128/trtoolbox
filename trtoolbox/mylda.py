@@ -238,6 +238,8 @@ class Results:
 
         plt.figure()
         plt.plot(self.lcurve[:, 0], self.lcurve[:, 1], 'o-', markersize=2)
+        plt.xlabel('res. norm (||Dx-b||)')
+        plt.ylabel('smooth norm (||Lx||)')
 
     def plot_solutionvector(self, alpha=-1, index_alpha=-1):
         """ Plots the sum of amplituted over time constants.
