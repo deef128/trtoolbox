@@ -477,6 +477,13 @@ p, li { white-space: pre-wrap; }
       </widget>
      </item>
      <item>
+      <widget class="QCheckBox" name="cb_lda_lcruve">
+       <property name="text">
+        <string>L-curve</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QLabel" name="label_13">
        <property name="text">
         <string>Alpha value:</string>
@@ -529,13 +536,6 @@ p, li { white-space: pre-wrap; }
       <widget class="QCheckBox" name="cb_lda_solution">
        <property name="text">
         <string>Solution vector</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QCheckBox" name="cb_lda_lcruve">
-       <property name="text">
-        <string>L-curve</string>
        </property>
       </widget>
      </item>
