@@ -38,6 +38,7 @@ res = mylda.dolda(
 # res.plot_results()
 res.plot_fitdata(alpha=0.9)
 res.plot_ldamap(alpha=0.9)
+res.plot_solutionvector()
 res.plot_traces()
 res.plot_spectra()
 plt.show()

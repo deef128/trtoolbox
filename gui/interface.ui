@@ -674,7 +674,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>300</y>
+       <y>330</y>
        <width>151</width>
        <height>25</height>
       </rect>
@@ -786,6 +786,19 @@ p, li { white-space: pre-wrap; }
       <enum>Qt::Vertical</enum>
      </property>
     </widget>
+    <widget class="QCheckBox" name="cb_lda_use_svd">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>300</y>
+       <width>151</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Use SVD data</string>
+     </property>
+    </widget>
     <zorder>line_4</zorder>
     <zorder>label_9</zorder>
     <zorder>label_8</zorder>
@@ -802,6 +815,7 @@ p, li { white-space: pre-wrap; }
     <zorder>txt_lda_tc_upper</zorder>
     <zorder>txt_lda_tc_bottom</zorder>
     <zorder>label_7</zorder>
+    <zorder>cb_lda_use_svd</zorder>
    </widget>
    <widget class="QPushButton" name="pb_plt_close">
     <property name="geometry">

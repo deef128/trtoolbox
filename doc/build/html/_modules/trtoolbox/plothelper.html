@@ -154,6 +154,7 @@
 <span class="kn">import</span> <span class="nn">matplotlib</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">matplotlib.widgets</span> <span class="kn">import</span> <span class="n">Slider</span>
+<span class="kn">from</span> <span class="nn">matplotlib.widgets</span> <span class="kn">import</span> <span class="n">CheckButtons</span>
 <span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="k">as</span> <span class="nn">colors</span>
 <span class="kn">from</span> <span class="nn">mpl_toolkits</span> <span class="kn">import</span> <span class="n">mplot3d</span>
 
@@ -420,8 +421,24 @@
             <span class="n">l1</span><span class="o">.</span><span class="n">set_ydata</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">ind</span><span class="p">,</span> <span class="p">:])</span>
             <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="s1">&#39;raw&#39;</span><span class="p">:</span>
                 <span class="n">l2</span><span class="o">.</span><span class="n">set_ydata</span><span class="p">(</span><span class="n">procdata</span><span class="p">[</span><span class="n">ind</span><span class="p">,</span> <span class="p">:])</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">yadjust_traces</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">l1data</span> <span class="o">=</span> <span class="n">l1</span><span class="o">.</span><span class="n">get_data</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">maxl1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">l1data</span><span class="p">)</span>
+                <span class="n">minl1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">l1data</span><span class="p">)</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="n">minl1</span><span class="o">*</span><span class="mf">1.05</span><span class="p">,</span> <span class="n">maxl1</span><span class="o">*</span><span class="mf">1.05</span><span class="p">])</span>
 
         <span class="n">sfreq</span><span class="o">.</span><span class="n">on_changed</span><span class="p">(</span><span class="n">update</span><span class="p">)</span>
+
+        <span class="n">ax_chx</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">([</span><span class="mf">0.012</span><span class="p">,</span> <span class="mf">0.83</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">chxbox</span> <span class="o">=</span> <span class="n">CheckButtons</span><span class="p">(</span><span class="n">ax_chx</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Adjust y-axis&#39;</span><span class="p">],</span> <span class="p">[</span><span class="kc">False</span><span class="p">])</span>
+
+        <span class="k">def</span> <span class="nf">chxboxfunc</span><span class="p">(</span><span class="n">label</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">yadjust_traces</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">chxbox_traces</span><span class="o">.</span><span class="n">get_status</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ymin_traces</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ymax_traces</span><span class="p">)</span>
+            <span class="n">update</span><span class="p">(</span><span class="n">sfreq</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+
+        <span class="n">chxbox</span><span class="o">.</span><span class="n">on_clicked</span><span class="p">(</span><span class="n">chxboxfunc</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">fig_traces</span> <span class="o">=</span> <span class="n">fig</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ax_traces</span> <span class="o">=</span> <span class="n">ax</span>
@@ -429,7 +446,11 @@
         <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="s1">&#39;raw&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">l2_traces</span> <span class="o">=</span> <span class="n">l2</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">axfreq</span> <span class="o">=</span> <span class="n">axfreq</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">sfreq</span> <span class="o">=</span> <span class="n">sfreq</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sfreq</span> <span class="o">=</span> <span class="n">sfreq</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chxbox_traces</span> <span class="o">=</span> <span class="n">chxbox</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ymin_traces</span> <span class="o">=</span> <span class="n">ymin</span><span class="o">*</span><span class="n">sc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ymax_traces</span> <span class="o">=</span> <span class="n">ymax</span><span class="o">*</span><span class="n">sc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">yadjust_traces</span> <span class="o">=</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="PlotHelper.plot_spectra"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.plothelper.PlotHelper.plot_spectra">[docs]</a>    <span class="k">def</span> <span class="nf">plot_spectra</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">index_alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">rev</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Plots interactive spectra.</span>
@@ -501,8 +522,24 @@
             <span class="n">l1</span><span class="o">.</span><span class="n">set_ydata</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="n">ind</span><span class="p">])</span>
             <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="s1">&#39;raw&#39;</span><span class="p">:</span>
                 <span class="n">l2</span><span class="o">.</span><span class="n">set_ydata</span><span class="p">(</span><span class="n">procdata</span><span class="p">[:,</span> <span class="n">ind</span><span class="p">])</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">yadjust_spectra</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">l1data</span> <span class="o">=</span> <span class="n">l1</span><span class="o">.</span><span class="n">get_data</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">maxl1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">l1data</span><span class="p">)</span>
+                <span class="n">minl1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">l1data</span><span class="p">)</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="n">minl1</span><span class="o">*</span><span class="mf">1.05</span><span class="p">,</span> <span class="n">maxl1</span><span class="o">*</span><span class="mf">1.05</span><span class="p">])</span>
 
         <span class="n">stime</span><span class="o">.</span><span class="n">on_changed</span><span class="p">(</span><span class="n">update</span><span class="p">)</span>
+
+        <span class="n">ax_chx</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">([</span><span class="mf">0.012</span><span class="p">,</span> <span class="mf">0.83</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">chxbox</span> <span class="o">=</span> <span class="n">CheckButtons</span><span class="p">(</span><span class="n">ax_chx</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Adjust y-axis&#39;</span><span class="p">],</span> <span class="p">[</span><span class="kc">False</span><span class="p">])</span>
+
+        <span class="k">def</span> <span class="nf">chxboxfunc</span><span class="p">(</span><span class="n">label</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">yadjust_spectra</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">chxbox_spectra</span><span class="o">.</span><span class="n">get_status</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ymin_spectra</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ymax_spectra</span><span class="p">)</span>
+            <span class="n">update</span><span class="p">(</span><span class="n">stime</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+
+        <span class="n">chxbox</span><span class="o">.</span><span class="n">on_clicked</span><span class="p">(</span><span class="n">chxboxfunc</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">fig_spectra</span> <span class="o">=</span> <span class="n">fig</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ax_spectra</span> <span class="o">=</span> <span class="n">ax</span>
@@ -510,7 +547,11 @@
         <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="s1">&#39;raw&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">l2_spectra</span> <span class="o">=</span> <span class="n">l2</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">axtime</span> <span class="o">=</span> <span class="n">axtime</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">stime</span> <span class="o">=</span> <span class="n">stime</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stime</span> <span class="o">=</span> <span class="n">stime</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chxbox_spectra</span> <span class="o">=</span> <span class="n">chxbox</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ymin_spectra</span> <span class="o">=</span> <span class="n">ymin</span><span class="o">*</span><span class="n">sc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ymax_spectra</span> <span class="o">=</span> <span class="n">ymax</span><span class="o">*</span><span class="n">sc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">yadjust_spectra</span> <span class="o">=</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="PlotHelper.append_ldamap"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.plothelper.PlotHelper.append_ldamap">[docs]</a>    <span class="k">def</span> <span class="nf">append_ldamap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">index_alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Appends NaN values in order to expand the taus array</span>
@@ -653,7 +694,96 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">fig_lda</span> <span class="o">=</span> <span class="n">fig</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">axs_lda</span> <span class="o">=</span> <span class="n">axs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">map_lda</span> <span class="o">=</span> <span class="n">pc_map</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ldadata</span> <span class="o">=</span> <span class="n">pc_ldadata</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ldadata</span> <span class="o">=</span> <span class="n">pc_ldadata</span></div>
+
+<div class="viewcode-block" id="PlotHelper.plot_solutionvector"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.plothelper.PlotHelper.plot_solutionvector">[docs]</a>    <span class="k">def</span> <span class="nf">plot_solutionvector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">index_alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Plots interactive solution vector.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -------</span>
+<span class="sd">        res : mylda.Results</span>
+<span class="sd">            Contains the data to be plotted.</span>
+<span class="sd">        alpha : float</span>
+<span class="sd">            Plot for the closest alpha as specified.</span>
+<span class="sd">        index_alpha : int</span>
+<span class="sd">            Plot for specified alpha at index.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">x_k</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">get_xk</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">index_alpha</span><span class="p">)</span>
+
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Solution vector &#39;</span> <span class="o">+</span> <span class="n">title</span><span class="p">[</span><span class="mi">8</span><span class="p">:])</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">taus</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">taus</span><span class="p">)],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+        <span class="n">l1</span><span class="p">,</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="n">res</span><span class="o">.</span><span class="n">taus</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x_k</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+            <span class="s1">&#39;o-&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">3</span>
+        <span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">margins</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">axsvec</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">([</span><span class="mf">0.175</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.65</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">],</span> <span class="n">facecolor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">axcolor</span><span class="p">)</span>
+        <span class="n">ssvec</span> <span class="o">=</span> <span class="n">Slider</span><span class="p">(</span>
+            <span class="n">axsvec</span><span class="p">,</span> <span class="s1">&#39;Frequency&#39;</span><span class="p">,</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">wn</span><span class="p">),</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">wn</span><span class="p">),</span>
+            <span class="n">valinit</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">wn</span><span class="p">),</span>
+            <span class="n">valstep</span><span class="o">=</span><span class="nb">abs</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">wn</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">res</span><span class="o">.</span><span class="n">wn</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+            <span class="p">)</span>
+        <span class="n">l1data</span> <span class="o">=</span> <span class="n">l1</span><span class="o">.</span><span class="n">get_data</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">ymin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">l1data</span><span class="p">)</span>
+        <span class="n">ymax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">l1data</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">ymin</span><span class="o">*</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">ymax</span><span class="o">*</span><span class="mf">1.05</span><span class="p">)</span>
+
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;time constant / s&#39;</span><span class="p">)</span>
+        <span class="n">time_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">taus</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:])</span>
+        <span class="n">time_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">taus</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:])</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="n">time_min</span><span class="p">,</span> <span class="n">time_max</span><span class="p">])</span>
+
+        <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">ssvec</span><span class="o">.</span><span class="n">val</span>
+            <span class="n">ind</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">val</span> <span class="o">-</span> <span class="n">res</span><span class="o">.</span><span class="n">wn</span><span class="p">)</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
+            <span class="n">ssvec</span><span class="o">.</span><span class="n">valtext</span><span class="o">.</span><span class="n">set_text</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%.2f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">wn</span><span class="p">[</span><span class="n">ind</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
+            <span class="n">l1</span><span class="o">.</span><span class="n">set_ydata</span><span class="p">(</span><span class="n">x_k</span><span class="p">[</span><span class="n">ind</span><span class="p">,</span> <span class="p">:])</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">chxbox_svec</span><span class="o">.</span><span class="n">get_status</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">l1data</span> <span class="o">=</span> <span class="n">l1</span><span class="o">.</span><span class="n">get_data</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">maxl1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">l1data</span><span class="p">)</span>
+                <span class="n">minl1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">l1data</span><span class="p">)</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="n">minl1</span><span class="o">*</span><span class="mf">1.05</span><span class="p">,</span> <span class="n">maxl1</span><span class="o">*</span><span class="mf">1.05</span><span class="p">])</span>
+
+        <span class="n">ssvec</span><span class="o">.</span><span class="n">on_changed</span><span class="p">(</span><span class="n">update</span><span class="p">)</span>
+        <span class="n">axsvec</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">ax_chx</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">([</span><span class="mf">0.012</span><span class="p">,</span> <span class="mf">0.83</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">chxbox</span> <span class="o">=</span> <span class="n">CheckButtons</span><span class="p">(</span>
+            <span class="n">ax_chx</span><span class="p">,</span>
+            <span class="p">[</span><span class="s1">&#39;Show sum&#39;</span><span class="p">,</span> <span class="s1">&#39;Adjust y-axis&#39;</span><span class="p">],</span>
+            <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">chxboxfunc</span><span class="p">(</span><span class="n">label</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">chxbox_svec</span><span class="o">.</span><span class="n">get_status</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">axsvec</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">l1</span><span class="o">.</span><span class="n">set_ydata</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x_k</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ymin_svec</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ymax_svec</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">axsvec</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">update</span><span class="p">(</span><span class="n">ssvec</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+                <span class="n">ymin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">x_k</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
+                <span class="n">ymax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">x_k</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">])</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+
+        <span class="n">chxbox</span><span class="o">.</span><span class="n">on_clicked</span><span class="p">(</span><span class="n">chxboxfunc</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fig_svec</span> <span class="o">=</span> <span class="n">fig</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax_svec</span> <span class="o">=</span> <span class="n">ax</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">axsvec</span> <span class="o">=</span> <span class="n">axsvec</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ssvec</span> <span class="o">=</span> <span class="n">ssvec</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chxbox_svec</span> <span class="o">=</span> <span class="n">chxbox</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ymin_svec</span> <span class="o">=</span> <span class="n">ymin</span><span class="o">*</span><span class="mf">0.95</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ymax_svec</span> <span class="o">=</span> <span class="n">ymax</span><span class="o">*</span><span class="mf">1.05</span></div></div>
 
 
 <div class="viewcode-block" id="MidpointNormalize"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.plothelper.MidpointNormalize">[docs]</a><span class="k">class</span> <span class="nc">MidpointNormalize</span><span class="p">(</span><span class="n">colors</span><span class="o">.</span><span class="n">Normalize</span><span class="p">):</span>

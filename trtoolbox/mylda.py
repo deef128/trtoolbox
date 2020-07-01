@@ -1,5 +1,5 @@
 # TODO: species associated spectra
-# TODO: something against noise in the beginning
+# TODO: something against noise in the beginning --> weights
 import os
 import numpy as np
 from scipy.linalg import svd
@@ -88,10 +88,10 @@ class Results:
 
         Returns
         -------
-        index_alpha : int
-            Index of alpha value.
         alpha : float
             Alpha value.
+        index_alpha : int
+            Index of alpha value.
         """
 
         if index_alpha == -1 and alpha == -1:
@@ -243,22 +243,17 @@ class Results:
 
     def plot_solutionvector(self, alpha=-1, index_alpha=-1):
         """ Plots the sum of amplituted over time constants.
+
+        Parameters
+        ----------
+        alpha : float
+            Plot for the closest alpha as specified.
+        index_alpha : int
+            Plot for specified alpha at index.
         """
 
-        plt.figure()
-        x_k, title = self.get_xk(alpha, index_alpha)
-        # plt.plot(
-        #     [np.min(self.taus), np.max(self.taus)],
-        #     [0, 0],
-        #     '--', color='k'
-        # )
-        plt.plot(self.taus.T, np.sum(np.abs(x_k), axis=0))
-        plt.xscale('log')
-        time_min = np.min(self.taus[0, :])
-        time_max = np.max(self.taus[0, :])
-        plt.xlim([time_min, time_max])
-        plt.xlabel('time constant / ' + self.time_unit)
-        plt.title('Solution vector ' + title[8:])
+        self.init_phelper()
+        self._phelper.plot_solutionvector(self, alpha, index_alpha)
 
     def plot_results(self):
         """ Plots interactive contourmaps of original and LDA data,

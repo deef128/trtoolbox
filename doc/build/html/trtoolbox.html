@@ -934,8 +934,8 @@ Running this method fixes this.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><strong>index_alpha</strong> (<em>int</em>) – Index of alpha value.</p></li>
 <li><p><strong>alpha</strong> (<em>float</em>) – Alpha value.</p></li>
+<li><p><strong>index_alpha</strong> (<em>int</em>) – Index of alpha value.</p></li>
 </ul>
 </p>
 </dd>
@@ -1027,6 +1027,14 @@ Running this method fixes this.</p>
 <dt id="trtoolbox.mylda.Results.plot_solutionvector">
 <code class="sig-name descname">plot_solutionvector</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mylda.html#Results.plot_solutionvector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mylda.Results.plot_solutionvector" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots the sum of amplituted over time constants.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>alpha</strong> (<em>float</em>) – Plot for the closest alpha as specified.</p></li>
+<li><p><strong>index_alpha</strong> (<em>int</em>) – Plot for specified alpha at index.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -1337,6 +1345,83 @@ Bit. 1987</p>
 </dd>
 </dl>
 </dd></dl>
+
+</div>
+<div class="section" id="module-trtoolbox.mymaxe">
+<span id="trtoolbox-mymaxe-module"></span><h2>trtoolbox.mymaxe module<a class="headerlink" href="#module-trtoolbox.mymaxe" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="trtoolbox.mymaxe.check_input">
+<code class="sig-prename descclassname">trtoolbox.mymaxe.</code><code class="sig-name descname">check_input</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">wn</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mymaxe.html#check_input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mymaxe.check_input" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Ensures that all np.arrays have float dtype and that</dt><dd><p>time spans over columns, frequency over rows.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>np.array</em>) – Data matrix.</p></li>
+<li><p><strong>time</strong> (<em>np.array</em>) – TIme array.</p></li>
+<li><p><strong>wn</strong> (<em>np.array</em>) – Frequency array.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="trtoolbox.mymaxe.entropy">
+<code class="sig-prename descclassname">trtoolbox.mymaxe.</code><code class="sig-name descname">entropy</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">type</span><span class="o">=</span><span class="default_value">'quadratic'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mymaxe.html#entropy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mymaxe.entropy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="trtoolbox.mymaxe.gen_dmatrix">
+<code class="sig-prename descclassname">trtoolbox.mymaxe.</code><code class="sig-name descname">gen_dmatrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">taus</span></em>, <em class="sig-param"><span class="n">seqmodel</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mymaxe.html#gen_dmatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mymaxe.gen_dmatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates D-matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time</strong> (<em>np.array</em>) – Time array.</p></li>
+<li><p><strong>taus</strong> (<em>np.array</em>) – Time constants array</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>dmatrix</strong> – D-matrix</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="trtoolbox.mymaxe.gen_taus">
+<code class="sig-prename descclassname">trtoolbox.mymaxe.</code><code class="sig-name descname">gen_taus</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">t1</span></em>, <em class="sig-param"><span class="n">t2</span></em>, <em class="sig-param"><span class="n">n</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mymaxe.html#gen_taus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mymaxe.gen_taus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates logarithmic spaced time constants.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t1</strong> (<em>float</em>) – Bottom limit.</p></li>
+<li><p><strong>t2</strong> (<em>float</em>) – Upper limit.</p></li>
+<li><p><strong>n</strong> (<em>int</em>) – Number of time constants.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>taus</strong> – Generated time constants.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="trtoolbox.mymaxe.opt_entropy">
+<code class="sig-prename descclassname">trtoolbox.mymaxe.</code><code class="sig-name descname">opt_entropy</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">dmatrix</span></em>, <em class="sig-param"><span class="n">alpha</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mymaxe.html#opt_entropy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mymaxe.opt_entropy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="trtoolbox.mymaxe.opt_func">
+<code class="sig-prename descclassname">trtoolbox.mymaxe.</code><code class="sig-name descname">opt_func</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">dmatrix</span></em>, <em class="sig-param"><span class="n">alpha</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/mymaxe.html#opt_func"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.mymaxe.opt_func" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </div>
 <div class="section" id="module-trtoolbox.mysvd">
@@ -1958,6 +2043,21 @@ and n as time. But it is actually not important.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>res</strong> (<a class="reference internal" href="#trtoolbox.mylda.Results" title="trtoolbox.mylda.Results"><em>mylda.Results</em></a>) – Contains the results to be plotted.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="trtoolbox.plothelper.PlotHelper.plot_solutionvector">
+<code class="sig-name descname">plot_solutionvector</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">res</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/plothelper.html#PlotHelper.plot_solutionvector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.plothelper.PlotHelper.plot_solutionvector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots interactive solution vector.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>res</strong> (<a class="reference internal" href="#trtoolbox.mylda.Results" title="trtoolbox.mylda.Results"><em>mylda.Results</em></a>) – Contains the data to be plotted.</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – Plot for the closest alpha as specified.</p></li>
+<li><p><strong>index_alpha</strong> (<em>int</em>) – Plot for specified alpha at index.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>

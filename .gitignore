@@ -6,3 +6,7 @@
 
 # ignore pycharm
 .idea
+
+# ignore maxE
+trtoolbox/mymaxe.py
+example_maxe.py

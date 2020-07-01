@@ -68,7 +68,7 @@ class DataStorage():
 
         i1 = np.argmin(abs(self._wn - self.trunc_wn[0]))
         i2 = np.argmin(abs(self._wn - self.trunc_wn[1]))
-        return self._wn[i1:i2+1, 0]
+        return self._wn[i1:i2+1, 0:1]
 
     @wn.setter
     def wn(self, val):
@@ -92,7 +92,7 @@ class DataStorage():
 
         i1 = np.argmin(abs(self._time - self.trunc_time[0]))
         i2 = np.argmin(abs(self._time - self.trunc_time[1]))
-        return self._time[0, i1:i2+1]
+        return self._time[0:1, i1:i2+1]
 
     @time.setter
     def time(self, val):
@@ -676,8 +676,16 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         except ValueError:
             print('Just type numbers.')
 
+        if self.cb_lda_use_svd.isChecked() is True:
+            if self.results.check_svd() is True:
+                data = self.results.svd.svddata
+            else:
+                return
+        else:
+            data = self.data.data
+
         self.results.lda = mylda.dolda(
-            self.data.data,
+            data,
             self.data.time,
             self.data.wn,
             tlimits=tcs,
@@ -685,6 +693,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             alimits=alpha,
             anum=alpha_num
         )
+
         self.results.lda.plot_results()
         plt.show()
 

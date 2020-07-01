@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider
+from matplotlib.widgets import CheckButtons
 import matplotlib.colors as colors
 from mpl_toolkits import mplot3d
 
@@ -268,8 +269,24 @@ class PlotHelper():
             l1.set_ydata(res.data[ind, :])
             if res.type != 'raw':
                 l2.set_ydata(procdata[ind, :])
+            if self.yadjust_traces is True:
+                l1data = l1.get_data()[1]
+                maxl1 = np.max(l1data)
+                minl1 = np.min(l1data)
+                ax.set_ylim([minl1*1.05, maxl1*1.05])
 
         sfreq.on_changed(update)
+
+        ax_chx = plt.axes([0.012, 0.83, 0.2, 0.2], frameon=False)
+        chxbox = CheckButtons(ax_chx, ['Adjust y-axis'], [False])
+
+        def chxboxfunc(label):
+            self.yadjust_traces = self.chxbox_traces.get_status()[0]
+            ax.set_ylim(self.ymin_traces, self.ymax_traces)
+            update(sfreq.val)
+            plt.draw()
+
+        chxbox.on_clicked(chxboxfunc)
 
         self.fig_traces = fig
         self.ax_traces = ax
@@ -278,6 +295,10 @@ class PlotHelper():
             self.l2_traces = l2
         self.axfreq = axfreq
         self.sfreq = sfreq
+        self.chxbox_traces = chxbox
+        self.ymin_traces = ymin*sc
+        self.ymax_traces = ymax*sc
+        self.yadjust_traces = False
 
     def plot_spectra(self, res, alpha=-1, index_alpha=-1, rev=True):
         """ Plots interactive spectra.
@@ -349,8 +370,24 @@ class PlotHelper():
             l1.set_ydata(res.data[:, ind])
             if res.type != 'raw':
                 l2.set_ydata(procdata[:, ind])
+            if self.yadjust_spectra is True:
+                l1data = l1.get_data()[1]
+                maxl1 = np.max(l1data)
+                minl1 = np.min(l1data)
+                ax.set_ylim([minl1*1.05, maxl1*1.05])
 
         stime.on_changed(update)
+
+        ax_chx = plt.axes([0.012, 0.83, 0.2, 0.2], frameon=False)
+        chxbox = CheckButtons(ax_chx, ['Adjust y-axis'], [False])
+
+        def chxboxfunc(label):
+            self.yadjust_spectra = self.chxbox_spectra.get_status()[0]
+            ax.set_ylim(self.ymin_spectra, self.ymax_spectra)
+            update(stime.val)
+            plt.draw()
+
+        chxbox.on_clicked(chxboxfunc)
 
         self.fig_spectra = fig
         self.ax_spectra = ax
@@ -359,6 +396,10 @@ class PlotHelper():
             self.l2_spectra = l2
         self.axtime = axtime
         self.stime = stime
+        self.chxbox_spectra = chxbox
+        self.ymin_spectra = ymin*sc
+        self.ymax_spectra = ymax*sc
+        self.yadjust_spectra = False
 
     def append_ldamap(self, res, index_alpha=-1):
         """ Appends NaN values in order to expand the taus array
@@ -502,6 +543,95 @@ class PlotHelper():
         self.axs_lda = axs
         self.map_lda = pc_map
         self.ldadata = pc_ldadata
+
+    def plot_solutionvector(self, res, alpha=-1, index_alpha=-1):
+        """ Plots interactive solution vector.
+
+        Parameters
+        -------
+        res : mylda.Results
+            Contains the data to be plotted.
+        alpha : float
+            Plot for the closest alpha as specified.
+        index_alpha : int
+            Plot for specified alpha at index.
+        """
+
+        x_k, title = res.get_xk(alpha, index_alpha)
+
+        fig = plt.figure()
+        fig.suptitle('Solution vector ' + title[8:])
+        ax = fig.add_subplot(111)
+        plt.subplots_adjust(bottom=0.2)
+        plt.plot([np.min(res.taus), np.max(res.taus)], [0, 0], '--', color='k')
+        l1, = plt.plot(
+            res.taus.T, np.sum(np.abs(x_k), axis=0),
+            'o-', markersize=3
+        )
+        plt.xscale('log')
+        ax.margins(x=0)
+
+        axsvec = plt.axes([0.175, 0.05, 0.65, 0.03], facecolor=self.axcolor)
+        ssvec = Slider(
+            axsvec, 'Frequency',
+            np.min(res.wn),
+            np.max(res.wn),
+            valinit=np.min(res.wn),
+            valstep=abs(res.wn[1, 0]-res.wn[0, 0])
+            )
+        l1data = l1.get_data()[1]
+        ymin = np.min(l1data)
+        ymax = np.max(l1data)
+        ax.set_ylim(ymin*0.95, ymax*1.05)
+
+        ax.set_xlabel('time constant / s')
+        time_min = np.min(res.taus[0, :])
+        time_max = np.max(res.taus[0, :])
+        ax.set_xlim([time_min, time_max])
+
+        def update(val):
+            val = ssvec.val
+            ind = abs(val - res.wn).argmin()
+            ssvec.valtext.set_text('%.2f' % (res.wn[ind, 0]))
+            l1.set_ydata(x_k[ind, :])
+            if self.chxbox_svec.get_status()[1] is True:
+                l1data = l1.get_data()[1]
+                maxl1 = np.max(l1data)
+                minl1 = np.min(l1data)
+                ax.set_ylim([minl1*1.05, maxl1*1.05])
+
+        ssvec.on_changed(update)
+        axsvec.set_visible(False)
+
+        ax_chx = plt.axes([0.012, 0.83, 0.2, 0.2], frameon=False)
+        chxbox = CheckButtons(
+            ax_chx,
+            ['Show sum', 'Adjust y-axis'],
+            [True, False]
+        )
+
+        def chxboxfunc(label):
+            if self.chxbox_svec.get_status()[0] is True:
+                self.axsvec.set_visible(False)
+                l1.set_ydata(np.sum(np.abs(x_k), axis=0))
+                ax.set_ylim(self.ymin_svec, self.ymax_svec)
+            else:
+                self.axsvec.set_visible(True)
+                update(ssvec.val)
+                ymin = np.min(x_k.flatten())
+                ymax = np.max(x_k.flatten())
+                ax.set_ylim([ymin, ymax])
+            plt.draw()
+
+        chxbox.on_clicked(chxboxfunc)
+
+        self.fig_svec = fig
+        self.ax_svec = ax
+        self.axsvec = axsvec
+        self.ssvec = ssvec
+        self.chxbox_svec = chxbox
+        self.ymin_svec = ymin*0.95
+        self.ymax_svec = ymax*1.05
 
 
 class MidpointNormalize(colors.Normalize):

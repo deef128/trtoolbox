@@ -20,6 +20,14 @@ trtoolbox.mylda module
    :undoc-members:
    :show-inheritance:
 
+trtoolbox.mymaxe module
+-----------------------
+
+.. automodule:: trtoolbox.mymaxe
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 trtoolbox.mysvd module
 ----------------------
 
