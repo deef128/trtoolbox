@@ -1,0 +1,218 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Global analysis &mdash; Time-Resolved Toolbox  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Lifetime density analysis" href="lda.html" />
+    <link rel="prev" title="Singular value decomposition" href="svd.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Time-Resolved Toolbox
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="svd.html">Singular value decomposition</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Global analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lda.html">Lifetime density analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">Using the GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dgen.html">Data generator</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Time-Resolved Toolbox</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Global analysis</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/ga.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="global-analysis">
+<h1>Global analysis<a class="headerlink" href="#global-analysis" title="Permalink to this headline">¶</a></h1>
+<p>In contrast to SVD, global fitting requires a model as fitting instruction. With this, models can be tested and parameters determined. Sticking to time-resolved spectral data, a model contains how spectral components evolve over time. This results in a system ordinary differential equations which can be (analytically) solved resulting in a concentration profile as shown in the image below.</p>
+<a class="reference internal image-reference" href="_images/gf.png"><img alt="_images/gf.png" src="_images/gf.png" style="width: 600px;" /></a>
+<p>In this toolbox, a model of sequential reactions is implemented (e.g. A -&gt; B -&gt; C -&gt; …). Back reactions are also implemented but are still experimental. The spectral components are also called <em>decay associated spectra (DAS)</em> and both, the concentration profile and the DAS are obtained by global fitting.</p>
+<p>The preferred method is to fit a specified number of abstract time traces which reduces drastically dimensionality and proved to be analytically very stable. The routine is can be called via <a class="reference internal" href="trtoolbox.html#trtoolbox.globalanalysis.doglobalfit" title="trtoolbox.globalanalysis.doglobalfit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">trtoolbox.globalanalysis.doglobalfit()</span></code></a>. Here, important parameters are <code class="docutils literal notranslate"><span class="pre">tcs</span></code> as a list with initial time constants and <code class="docutils literal notranslate"><span class="pre">svds</span></code> defining how many abstract time traces shall be fitted.</p>
+<p>The returned objext is <a class="reference internal" href="trtoolbox.html#trtoolbox.globalanalysis.Results" title="trtoolbox.globalanalysis.Results"><code class="xref py py-class docutils literal notranslate"><span class="pre">trtoolbox.globalanalysis.Results</span></code></a>.</p>
+<div class="line-block">
+<div class="line">Reference:</div>
+<div class="line">Lórenz-Fonfría, Víctor A., and Hideki Kandori. “Spectroscopic and kinetic evidence on how bacteriorhodopsin accomplishes vectorial proton transport under functional conditions.” Journal of the American Chemical Society 131.16 (2009): 5891-5901.</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="lda.html" class="btn btn-neutral float-right" title="Lifetime density analysis" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="svd.html" class="btn btn-neutral float-left" title="Singular value decomposition" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, David Ehrenberg
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
