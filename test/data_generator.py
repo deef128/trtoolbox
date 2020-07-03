@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import numpy.random as nrand
 from scipy import signal
-from trtoolbox.myglobalfit import create_profile
+from trtoolbox.globalanalysis import create_profile
 from trtoolbox.plothelper import PlotHelper
 
 
@@ -176,8 +176,8 @@ class DataGenerator:
             wnstep=-1,
             tcs=[-1, -1, -1],
             num_peaks=1,
-            avg_width=30,
-            avg_std=5,
+            avg_width=float(30),
+            avg_std=float(5),
             diff=False,
             back=False,
             noise=False,
@@ -217,9 +217,8 @@ class DataGenerator:
         if isinstance(tcs, int):
             tcs = [-1 for i in range(tcs)]
 
-        if back is False:
-            num_das = len(tcs)
-        elif back is True:
+        num_das = len(tcs)
+        if back is True:
             num_das = int(len(tcs))
         self.gen_time(tlimit, number)
         self.gen_wn(wnlimit, wnstep)

@@ -7,7 +7,7 @@ import matplotlib.colors as colors
 from mpl_toolkits import mplot3d
 
 
-class PlotHelper():
+class PlotHelper:
     """ Object for interactive plotting. This class ensures that
     all the matplotlib objects are kept referenced which ensures
     proper function of the sliders.
@@ -63,7 +63,8 @@ class PlotHelper():
 
         self.axcolor = 'lightgoldenrodyellow'
 
-    def plot_heatmap(self, data, time, wn, title='data', newfig=True):
+    @staticmethod
+    def plot_heatmap(data, time, wn, title='data', newfig=True):
         """ Plots a nice looking heatmap.
 
         Parameters
@@ -101,7 +102,8 @@ class PlotHelper():
         plt.title(title)
         return pc
 
-    def plot_contourmap(self, data, time, wn, title='data', newfig=True):
+    @staticmethod
+    def plot_contourmap(data, time, wn, title='data', newfig=True):
         """ Plots a nice looking contourmap.
 
         Parameters
@@ -161,7 +163,8 @@ class PlotHelper():
         return pc
 
     # TODO: better 3D plot
-    def plot_surface(self, data, time, wn, title='data'):
+    @staticmethod
+    def plot_surface(data, time, wn, title='data'):
         """ Plots a nice looking heatmap.
 
         Parameters
@@ -175,8 +178,6 @@ class PlotHelper():
             Frequency array.
         title : np.array
             Title of plot. Default *data*.
-        newfig : boolean
-            Setting to False prevents the creation of a new figure.
         """
 
         plt.figure()
@@ -212,6 +213,10 @@ class PlotHelper():
         -------
         res : mysvd.Results
             Contains the data to be plotted.
+        alpha : float
+            Alpha value.
+        index_alpha : int
+            Index of alpha value.
         """
 
         if res.type == 'svd':
@@ -222,11 +227,11 @@ class PlotHelper():
                 alpha, index_alpha = res.get_alpha(alpha, index_alpha)
                 procdata = res.fitdata[:, :, index_alpha]
                 title = 'Time traces\nblue: Raw, red: LDA '\
-                        '(alpha=%.2f)' % (alpha)
+                        '(alpha=%.2f)' % alpha
             elif res.method == 'tsvd':
                 procdata = res.fitdata
                 title = 'Time traces\nblue: Raw, red: LDA '\
-                        '(TSVD truncated at %i)' % (res.k)
+                        '(TSVD truncated at %i)' % res.k
         elif res.type == 'gf':
             title = 'Time traces\nblue: Raw, red: Global Fit'
             procdata = res.fitdata
@@ -307,6 +312,12 @@ class PlotHelper():
         -------
         res : mysvd.Results
             Contains the data to be plotted.
+        alpha : float
+            Alpha value.
+        index_alpha : int
+            Index of alpha value.
+        rev : boolean
+            Reverses the x-axis.
         """
 
         if res.type == 'svd':
@@ -317,11 +328,11 @@ class PlotHelper():
                 alpha, index_alpha = res.get_alpha(alpha, index_alpha)
                 procdata = res.fitdata[:, :, index_alpha]
                 title = 'Spectra\nblue: Raw, red: LDA '\
-                        '(alpha=%.2f)' % (alpha)
+                        '(alpha=%.2f)' % alpha
             elif res.method == 'tsvd':
                 procdata = res.fitdata
                 title = 'Spectra\nblue: Raw, red: LDA '\
-                        '(TSVD truncated at %i)' % (res.k)
+                        '(TSVD truncated at %i)' % res.k
         elif res.type == 'gf':
             title = 'Spectra\nblue: Raw, red: Global Fit'
             procdata = res.fitdata
@@ -364,7 +375,7 @@ class PlotHelper():
             ax.set_xlim([wn_min, wn_max])
 
         def update(val):
-            val = 10**(stime.val)
+            val = 10 ** stime.val
             ind = abs(val - res.time).argmin()
             stime.valtext.set_text('%1.2e' % (res.time[0, ind]))
             l1.set_ydata(res.data[:, ind])
@@ -401,7 +412,8 @@ class PlotHelper():
         self.ymax_spectra = ymax*sc
         self.yadjust_spectra = False
 
-    def append_ldamap(self, res, index_alpha=-1):
+    @staticmethod
+    def append_ldamap(res, index_alpha=-1):
         """ Appends NaN values in order to expand the taus array
             to match the time array span.
 
@@ -516,7 +528,7 @@ class PlotHelper():
             salpha.valtext.set_text('%1.2e' % (10**salpha.val))
 
             def update(val):
-                val = 10**(salpha.val)
+                val = 10 ** salpha.val
                 ind = abs(val - res.alphas).argmin()
                 salpha.valtext.set_text('%1.2e' % (res.alphas[ind]))
                 # lda map

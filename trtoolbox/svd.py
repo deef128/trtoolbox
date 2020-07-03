@@ -1,5 +1,5 @@
 import os
-from scipy.linalg import svd
+from scipy.linalg import svd as scipy_svd
 import numpy as np
 import matplotlib.pyplot as plt
 from trtoolbox.plothelper import PlotHelper
@@ -81,7 +81,7 @@ class Results:
         self.init_phelper()
         self._phelper.plot_heatmap(
             self.data, self.time, self.wn,
-            title='Original Data', newfig=False)
+            title='Original Data', newfig=newfig)
         plt.ylabel('%s / %s' % (self.wn_name, self.wn_unit))
         plt.xlabel('%s / %s' % (self.time_name, self.time_unit))
 
@@ -229,7 +229,7 @@ class Results:
         print('Writing 00_comments.txt')
         f.write('Created with trtoolbox\n' +
                 '----------------------\n\n' +
-                'SVD components used: %i\n' % (self.n) +
+                'SVD components used: %i\n' % self.n +
                 '----------------------\n\n' +
                 'Files:\n' +
                 '\t- data.dat (Raw data)\n' +
@@ -239,6 +239,28 @@ class Results:
 
 
 def check_input(data, time, wn):
+    """ Ensures that all np.arrays have float dtype and that
+        time spans over columns, frequency over rows.
+
+    Parameters
+    ----------
+    data : np.array
+        Data matrix.
+    time : np.array
+        TIme array.
+    wn : np.array
+        Frequency array.
+
+    Returns
+    ----------
+    data : np.array
+        Data matrix.
+    time : np.array
+        TIme array.
+    wn : np.array
+        Frequency array.
+    """
+
     # check for right dtype
     if data.dtype != 'float':
         data = data.astype('float64')
@@ -280,7 +302,8 @@ def wrapper_svd(data):
         Transposed V matrix. Represents abstract time traces.
     """
 
-    u, s, vt = svd(data)
+    # noinspection PyTupleAssignmentBalance
+    u, s, vt = scipy_svd(data)
     return u, s, vt
 
 
@@ -300,7 +323,8 @@ def show_svs(data, time, wn):
 
     data, time, wn = check_input(data, time, wn)
 
-    u, s, vt = svd(data)
+    # noinspection PyTupleAssignmentBalance
+    u, s, vt = scipy_svd(data)
     eig = s**2/np.sum(s**2)
 
     num = 15
@@ -308,7 +332,7 @@ def show_svs(data, time, wn):
     varlimits = [0.8, 0.95, 0.995]
     colors = ['red', 'orange', 'forestgreen']
     fig, axs = plt.subplots(1, 2)
-    fig.suptitle('First %i singular values' % (num))
+    fig.suptitle('First %i singular values' % num)
     axs[0].plot(numlist, s[:num], 'o-')
     axs[0].set_title('Singular values')
     axs[0].set_ylabel('|s|')
@@ -363,7 +387,9 @@ def reconstruct(data, n):
         Results object.
     """
 
-    u, s, vt = svd(data)
+    # noinspection PyTupleAssignmentBalance
+    u, s, vt = scipy_svd(data)
+    nlist = []
     if type(n) == int:
         nlist = list(range(n))
     elif type(n) == list:
@@ -414,7 +440,7 @@ def dosvd(data, time, wn, n=-1):
 
     Returns
     -------
-    res : *mysvd.results*
+    res : *svd.results*
         Results object.
     """
 

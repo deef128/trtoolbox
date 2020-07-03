@@ -2,9 +2,9 @@ import sys
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-import trtoolbox.mysvd as mysvd
-import trtoolbox.myglobalfit as mygf
-import trtoolbox.mylda as mylda
+import trtoolbox.svd as mysvd
+import trtoolbox.globalanalysis as mygf
+import trtoolbox.lda as mylda
 from test.data_generator import DataGenerator
 from trtoolbox.plothelper import PlotHelper
 from PyQt5 import QtWidgets, uic
@@ -14,7 +14,7 @@ Ui_MainWindow, QtBaseClass = uic.loadUiType("gui/interface.ui")
 Ui_Dialog, _ = uic.loadUiType('gui/dialog_dgen.ui')
 
 
-class DataStorage():
+class DataStorage:
     """ Object for data storage.
 
     Attributes
@@ -33,7 +33,7 @@ class DataStorage():
         Name of the frequency unit (default: wavenumber).
     wn_unit : str
         Frequency unit (default cm^{-1}).
-    t_name : str
+    time_name : str
         Time name (default: time).
     time_unit : str
         Time uni (default: s).
@@ -188,7 +188,7 @@ class DataStorage():
         self._phelper.plot_traces(self)
 
 
-class Results():
+class Results:
     """ Container for results objects.
 
     Attributes
@@ -490,7 +490,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         if ok:
             self.data.wn_unit = text
 
-    def close_all(self):
+    @staticmethod
+    def close_all():
         """ Closes all plots.
         """
 
@@ -627,12 +628,12 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         """ Prints results to text field.
         """
 
-        str = ''
+        res_str = ''
         for i, t in enumerate(self.results.gf.tcs):
-            str = str + '%i. %.2e (%.2e)\n' % (i+1, t, self.results.gf.var[i])
-        str = str + 'R^2 = %.2f%%' % (self.results.gf.r2)
+            res_str = res_str + '%i. %.2e (%.2e)\n' % (i+1, t, self.results.gf.var[i])
+        res_str = res_str + 'R^2 = %.2f%%' % self.results.gf.r2
         self.txt_gf_results.clear()
-        self.txt_gf_results.insertPlainText(str)
+        self.txt_gf_results.insertPlainText(res_str)
 
     def plot_gf(self):
         """ Plots global fit results.

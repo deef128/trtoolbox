@@ -20,7 +20,7 @@ But how to choose :math:`\alpha`? For this, the so-called L-curve as shown below
 .. image:: pics/lcurve.png
     :width: 500
     
-LDA can be performed with the :py:meth:`trtoolbox.mylda.dolda` method. The returned objext is :py:class:`trtoolbox.mylda.Results`.
+LDA can be performed with the :py:meth:`trtoolbox.lda.dolda` method. The returned objext is :py:class:`trtoolbox.lda.Results`.
 
 | Reference:
 | Dorlhiac, Gabriel F., Clyde Fare, and Jasper J. van Thor. "PyLDM-An open source package for lifetime density analysis of time-resolved spectroscopic data." PLoS computational biology 13.5 (2017): e1005528.

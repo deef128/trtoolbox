@@ -7,7 +7,7 @@ from scipy.optimize import nnls
 from scipy.linalg import lstsq
 import numpy as np
 import matplotlib.pyplot as plt
-import trtoolbox.mysvd as mysvd
+import trtoolbox.svd as mysvd
 from trtoolbox.plothelper import PlotHelper
 # from scipy.special import logsumexp
 
@@ -261,11 +261,11 @@ class Results:
 
         f = open(os.path.join(path, '00_comments.txt'), 'w')
         print('Writing 00_comments.txt')
-        tcs_str = ['\n\t%.2e' % (i) for i in self.tcs]
+        tcs_str = ['\n\t%.2e' % i for i in self.tcs]
         f.write('Created with trtoolbox\n' +
                 '----------------------\n\n' +
                 'Obtained time constants: %s\n' % (''.join(tcs_str)) +
-                'R^2: %.2f%%\n' % (self.r2) +
+                'R^2: %.2f%%\n' % self.r2 +
                 '----------------------\n\n' +
                 'Files:\n' +
                 '\t- das.dat (Decay associated spectra)\n' +
@@ -282,6 +282,15 @@ def check_input(data, time, wn):
         time spans over columns, frequency over rows.
 
     Parameters
+    ----------
+    data : np.array
+        Data matrix.
+    time : np.array
+        TIme array.
+    wn : np.array
+        Frequency array.
+
+    Returns
     ----------
     data : np.array
         Data matrix.
@@ -323,7 +332,7 @@ def model(s, time, ks, back=False):
 
     Parameters
     ----------
-    S : np.array
+    s : np.array
         Starting concentrations for each species.
     time : np.array
         Time array.
@@ -369,6 +378,8 @@ def create_profile(time, ks, back=False):
         Time array.
     ks : np.array
         Decay rate constants for each species.
+    back : boolean
+        Determines if a model with back-reactions is used.
 
     Returns
     -------
@@ -458,6 +469,8 @@ def calculate_fitdata(ks, time, data, back=False):
         Time array.
     data : np.array
         Data matrix.
+    back : boolean
+        Determines if a model with back-reactions is used.
 
     Returns
     -------
@@ -554,6 +567,7 @@ def opt_func_est(ks, time, data):
     return r.flatten()**2
 
 
+# TODO: check for back reaction
 def opt_func_svd(par, time, data, svdtraces, nb_exps, back):
     """ Optimization function for residuals of SVD
         abstract time traces - fitted traces.
@@ -658,7 +672,7 @@ def doglobalfit(
         *est* for fitting the residuals between concentration profile
         and contributions of DAS,
         *svd* for fitting the SVD time traces (default).
-    svd : int
+    svds : int
         Number of SVD components to be fitted. Default: 5.
     offset : boolean
         Considering the last spectrum to be an offset. Default: False.
@@ -674,7 +688,7 @@ def doglobalfit(
 
     Returns
     -------
-    gf_res : *myglobalfit.results*
+    gf_res : *globalanalysis.results*
         Results objects.
     """
 
@@ -782,5 +796,5 @@ def doglobalfit(
         gf_res.fittraces = create_tr(par, time)
 
     gf_res.print_results()
-    print('With an R^2 of %.2f%%' % (gf_res.r2))
+    print('With an R^2 of %.2f%%' % gf_res.r2)
     return gf_res

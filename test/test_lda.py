@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 import matplotlib.pyplot as plt
-import trtoolbox.mylda as mylda
+import trtoolbox.lda as mylda
 from data_generator import DataGenerator
 
 

@@ -1,8 +1,8 @@
 import unittest
 import numpy as np
 import matplotlib.pyplot as plt
-import trtoolbox.myglobalfit as mygf
-import trtoolbox.mysvd as mysvd
+import trtoolbox.globalanalysis as mygf
+import trtoolbox.svd as mysvd
 from data_generator import DataGenerator
 
 
@@ -57,21 +57,21 @@ class TestGF(unittest.TestCase):
         self.assertEqual(wn.shape[0], self.data.shape[0])
 
         with self.assertRaises(ValueError):
-            data, time, wn = mygf.check_input(
+            _ = mygf.check_input(
                 self.data,
                 self.time,
                 self.wn[2:]
             )
 
         with self.assertRaises(ValueError):
-            data, time, wn = mygf.check_input(
+            _ = mygf.check_input(
                 self.data,
                 self.time[2:],
                 self.wn
             )
 
         with self.assertRaises(ValueError):
-            data, time, wn = mygf.check_input(
+            _ = mygf.check_input(
                 self.data[2:, :-3],
                 self.time,
                 self.wn

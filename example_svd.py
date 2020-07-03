@@ -1,5 +1,5 @@
 # %% import stuff
-import trtoolbox.mysvd as mysvd
+import trtoolbox.svd as mysvd
 from test.data_generator import DataGenerator
 import matplotlib.pyplot as plt
 plt.close('all')

@@ -1,5 +1,5 @@
 # %% import stuff
-import trtoolbox.myglobalfit as mygf
+import trtoolbox.globalanalysis as ga
 from test.data_generator import DataGenerator
 import numpy as np
 import matplotlib.pyplot as plt
@@ -33,7 +33,7 @@ dgen.plot_data()
 # %% do global fitting
 rdnm = 5 - 5 * np.random.random(dgen.tcs.shape)
 start_tcs = dgen.tcs * rdnm
-res = mygf.doglobalfit(dgen.data, dgen.time, dgen.wn, dgen.tcs, svds=3)
+res = ga.doglobalfit(dgen.data, dgen.time, dgen.wn, dgen.tcs, svds=3)
 res.plot_results()
 res.plot_traces()
 res.plot_spectra()

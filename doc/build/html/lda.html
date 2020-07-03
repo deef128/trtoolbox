@@ -37,7 +37,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Using the GUI" href="gui.html" />
-    <link rel="prev" title="Global fit routine" href="gf.html" /> 
+    <link rel="prev" title="Global analysis" href="ga.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -85,7 +85,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="svd.html">Singular value decomposition</a></li>
-<li class="toctree-l1"><a class="reference internal" href="gf.html">Global fit routine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ga.html">Global analysis</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Lifetime density analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gui.html">Using the GUI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dgen.html">Data generator</a></li>
@@ -164,7 +164,7 @@
 <p>with <span class="math notranslate nohighlight">\(\alpha\)</span> as a constant which defines the balance between the residual (left) and smooth norm (right). The algorithm uses the identity matrix for <span class="math notranslate nohighlight">\(\mathbf{L}\)</span> leading to the Euclidian 2-norm.</p>
 <p>But how to choose <span class="math notranslate nohighlight">\(\alpha\)</span>? For this, the so-called L-curve as shown below can provide some guidance. It plots the residual norm against the smooth norm. A good balance between the two are at the point with highest curvature.</p>
 <a class="reference internal image-reference" href="_images/lcurve.png"><img alt="_images/lcurve.png" src="_images/lcurve.png" style="width: 500px;" /></a>
-<p>LDA can be performed with the <a class="reference internal" href="trtoolbox.html#trtoolbox.mylda.dolda" title="trtoolbox.mylda.dolda"><code class="xref py py-meth docutils literal notranslate"><span class="pre">trtoolbox.mylda.dolda()</span></code></a> method. The returned objext is <a class="reference internal" href="trtoolbox.html#trtoolbox.mylda.Results" title="trtoolbox.mylda.Results"><code class="xref py py-class docutils literal notranslate"><span class="pre">trtoolbox.mylda.Results</span></code></a>.</p>
+<p>LDA can be performed with the <a class="reference internal" href="trtoolbox.html#trtoolbox.lda.dolda" title="trtoolbox.lda.dolda"><code class="xref py py-meth docutils literal notranslate"><span class="pre">trtoolbox.lda.dolda()</span></code></a> method. The returned objext is <a class="reference internal" href="trtoolbox.html#trtoolbox.lda.Results" title="trtoolbox.lda.Results"><code class="xref py py-class docutils literal notranslate"><span class="pre">trtoolbox.lda.Results</span></code></a>.</p>
 <div class="line-block">
 <div class="line">Reference:</div>
 <div class="line">Dorlhiac, Gabriel F., Clyde Fare, and Jasper J. van Thor. “PyLDM-An open source package for lifetime density analysis of time-resolved spectroscopic data.” PLoS computational biology 13.5 (2017): e1005528.</div>
@@ -182,7 +182,7 @@
         <a href="gui.html" class="btn btn-neutral float-right" title="Using the GUI" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="gf.html" class="btn btn-neutral float-left" title="Global fit routine" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="ga.html" class="btn btn-neutral float-left" title="Global analysis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

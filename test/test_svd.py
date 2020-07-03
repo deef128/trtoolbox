@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 import matplotlib.pyplot as plt
-import trtoolbox.mysvd as mysvd
+import trtoolbox.svd as mysvd
 from data_generator import DataGenerator
 
 

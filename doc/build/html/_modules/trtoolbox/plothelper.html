@@ -83,7 +83,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../svd.html">Singular value decomposition</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../gf.html">Global fit routine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ga.html">Global analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../lda.html">Lifetime density analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../gui.html">Using the GUI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../dgen.html">Data generator</a></li>
@@ -159,7 +159,7 @@
 <span class="kn">from</span> <span class="nn">mpl_toolkits</span> <span class="kn">import</span> <span class="n">mplot3d</span>
 
 
-<div class="viewcode-block" id="PlotHelper"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.plothelper.PlotHelper">[docs]</a><span class="k">class</span> <span class="nc">PlotHelper</span><span class="p">():</span>
+<div class="viewcode-block" id="PlotHelper"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.plothelper.PlotHelper">[docs]</a><span class="k">class</span> <span class="nc">PlotHelper</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot; Object for interactive plotting. This class ensures that</span>
 <span class="sd">    all the matplotlib objects are kept referenced which ensures</span>
 <span class="sd">    proper function of the sliders.</span>
@@ -215,7 +215,8 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">axcolor</span> <span class="o">=</span> <span class="s1">&#39;lightgoldenrodyellow&#39;</span>
 
-<div class="viewcode-block" id="PlotHelper.plot_heatmap"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.plothelper.PlotHelper.plot_heatmap">[docs]</a>    <span class="k">def</span> <span class="nf">plot_heatmap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">wn</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="n">newfig</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="PlotHelper.plot_heatmap"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.plothelper.PlotHelper.plot_heatmap">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">plot_heatmap</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">wn</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="n">newfig</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Plots a nice looking heatmap.</span>
 
 <span class="sd">        Parameters</span>
@@ -253,7 +254,8 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">pc</span></div>
 
-<div class="viewcode-block" id="PlotHelper.plot_contourmap"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.plothelper.PlotHelper.plot_contourmap">[docs]</a>    <span class="k">def</span> <span class="nf">plot_contourmap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">wn</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="n">newfig</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="PlotHelper.plot_contourmap"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.plothelper.PlotHelper.plot_contourmap">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">plot_contourmap</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">wn</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="n">newfig</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Plots a nice looking contourmap.</span>
 
 <span class="sd">        Parameters</span>
@@ -313,7 +315,8 @@
         <span class="k">return</span> <span class="n">pc</span></div>
 
     <span class="c1"># TODO: better 3D plot</span>
-<div class="viewcode-block" id="PlotHelper.plot_surface"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.plothelper.PlotHelper.plot_surface">[docs]</a>    <span class="k">def</span> <span class="nf">plot_surface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">wn</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="PlotHelper.plot_surface"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.plothelper.PlotHelper.plot_surface">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">plot_surface</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">wn</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Plots a nice looking heatmap.</span>
 
 <span class="sd">        Parameters</span>
@@ -327,8 +330,6 @@
 <span class="sd">            Frequency array.</span>
 <span class="sd">        title : np.array</span>
 <span class="sd">            Title of plot. Default *data*.</span>
-<span class="sd">        newfig : boolean</span>
-<span class="sd">            Setting to False prevents the creation of a new figure.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
@@ -364,6 +365,10 @@
 <span class="sd">        -------</span>
 <span class="sd">        res : mysvd.Results</span>
 <span class="sd">            Contains the data to be plotted.</span>
+<span class="sd">        alpha : float</span>
+<span class="sd">            Alpha value.</span>
+<span class="sd">        index_alpha : int</span>
+<span class="sd">            Index of alpha value.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;svd&#39;</span><span class="p">:</span>
@@ -374,11 +379,11 @@
                 <span class="n">alpha</span><span class="p">,</span> <span class="n">index_alpha</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">get_alpha</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">index_alpha</span><span class="p">)</span>
                 <span class="n">procdata</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">fitdata</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">index_alpha</span><span class="p">]</span>
                 <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Time traces</span><span class="se">\n</span><span class="s1">blue: Raw, red: LDA &#39;</span>\
-                        <span class="s1">&#39;(alpha=</span><span class="si">%.2f</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
+                        <span class="s1">&#39;(alpha=</span><span class="si">%.2f</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="n">alpha</span>
             <span class="k">elif</span> <span class="n">res</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;tsvd&#39;</span><span class="p">:</span>
                 <span class="n">procdata</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">fitdata</span>
                 <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Time traces</span><span class="se">\n</span><span class="s1">blue: Raw, red: LDA &#39;</span>\
-                        <span class="s1">&#39;(TSVD truncated at </span><span class="si">%i</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">k</span><span class="p">)</span>
+                        <span class="s1">&#39;(TSVD truncated at </span><span class="si">%i</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="n">res</span><span class="o">.</span><span class="n">k</span>
         <span class="k">elif</span> <span class="n">res</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;gf&#39;</span><span class="p">:</span>
             <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Time traces</span><span class="se">\n</span><span class="s1">blue: Raw, red: Global Fit&#39;</span>
             <span class="n">procdata</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">fitdata</span>
@@ -459,6 +464,12 @@
 <span class="sd">        -------</span>
 <span class="sd">        res : mysvd.Results</span>
 <span class="sd">            Contains the data to be plotted.</span>
+<span class="sd">        alpha : float</span>
+<span class="sd">            Alpha value.</span>
+<span class="sd">        index_alpha : int</span>
+<span class="sd">            Index of alpha value.</span>
+<span class="sd">        rev : boolean</span>
+<span class="sd">            Reverses the x-axis.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;svd&#39;</span><span class="p">:</span>
@@ -469,11 +480,11 @@
                 <span class="n">alpha</span><span class="p">,</span> <span class="n">index_alpha</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">get_alpha</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">index_alpha</span><span class="p">)</span>
                 <span class="n">procdata</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">fitdata</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">index_alpha</span><span class="p">]</span>
                 <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Spectra</span><span class="se">\n</span><span class="s1">blue: Raw, red: LDA &#39;</span>\
-                        <span class="s1">&#39;(alpha=</span><span class="si">%.2f</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
+                        <span class="s1">&#39;(alpha=</span><span class="si">%.2f</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="n">alpha</span>
             <span class="k">elif</span> <span class="n">res</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;tsvd&#39;</span><span class="p">:</span>
                 <span class="n">procdata</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">fitdata</span>
                 <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Spectra</span><span class="se">\n</span><span class="s1">blue: Raw, red: LDA &#39;</span>\
-                        <span class="s1">&#39;(TSVD truncated at </span><span class="si">%i</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">k</span><span class="p">)</span>
+                        <span class="s1">&#39;(TSVD truncated at </span><span class="si">%i</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="n">res</span><span class="o">.</span><span class="n">k</span>
         <span class="k">elif</span> <span class="n">res</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;gf&#39;</span><span class="p">:</span>
             <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Spectra</span><span class="se">\n</span><span class="s1">blue: Raw, red: Global Fit&#39;</span>
             <span class="n">procdata</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">fitdata</span>
@@ -516,7 +527,7 @@
             <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="n">wn_min</span><span class="p">,</span> <span class="n">wn_max</span><span class="p">])</span>
 
         <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
-            <span class="n">val</span> <span class="o">=</span> <span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="n">stime</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">**</span> <span class="n">stime</span><span class="o">.</span><span class="n">val</span>
             <span class="n">ind</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">val</span> <span class="o">-</span> <span class="n">res</span><span class="o">.</span><span class="n">time</span><span class="p">)</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
             <span class="n">stime</span><span class="o">.</span><span class="n">valtext</span><span class="o">.</span><span class="n">set_text</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%1.2e</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">time</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">ind</span><span class="p">]))</span>
             <span class="n">l1</span><span class="o">.</span><span class="n">set_ydata</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="n">ind</span><span class="p">])</span>
@@ -553,7 +564,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">ymax_spectra</span> <span class="o">=</span> <span class="n">ymax</span><span class="o">*</span><span class="n">sc</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">yadjust_spectra</span> <span class="o">=</span> <span class="kc">False</span></div>
 
-<div class="viewcode-block" id="PlotHelper.append_ldamap"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.plothelper.PlotHelper.append_ldamap">[docs]</a>    <span class="k">def</span> <span class="nf">append_ldamap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">index_alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="PlotHelper.append_ldamap"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.plothelper.PlotHelper.append_ldamap">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">append_ldamap</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">index_alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Appends NaN values in order to expand the taus array</span>
 <span class="sd">            to match the time array span.</span>
 
@@ -668,7 +680,7 @@
             <span class="n">salpha</span><span class="o">.</span><span class="n">valtext</span><span class="o">.</span><span class="n">set_text</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%1.2e</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="n">salpha</span><span class="o">.</span><span class="n">val</span><span class="p">))</span>
 
             <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
-                <span class="n">val</span> <span class="o">=</span> <span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="n">salpha</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">**</span> <span class="n">salpha</span><span class="o">.</span><span class="n">val</span>
                 <span class="n">ind</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">val</span> <span class="o">-</span> <span class="n">res</span><span class="o">.</span><span class="n">alphas</span><span class="p">)</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
                 <span class="n">salpha</span><span class="o">.</span><span class="n">valtext</span><span class="o">.</span><span class="n">set_text</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%1.2e</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">alphas</span><span class="p">[</span><span class="n">ind</span><span class="p">]))</span>
                 <span class="c1"># lda map</span>

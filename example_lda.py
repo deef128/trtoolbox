@@ -1,5 +1,5 @@
 # %% import stuff
-import trtoolbox.mylda as mylda
+import trtoolbox.lda as mylda
 from test.data_generator import DataGenerator
 import numpy as np
 import matplotlib.pyplot as plt

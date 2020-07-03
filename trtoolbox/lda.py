@@ -43,7 +43,7 @@ class Results:
         Name of the frequency unit (default: wavenumber).
     wn_unit : str
         Frequency unit (default cm^{-1}).
-    t_name : str
+    time_name : str
         Time name (default: time).
     time_unit : str
         Time uni (default: s).
@@ -331,7 +331,7 @@ class Results:
                 % (self.taus[0, 0], self.taus[0, -1]) +
                 'Alpha value limits: %.2f to %.2f\n'
                 % (self.alphas[0], self.alphas[-1]) +
-                'Chosen alpha value: %.2f\n' % (alpha) +
+                'Chosen alpha value: %.2f\n' % alpha +
                 '----------------------\n\n' +
                 'Files:\n' +
                 '\t- alphas.dat (Alpha values)\n' +
@@ -348,6 +348,15 @@ def check_input(data, time, wn):
         time spans over columns, frequency over rows.
 
     Parameters
+    ----------
+    data : np.array
+        Data matrix.
+    time : np.array
+        TIme array.
+    wn : np.array
+        Frequency array.
+
+    Returns
     ----------
     data : np.array
         Data matrix.
@@ -420,6 +429,8 @@ def gen_dmatrix(time, taus, seqmodel=False):
         Time array.
     taus : np.array
         Time constants array
+    seqmodel : boolean
+        Sets a sequential model.
 
     Returns
     -------
@@ -428,8 +439,7 @@ def gen_dmatrix(time, taus, seqmodel=False):
     """
     if seqmodel is True:
         def model(s, time, ks):
-            arr = [-ks[0] * s[0]]
-            arr.append(ks[0] * s[0] - ks[1] * s[1])
+            arr = [-ks[0] * s[0], ks[0] * s[0] - ks[1] * s[1]]
             return arr
 
     dmatrix = np.zeros([time.size, taus.size])
@@ -450,7 +460,7 @@ def gen_lmatrix(dmatrix):
 
     Parameters
     ----------
-    damtrix : np.array
+    dmatrix : np.array
         D-matrix
 
     Returns
@@ -517,6 +527,8 @@ def inversesvd(dmatrix, k=-1):
     ----------
     dmatrix : np.array
         Matrix to be inversed
+    k : int
+        Point of truncation. If *-1* then all singular values are used.
 
     Returns
     -------
@@ -524,6 +536,7 @@ def inversesvd(dmatrix, k=-1):
         Inverse of input matrix.
     """
 
+    # noinspection PyTupleAssignmentBalance
     u, s, vt = svd(dmatrix, full_matrices=False)
 
     if k == -1:
@@ -576,7 +589,7 @@ def tik(data, dmatrix, alpha):
     # d_aug = (D, sqrt(alpha)*L)
     # a_aug = (A, zeros)
     if alpha != 0:
-        d_aug = np.concatenate((dmatrix, alpha**(0.5)*lmatrix))
+        d_aug = np.concatenate((dmatrix, alpha ** 0.5 * lmatrix))
         a_aug = np.concatenate(
             (data, np.zeros([np.shape(data)[0], len(lmatrix)])),
             axis=1)
@@ -640,8 +653,8 @@ def calc_lcurve(data, dmatrix, lmatrix, x_ks):
     lcurve = np.empty((np.shape(x_ks)[2], 2))
     for i in range(np.shape(x_ks)[2]):
         lcurve[i, 0] = np.sum(
-            (dmatrix.dot(x_ks[:, :, i])-np.transpose(data))**2)**(0.5)
-        lcurve[i, 1] = np.sum((lmatrix.dot(x_ks[:, :, i]))**2)**(0.5)
+            (dmatrix.dot(x_ks[:, :, i])-np.transpose(data))**2) ** 0.5
+        lcurve[i, 1] = np.sum((lmatrix.dot(x_ks[:, :, i]))**2) ** 0.5
     return lcurve
 
 
@@ -667,7 +680,7 @@ def tik_lstsq(data, dmatrix, alpha):
     lmatrix = gen_lmatrix(dmatrix)
 
     if alpha != 0:
-        d_aug = np.concatenate((dmatrix, alpha**(2)*lmatrix))
+        d_aug = np.concatenate((dmatrix, alpha ** 2 * lmatrix))
         a_aug = np.concatenate(
             (data, np.zeros([np.shape(data)[0], len(lmatrix)])),
             axis=1)
@@ -750,7 +763,7 @@ def dolda(
 
     Returns
     -------
-    res : *mylda.results*
+    res : *lda.results*
         Results object.
     """
 

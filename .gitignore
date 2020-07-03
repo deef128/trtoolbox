@@ -8,5 +8,5 @@
 .idea
 
 # ignore maxE
-trtoolbox/mymaxe.py
+trtoolbox/_mymaxe.py
 example_maxe.py

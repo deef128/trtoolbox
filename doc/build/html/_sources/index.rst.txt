@@ -16,7 +16,7 @@ This project was inspired by OPTIMUS written by Dr. Chavdar Slavov (https://opti
    
    introduction.rst
    svd.rst
-   gf.rst
+   ga.rst
    lda.rst
    gui.rst
    dgen.rst
