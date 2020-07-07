@@ -1,5 +1,6 @@
 # TODO: fix overflow
 # TODO: GLA
+# TODO: improve back reaction fitting
 import os
 from scipy.integrate import odeint
 from scipy.optimize import least_squares
@@ -510,7 +511,7 @@ def calculate_estimate(das, data):
     return est
 
 
-def opt_func_raw(ks, time, data):
+def opt_func_raw(ks, time, data, back):
     """ Optimization function for residuals of fitted data - input data.
 
     Parameters
@@ -521,6 +522,8 @@ def opt_func_raw(ks, time, data):
         Time array.
     data : np.array
         Data matrix.
+    back : boolean
+        Determines if a model with back-reactions is used.
 
     Returns
     -------
@@ -529,15 +532,15 @@ def opt_func_raw(ks, time, data):
     """
 
     # deflattens array
-    # if back is True and ks.ndim == 1:
-    #     ks = ks.reshape(int(ks.shape[0]/2), 2)
+    if back is True and ks.ndim == 1:
+        ks = ks.reshape(int(ks.shape[0]/2), 2)
 
-    fitdata = calculate_fitdata(ks, time, data)
+    fitdata = calculate_fitdata(ks, time, data, back)
     r = fitdata - data
-    return r.flatten()**2
+    return r.flatten()
 
 
-def opt_func_est(ks, time, data):
+def opt_func_est(ks, time, data, back):
     """ Optimization function for residuals of concentration profile
         and estimated contributions of DAS
 
@@ -549,6 +552,8 @@ def opt_func_est(ks, time, data):
         Time array.
     data : np.array
         Data matrix.
+    back : boolean
+        Determines if a model with back-reactions is used.
 
     Returns
     -------
@@ -557,18 +562,17 @@ def opt_func_est(ks, time, data):
     """
 
     # deflattens array
-    # if back is True and ks.ndim == 1:
-    #     ks = ks.reshape(int(ks.shape[0]/2), 2)
+    if back is True and ks.ndim == 1:
+        ks = ks.reshape(int(ks.shape[0]/2), 2)
 
-    profile = create_profile(time, ks)
+    profile = create_profile(time, ks, back)
     das = create_das(profile, data)
     est = calculate_estimate(das, data)
     r = profile - est
-    return r.flatten()**2
+    return r.flatten()
 
 
-# TODO: check for back reaction
-def opt_func_svd(par, time, data, svdtraces, nb_exps, back):
+def opt_func_svd(par, time, data, svdtraces, nb_exps):
     """ Optimization function for residuals of SVD
         abstract time traces - fitted traces.
 
@@ -585,8 +589,6 @@ def opt_func_svd(par, time, data, svdtraces, nb_exps, back):
     nb_exps : int
         Number of exponential decay processes. Needed for reshaping the
         flattened paramater array.
-    back : boolean
-        Determines if a model with back-reactions is used.
 
     Returns
     -------
@@ -717,30 +719,30 @@ def doglobalfit(
         data = data-spectral_offset_matrix
 
     if method == 'raw':
-        if back is True:
-            raise ValueError('Back reactions are not implemented \
-                for this method. Take svd')
         res = least_squares(
             opt_func_raw,
             start_ks.flatten(),
-            args=(time, data)
+            args=(time, data, back)
             )
         if back is False:
             ks = -np.sort(-res.x)
             var = calculate_sigma(res)
+        elif back is True:
+            ks = res.x.reshape(start_ks.shape)
+            var = np.ones(start_ks.shape)
 
     elif method == 'est':
-        if back is True:
-            raise ValueError('Back reactions are not implemented \
-                for this method. Take svd')
         res = least_squares(
             opt_func_est,
             start_ks.flatten(),
-            args=(time, data)
+            args=(time, data, back)
             )
         if back is False:
             ks = -np.sort(-res.x)
             var = calculate_sigma(res)
+        elif back is True:
+            ks = res.x.reshape(start_ks.shape)
+            var = np.ones(start_ks.shape)
 
     elif method == 'svd':
         u, s, vt = mysvd.wrapper_svd(data)
@@ -762,7 +764,7 @@ def doglobalfit(
         res = least_squares(
             opt_func_svd,
             pars.flatten(),
-            args=(time, data, svdtraces, nb_exps, back)
+            args=(time, data, svdtraces, nb_exps)
         )
         ks = res.x[svds::svds+1]
         if back is True:

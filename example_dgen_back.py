@@ -10,24 +10,24 @@ dgen.plot_profile()
 # dgen.plot_data()
 # dgen.plot_das()
 
-# print('-----------')
-# res = mygf.doglobalfit(
-#     dgen.data, dgen.time, dgen.wn,
-#     [[4e-6, 3e-4, 2e-2], [4e-6, 9e-5, 2e-2]],
-#     method='est',
-#     back=True
-# )
-# res.plot_profile()
-# print('-----------')
-# res = mygf.doglobalfit(
-#     dgen.data, dgen.time, dgen.wn,
-#     [[4e-6, 3e-4, 2e-2], [4e-6, 9e-5, 2e-2]],
-#     method='raw',
-#     svds=3,
-#     back=True
-# )
-# res.plot_profile()
-# print('-----------')
+print('-----------')
+res = mygf.doglobalfit(
+    dgen.data, dgen.time, dgen.wn,
+    [[4e-6, 3e-4, 2e-2], [4e-6, 9e-5, 2e-2]],
+    method='est',
+    back=True
+)
+res.plot_profile()
+print('-----------')
+res = mygf.doglobalfit(
+    dgen.data, dgen.time, dgen.wn,
+    [[4e-6, 3e-4, 2e-2], [4e-6, 9e-5, 2e-2]],
+    method='raw',
+    svds=3,
+    back=True
+)
+res.plot_profile()
+print('-----------')
 res = mygf.doglobalfit(
     dgen.data, dgen.time, dgen.wn,
     [[4e-6, 3e-4, 2e-2], [4e-6, 9e-5, 2e-2]],
@@ -36,12 +36,29 @@ res = mygf.doglobalfit(
     back=True
 )
 res.plot_profile()
-# res.plot_das()
 
-res = mylda.dolda(dgen.data, dgen.time, dgen.wn, alimits=[0.1, 50])
-res.plot_results()
-# # res.plot_traces()
-# # res.plot_spectra()
-# res.plot_solutionvector()
+taus = [[4e-6, 3e-4, 2e-2], [4e-6, 9e-5, 2e-2]]
+for i in range(3):
+    print('-----------')
+    res = mygf.doglobalfit(
+        dgen.data, dgen.time, dgen.wn,
+        taus,
+        method='raw',
+        svds=3,
+        back=True
+    )
+    taus = res.tcs
+    print('-----------')
+    res = mygf.doglobalfit(
+        dgen.data, dgen.time, dgen.wn,
+        res.tcs,
+        method='est',
+        back=True
+    )
+    taus = res.tcs
+res.plot_profile()
+
+# res = mylda.dolda(dgen.data, dgen.time, dgen.wn, alimits=[0.1, 50])
+# res.plot_results()
 
 plt.show()
