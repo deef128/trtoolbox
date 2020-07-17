@@ -1,6 +1,6 @@
 # TODO: fix overflow
 # TODO: DAS / EAS / SAS
-# TODO: improve back reaction fitting
+# TODO: improve back reaction fitting (by using svds)
 
 import os
 from scipy.integrate import odeint

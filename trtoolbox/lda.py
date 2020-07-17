@@ -1,5 +1,4 @@
-# TODO: something against noise in the beginning --> weights
-# TODO: parallelization
+# TODO: something against noise in the beginning --> weights?
 
 import os
 import numpy as np
@@ -604,8 +603,9 @@ def tik(data, dmatrix, alpha):
 
 
 def tiks(data, dmatrix, alphas):
-    """ Wrapper for computing LDA for
-        various alpha values.
+    """ Wrapper for computing LDA for various alpha values.
+        Parallelization makes execution actually slower. I suspect that the svd numpy method already optimizes
+        CPU usage.
 
     Parameters
     ----------
