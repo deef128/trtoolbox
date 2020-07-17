@@ -935,8 +935,16 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionTime_change"/>
     <addaction name="actionFreq_change"/>
    </widget>
+   <widget class="QMenu" name="menuOptions">
+    <property name="title">
+     <string>Options</string>
+    </property>
+    <addaction name="actionSet_delimiter"/>
+    <addaction name="actionClear_all"/>
+   </widget>
    <addaction name="menuData"/>
    <addaction name="menuChange_Units"/>
+   <addaction name="menuOptions"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionLoad_all">
@@ -982,6 +990,16 @@ p, li { white-space: pre-wrap; }
   <action name="actionFrequency_short">
    <property name="text">
     <string>Frequency short</string>
+   </property>
+  </action>
+  <action name="actionSet_delimiter">
+   <property name="text">
+    <string>Set delimiter</string>
+   </property>
+  </action>
+  <action name="actionClear_all">
+   <property name="text">
+    <string>Clear all</string>
    </property>
   </action>
  </widget>

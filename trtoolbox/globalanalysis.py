@@ -1,6 +1,7 @@
 # TODO: fix overflow
-# TODO: GLA
+# TODO: DAS / EAS / SAS
 # TODO: improve back reaction fitting
+
 import os
 from scipy.integrate import odeint
 from scipy.optimize import least_squares
@@ -222,6 +223,32 @@ class Results:
                         axs[r, i-offset].set_xscale('log')
                     else:
                         axs[r, i-offset].plot(self.wn, self.spectral_offset)
+        else:
+            title = 'SVD of the residual matrix'
+            nb_svds = 4
+            nb_cols = 2
+            fig, axs = plt.subplots(2, nb_cols)
+            fig.suptitle(title)
+            resi = self.data - self.fitdata
+            u, _, vt = mysvd.wrapper_svd(resi)
+            r = 0
+            offset = 0
+            iu = 0
+            iv = 0
+            for i in range(nb_svds):
+                if i == nb_cols:
+                    r = 1
+                    offset = nb_cols
+                if i < nb_svds:
+                    if i - offset == 0:
+                        axs[r, i - offset].plot(
+                            self.wn, u[:, iu])
+                        iu = iu + 1
+                    else:
+                        axs[r, i - offset].plot(
+                            self.time.T, vt[iv, :])
+                        axs[r, i - offset].set_xscale('log')
+                        iv = iv + 1
 
     def clean(self):
         """ Unfortunetaly, spyder messes up when the results

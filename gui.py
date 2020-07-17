@@ -55,6 +55,7 @@ class DataStorage:
         self.time_unit = 's'
         self.trunc_time = list()
         self.trunc_wn = list()
+        self.delimiter = ','
 
     @property
     def wn(self):
@@ -77,7 +78,7 @@ class DataStorage:
 
         if val.dtype != 'float':
             val = val.astype('float64')
-        self._wn = val.reshape((val.size, 1))
+        self._wn = np.sort(val.reshape((val.size, 1)), axis=0)
         self.trunc_wn = [np.min(self._wn), np.max(self._wn)]
 
     @property
@@ -328,6 +329,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.actionTime_change.triggered.connect(self.change_time)
         self.actionFreq_change.triggered.connect(self.change_freq)
 
+        self.actionClear_all.triggered.connect(self.clear_all)
+        self.actionSet_delimiter.triggered.connect(self.set_delimiter)
+
         self.pb_plt_close.clicked.connect(self.close_all)
         self.pb_save_results.clicked.connect(self.save_all)
 
@@ -353,14 +357,14 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.get_file_data()
 
     def get_file_time(self):
-        """ Loads time file. Delimiter should be ','.
-             It also sets text into the truncation field.
+        """ Loads time file.
+            It also sets text into the truncation field.
         """
 
         fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open time file')
         if os.path.exists(fname[0]):
             try:
-                self.data.time = np.loadtxt(fname[0], delimiter=',')
+                self.data.time = np.loadtxt(fname[0], delimiter=self.data.delimiter)
                 self.label_file_time.setText(
                     'Time file:\n' + fname[0].split(os.path.sep)[-1][-22:])
                 str_trunc = '%.1e, %.1e' % (tuple(self.data.trunc_time))
@@ -372,7 +376,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             print('File not found.')
 
     def get_file_wn(self):
-        """ Loads frequency file. Delimiter should be ','.
+        """ Loads frequency file.
             It also sets text into the truncation field.
         """
 
@@ -382,7 +386,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         )
         if os.path.exists(fname[0]):
             try:
-                self.data.wn = np.loadtxt(fname[0], delimiter=',')
+                self.data.wn = np.loadtxt(fname[0], delimiter=self.data.delimiter)
                 self.label_file_freq.setText(
                     'Freq file:\n' + fname[0].split(os.path.sep)[-1][-22:])
                 str_trunc = '%.1f, %.1f' % (tuple(self.data.trunc_wn))
@@ -394,13 +398,16 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             print('File not found.')
 
     def get_file_data(self):
-        """ Loads data file. Delimiter should be ','.
+        """ Loads data file.
         """
 
         fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open data file')
         if os.path.exists(fname[0]):
             try:
-                self.data.data = np.loadtxt(fname[0], delimiter=',')
+                if self.data.delimiter == 'tab':
+                    self.data.data = np.loadtxt(fname[0])
+                else:
+                    self.data.data = np.loadtxt(fname[0], delimiter=self.data.delimiter)
                 self.label_file_data.setText(
                     'Data file:\n...' + fname[0][-50:]
                 )
@@ -489,6 +496,33 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         )
         if ok:
             self.data.wn_unit = text
+
+    def set_delimiter(self):
+        """ Sets delimiter,
+        """
+
+        text, ok = QtWidgets.QInputDialog.getText(
+            self,
+            'Text Input Dialog',
+            'Delimiter:'
+        )
+        if ok:
+            self.data.delimiter = text
+            print('New delimiter (type tab for tabulator): ' + self.data.delimiter)
+
+    def clear_all(self):
+        """ Clears data and results.
+        """
+
+        self.data = DataStorage()
+        self.results = Results()
+        self.txt_gf_results.clear()
+        self.txt_trunc_time.clear()
+        self.txt_trunc_freq.clear()
+        self.label_file_time.setText('Time file:')
+        self.label_file_freq.setText('Freq file:')
+        self.label_file_data.setText('Data file:')
+        plt.close('all')
 
     @staticmethod
     def close_all():

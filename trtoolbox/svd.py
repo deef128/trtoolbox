@@ -32,11 +32,11 @@ class Results:
         Frequency unit (default cm^{-1}).
     time : np.array
         Time array.
-    t_name : str
+    time_name : str
         Time name (default: time).
-    time_uni : str
+    time_unit : str
         Time uni (default: s).
-    __phelper : mysvd.PlotHelper
+    _phelper : mysvd.PlotHelper
         Plot helper class for interactive plots.
     """
 
@@ -327,7 +327,12 @@ def show_svs(data, time, wn):
     u, s, vt = scipy_svd(data)
     eig = s**2/np.sum(s**2)
 
-    num = 15
+    if s.size < 8:
+        raise RuntimeError('Too less singular values!')
+    if s.size < 15:
+        num = s.size
+    else:
+        num = 15
     numlist = list(range(1, num+1))
     varlimits = [0.8, 0.95, 0.995]
     colors = ['red', 'orange', 'forestgreen']

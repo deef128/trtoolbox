@@ -1,5 +1,6 @@
-# TODO: species associated spectra
 # TODO: something against noise in the beginning --> weights
+# TODO: parallelization
+
 import os
 import numpy as np
 from scipy.linalg import svd
