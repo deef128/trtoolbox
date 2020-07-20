@@ -3,12 +3,12 @@
 Lifetime density analysis
 =========================
 
-In contrast to global fitting where just a limited number of transitions is considered, LDA tries to explain the data with a discrete set of time constants (lifetime-density). Let :math:`\mathbf{D}` be a matrix where the ith column is filled with :math:`e^{-t/\tau_i}` where :math:`\tau` is the time constant. Further let :math:`\mathbf{A}` be the recorded data matrix. Then the data can potentially reconstructed by finding a matrix :math:`\mathbf{x}` solving
+In contrast to global analysis where just a limited number of transitions is considered, Lifetime density analysis (LDA) tries to explain the data with a discrete set of time constants. Let :math:`\mathbf{D}` be a matrix where the ith column is filled with :math:`e^{-t/\tau_i}` where :math:`\tau` is the time constant. Further let :math:`\mathbf{A}` be the recorded data matrix. Then the data can potentially reconstructed by finding a matrix :math:`\mathbf{x}` solving
 
 .. math::
     \mathbf{D}\cdot\mathbf{x} = \mathbf{A} \quad ,
     
-which contains the amplitudes (pre-factors) for a certain expontential time course at a specific frequency. Above equation is a ill-posed problem with no unique solution. Applying Tikhonov regularization applies a penalty on large numbers on the solution :math:`\mathbf{x}` and thus prefers zero. In terms of minimization problem:
+which contains the amplitudes (pre-factors) for a certain expontential time course at a specific frequency. Above equation is a ill-posed problem with no unique solution. Applying Tikhonov regularization yields a penalty on large numbers of the solution :math:`\mathbf{x}` and thus prefers zero. In terms of minimization problem:
 
 .. math::
     ||\mathbf{A}-\mathbf{D}\cdot\mathbf{x}|| + \alpha||\mathbf{L}\cdot\mathbf{x}|| \quad ,

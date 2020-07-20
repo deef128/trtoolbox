@@ -25,7 +25,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -85,7 +85,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="svd.html">Singular value decomposition</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ga.html">Global analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ga.html">Global target analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lda.html">Lifetime density analysis</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Using the GUI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dgen.html">Data generator</a></li>
@@ -155,7 +155,10 @@
             
   <div class="section" id="using-the-gui">
 <h1>Using the GUI<a class="headerlink" href="#using-the-gui" title="Permalink to this headline">¶</a></h1>
-<p>To start the GUI simply run <em>gui.py</em> in the trtoolbox folder. The two script files (<em>trtoolbox.sh</em> for bash/Linux and <em>trtoolbox.bat</em> for Windows) are a convenient way to activate an Anaconda environment and start the GUI. Do no forget to set the environment name and the Anaconda path in case of Windows. Data to be imported shoud have ‘,’ as delimiter.</p>
+<p>To start the GUI simply run <em>gui.py</em> in the trtoolbox folder. The two script files (<em>trtoolbox.sh</em> for bash/Linux and <em>trtoolbox.bat</em> for Windows) are a convenient way to activate an Anaconda environment and start the GUI. Do no forget to set the environment name and the Anaconda path in case of Windows.</p>
+<a class="reference internal image-reference" href="_images/gui.png"><img alt="_images/gui.png" src="_images/gui.png" style="width: 600px;" /></a>
+<p>The GUI is divided into different sections corresponding to the raw data, SVD, global analysis and LDA. Each section is further divided into a left pane where parameters for the method can be set and a right pane for plotting the results. For details of the different sections please read the dedicated chapters of this doc.</p>
+<p>Data can be imported via the <em>Load Data</em> button in the menu bar. The GUI needs ASCII files but the delimiter can be set. Default is a comma. For training purposes, spectroscopic data can be generated and subsequently used for data analysis.</p>
 </div>
 
 

@@ -25,7 +25,7 @@
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -83,7 +83,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../svd.html">Singular value decomposition</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../ga.html">Global analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ga.html">Global target analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../lda.html">Lifetime density analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../gui.html">Using the GUI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../dgen.html">Data generator</a></li>
@@ -150,8 +150,8 @@
            <div itemprop="articleBody">
             
   <h1>Source code for trtoolbox.lda</h1><div class="highlight"><pre>
-<span></span><span class="c1"># TODO: species associated spectra</span>
-<span class="c1"># TODO: something against noise in the beginning --&gt; weights</span>
+<span></span><span class="c1"># TODO: something against noise in the beginning --&gt; weights?</span>
+
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">svd</span>
@@ -755,8 +755,9 @@
 
 
 <div class="viewcode-block" id="tiks"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.lda.tiks">[docs]</a><span class="k">def</span> <span class="nf">tiks</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dmatrix</span><span class="p">,</span> <span class="n">alphas</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Wrapper for computing LDA for</span>
-<span class="sd">        various alpha values.</span>
+    <span class="sd">&quot;&quot;&quot; Wrapper for computing LDA for various alpha values.</span>
+<span class="sd">        Parallelization makes execution actually slower. I suspect that the svd numpy method already optimizes</span>
+<span class="sd">        CPU usage.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>

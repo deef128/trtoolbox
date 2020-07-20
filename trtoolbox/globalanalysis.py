@@ -1,6 +1,7 @@
 # TODO: fix overflow
 # TODO: DAS / EAS / SAS
 # TODO: improve back reaction fitting (by using svds)
+# TODO: use K-matrix (Stokkum)
 
 import os
 from scipy.integrate import odeint
@@ -255,6 +256,7 @@ class Results:
             object is invesitgated via the variable explorer.
             Running this method fixes this.
         """
+
         # self._phelper = PlotHelper()
         # delattr(self, '_phelper')
         self._phelper = []
@@ -672,7 +674,7 @@ def calc_r2(data, res):
     return r2*100
 
 
-def doglobalfit(
+def doglobalanalysis(
         data,
         time,
         wn,

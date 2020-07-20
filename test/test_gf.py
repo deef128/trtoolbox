@@ -226,7 +226,7 @@ class TestGF(unittest.TestCase):
         start_tcs = self.tcs * rdnm
 
         print('SVD')
-        res = mygf.doglobalfit(
+        res = mygf.doglobalanalysis(
             self.data,
             self.time,
             self.wn,
@@ -237,7 +237,7 @@ class TestGF(unittest.TestCase):
         np.testing.assert_almost_equal(res.fitdata, self.data, decimal=5)
 
         print('Raw')
-        res = mygf.doglobalfit(
+        res = mygf.doglobalanalysis(
             self.data,
             self.time,
             self.wn,
@@ -248,7 +248,7 @@ class TestGF(unittest.TestCase):
         np.testing.assert_almost_equal(res.fitdata, self.data, decimal=0)
 
         print('Est')
-        res = mygf.doglobalfit(
+        res = mygf.doglobalanalysis(
             self.data,
             self.time,
             self.wn,
@@ -266,7 +266,7 @@ class TestGF(unittest.TestCase):
         start_tcs = dgen.tcs * rdnm
 
         print('SVD')
-        res = mygf.doglobalfit(
+        res = mygf.doglobalanalysis(
             dgen.data,
             dgen.time,
             dgen.wn,
@@ -278,7 +278,7 @@ class TestGF(unittest.TestCase):
         np.testing.assert_almost_equal(res.fitdata, dgen.data, decimal=-1)
 
         with self.assertRaises(ValueError):
-            res = mygf.doglobalfit(
+            res = mygf.doglobalanalysis(
                 dgen.data,
                 dgen.time,
                 dgen.wn,
@@ -288,7 +288,7 @@ class TestGF(unittest.TestCase):
             )
 
         with self.assertRaises(ValueError):
-            res = mygf.doglobalfit(
+            res = mygf.doglobalanalysis(
                 dgen.data,
                 dgen.time,
                 dgen.wn,

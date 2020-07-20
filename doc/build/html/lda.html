@@ -25,7 +25,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -37,7 +37,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Using the GUI" href="gui.html" />
-    <link rel="prev" title="Global analysis" href="ga.html" /> 
+    <link rel="prev" title="Global target analysis" href="ga.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -85,7 +85,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="svd.html">Singular value decomposition</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ga.html">Global analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ga.html">Global target analysis</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Lifetime density analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gui.html">Using the GUI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dgen.html">Data generator</a></li>
@@ -155,10 +155,10 @@
             
   <div class="section" id="lifetime-density-analysis">
 <h1>Lifetime density analysis<a class="headerlink" href="#lifetime-density-analysis" title="Permalink to this headline">¶</a></h1>
-<p>In contrast to global fitting where just a limited number of transitions is considered, LDA tries to explain the data with a discrete set of time constants (lifetime-density). Let <span class="math notranslate nohighlight">\(\mathbf{D}\)</span> be a matrix where the ith column is filled with <span class="math notranslate nohighlight">\(e^{-t/\tau_i}\)</span> where <span class="math notranslate nohighlight">\(\tau\)</span> is the time constant. Further let <span class="math notranslate nohighlight">\(\mathbf{A}\)</span> be the recorded data matrix. Then the data can potentially reconstructed by finding a matrix <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> solving</p>
+<p>In contrast to global analysis where just a limited number of transitions is considered, Lifetime density analysis (LDA) tries to explain the data with a discrete set of time constants. Let <span class="math notranslate nohighlight">\(\mathbf{D}\)</span> be a matrix where the ith column is filled with <span class="math notranslate nohighlight">\(e^{-t/\tau_i}\)</span> where <span class="math notranslate nohighlight">\(\tau\)</span> is the time constant. Further let <span class="math notranslate nohighlight">\(\mathbf{A}\)</span> be the recorded data matrix. Then the data can potentially reconstructed by finding a matrix <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> solving</p>
 <div class="math notranslate nohighlight">
 \[\mathbf{D}\cdot\mathbf{x} = \mathbf{A} \quad ,\]</div>
-<p>which contains the amplitudes (pre-factors) for a certain expontential time course at a specific frequency. Above equation is a ill-posed problem with no unique solution. Applying Tikhonov regularization applies a penalty on large numbers on the solution <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> and thus prefers zero. In terms of minimization problem:</p>
+<p>which contains the amplitudes (pre-factors) for a certain expontential time course at a specific frequency. Above equation is a ill-posed problem with no unique solution. Applying Tikhonov regularization yields a penalty on large numbers of the solution <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> and thus prefers zero. In terms of minimization problem:</p>
 <div class="math notranslate nohighlight">
 \[||\mathbf{A}-\mathbf{D}\cdot\mathbf{x}|| + \alpha||\mathbf{L}\cdot\mathbf{x}|| \quad ,\]</div>
 <p>with <span class="math notranslate nohighlight">\(\alpha\)</span> as a constant which defines the balance between the residual (left) and smooth norm (right). The algorithm uses the identity matrix for <span class="math notranslate nohighlight">\(\mathbf{L}\)</span> leading to the Euclidian 2-norm.</p>
@@ -182,7 +182,7 @@
         <a href="gui.html" class="btn btn-neutral float-right" title="Using the GUI" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="ga.html" class="btn btn-neutral float-left" title="Global analysis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="ga.html" class="btn btn-neutral float-left" title="Global target analysis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

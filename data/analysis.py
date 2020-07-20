@@ -17,5 +17,5 @@ wn = np.loadtxt('wavenumbers.dat', delimiter=',')
 
 #%%
 plt.close('all')
-res = mygf.doglobalfit(data, time, wn, [1.4e-5, 1.2e-4, 2.1e-3, 2.3e-2], method='raw', svds=5)
+res = mygf.doglobalanalysis(data, time, wn, [1.4e-5, 1.2e-4, 2.1e-3, 2.3e-2], method='raw', svds=5)
 res.plot_results()

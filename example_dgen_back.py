@@ -11,7 +11,7 @@ dgen.plot_profile()
 # dgen.plot_das()
 
 print('-----------')
-res = mygf.doglobalfit(
+res = mygf.doglobalanalysis(
     dgen.data, dgen.time, dgen.wn,
     [[4e-6, 3e-4, 2e-2], [4e-6, 9e-5, 2e-2]],
     method='est',
@@ -19,7 +19,7 @@ res = mygf.doglobalfit(
 )
 res.plot_profile()
 print('-----------')
-res = mygf.doglobalfit(
+res = mygf.doglobalanalysis(
     dgen.data, dgen.time, dgen.wn,
     [[4e-6, 3e-4, 2e-2], [4e-6, 9e-5, 2e-2]],
     method='raw',
@@ -28,7 +28,7 @@ res = mygf.doglobalfit(
 )
 res.plot_profile()
 print('-----------')
-res = mygf.doglobalfit(
+res = mygf.doglobalanalysis(
     dgen.data, dgen.time, dgen.wn,
     [[4e-6, 3e-4, 2e-2], [4e-6, 9e-5, 2e-2]],
     method='svd',
@@ -40,7 +40,7 @@ res.plot_profile()
 taus = [[4e-6, 3e-4, 2e-2], [4e-6, 9e-5, 2e-2]]
 for i in range(3):
     print('-----------')
-    res = mygf.doglobalfit(
+    res = mygf.doglobalanalysis(
         dgen.data, dgen.time, dgen.wn,
         taus,
         method='raw',
@@ -49,7 +49,7 @@ for i in range(3):
     )
     taus = res.tcs
     print('-----------')
-    res = mygf.doglobalfit(
+    res = mygf.doglobalanalysis(
         dgen.data, dgen.time, dgen.wn,
         res.tcs,
         method='est',

@@ -380,7 +380,7 @@ p, li { white-space: pre-wrap; }
      </rect>
     </property>
     <property name="title">
-     <string>Global Fit</string>
+     <string>Global analysis</string>
     </property>
     <widget class="QWidget" name="verticalLayoutWidget_6">
      <property name="geometry">
@@ -564,7 +564,7 @@ p, li { white-space: pre-wrap; }
      </font>
     </property>
     <property name="title">
-     <string>Lifetime density analysis</string>
+     <string>LDA</string>
     </property>
     <widget class="QLabel" name="label_9">
      <property name="geometry">
@@ -925,6 +925,7 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionLoad_time"/>
     <addaction name="actionLoad_frequency"/>
     <addaction name="actionLoad_data"/>
+    <addaction name="actionSet_delimiter"/>
     <addaction name="separator"/>
     <addaction name="actionLoad_test_data"/>
    </widget>
@@ -939,7 +940,6 @@ p, li { white-space: pre-wrap; }
     <property name="title">
      <string>Options</string>
     </property>
-    <addaction name="actionSet_delimiter"/>
     <addaction name="actionClear_all"/>
    </widget>
    <addaction name="menuData"/>

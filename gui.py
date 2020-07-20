@@ -647,7 +647,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         except ValueError:
             print('Please provide valid string')
             return
-        self.results.gf = mygf.doglobalfit(
+        self.results.gf = mygf.doglobalanalysis(
             self.data.data,
             self.data.time,
             self.data.wn,

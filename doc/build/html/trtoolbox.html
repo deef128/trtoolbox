@@ -25,7 +25,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -83,7 +83,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="svd.html">Singular value decomposition</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ga.html">Global analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ga.html">Global target analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lda.html">Lifetime density analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gui.html">Using the GUI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dgen.html">Data generator</a></li>
@@ -583,8 +583,8 @@ columns are prefactors (rate constants x SVD components)</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt id="trtoolbox.globalanalysis.doglobalfit">
-<code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">doglobalfit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">wn</span></em>, <em class="sig-param"><span class="n">tcs</span></em>, <em class="sig-param"><span class="n">method</span><span class="o">=</span><span class="default_value">'svd'</span></em>, <em class="sig-param"><span class="n">svds</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">offset</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">offindex</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">back</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#doglobalfit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.doglobalfit" title="Permalink to this definition">¶</a></dt>
+<dt id="trtoolbox.globalanalysis.doglobalanalysis">
+<code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">doglobalanalysis</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">wn</span></em>, <em class="sig-param"><span class="n">tcs</span></em>, <em class="sig-param"><span class="n">method</span><span class="o">=</span><span class="default_value">'svd'</span></em>, <em class="sig-param"><span class="n">svds</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">offset</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">offindex</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">back</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#doglobalanalysis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.doglobalanalysis" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Wrapper for global fit routine. Implementation of back reactions</dt><dd><p>is still experimental and just available for the svd method.</p>
 </dd>
@@ -657,7 +657,7 @@ Therefore ks[-1] is not used.</p></li>
 
 <dl class="py function">
 <dt id="trtoolbox.globalanalysis.opt_func_est">
-<code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">opt_func_est</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ks</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#opt_func_est"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.opt_func_est" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">opt_func_est</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ks</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">back</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#opt_func_est"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.opt_func_est" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Optimization function for residuals of concentration profile</dt><dd><p>and estimated contributions of DAS</p>
 </dd>
@@ -668,6 +668,7 @@ Therefore ks[-1] is not used.</p></li>
 <li><p><strong>ks</strong> (<em>np.array</em>) – Rate constants</p></li>
 <li><p><strong>time</strong> (<em>np.array</em>) – Time array.</p></li>
 <li><p><strong>data</strong> (<em>np.array</em>) – Data matrix.</p></li>
+<li><p><strong>back</strong> (<em>boolean</em>) – Determines if a model with back-reactions is used.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -681,7 +682,7 @@ Therefore ks[-1] is not used.</p></li>
 
 <dl class="py function">
 <dt id="trtoolbox.globalanalysis.opt_func_raw">
-<code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">opt_func_raw</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ks</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#opt_func_raw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.opt_func_raw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">opt_func_raw</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ks</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">back</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#opt_func_raw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.opt_func_raw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Optimization function for residuals of fitted data - input data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -689,6 +690,7 @@ Therefore ks[-1] is not used.</p></li>
 <li><p><strong>ks</strong> (<em>np.array</em>) – Rate constants</p></li>
 <li><p><strong>time</strong> (<em>np.array</em>) – Time array.</p></li>
 <li><p><strong>data</strong> (<em>np.array</em>) – Data matrix.</p></li>
+<li><p><strong>back</strong> (<em>boolean</em>) – Determines if a model with back-reactions is used.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -702,7 +704,7 @@ Therefore ks[-1] is not used.</p></li>
 
 <dl class="py function">
 <dt id="trtoolbox.globalanalysis.opt_func_svd">
-<code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">opt_func_svd</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">par</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">svdtraces</span></em>, <em class="sig-param"><span class="n">nb_exps</span></em>, <em class="sig-param"><span class="n">back</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#opt_func_svd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.opt_func_svd" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">opt_func_svd</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">par</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">svdtraces</span></em>, <em class="sig-param"><span class="n">nb_exps</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#opt_func_svd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.opt_func_svd" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Optimization function for residuals of SVD</dt><dd><p>abstract time traces - fitted traces.</p>
 </dd>
@@ -716,7 +718,6 @@ Therefore ks[-1] is not used.</p></li>
 <li><p><strong>svdtraces</strong> (<em>np.array</em>) – SVD traces</p></li>
 <li><p><strong>nb_exps</strong> (<em>int</em>) – Number of exponential decay processes. Needed for reshaping the
 flattened paramater array.</p></li>
-<li><p><strong>back</strong> (<em>boolean</em>) – Determines if a model with back-reactions is used.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1320,7 +1321,8 @@ PLoS computational biology 13.5 (2017)</p>
 <dt id="trtoolbox.lda.tiks">
 <code class="sig-prename descclassname">trtoolbox.lda.</code><code class="sig-name descname">tiks</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">dmatrix</span></em>, <em class="sig-param"><span class="n">alphas</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/lda.html#tiks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.lda.tiks" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
-<dt>Wrapper for computing LDA for</dt><dd><p>various alpha values.</p>
+<dt>Wrapper for computing LDA for various alpha values.</dt><dd><p>Parallelization makes execution actually slower. I suspect that the svd numpy method already optimizes
+CPU usage.</p>
 </dd>
 </dl>
 <dl class="field-list simple">
@@ -1862,8 +1864,8 @@ and n as time. But it is actually not important.</p></li>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="trtoolbox.svd.Results.t_name">
-<code class="sig-name descname">t_name</code><a class="headerlink" href="#trtoolbox.svd.Results.t_name" title="Permalink to this definition">¶</a></dt>
+<dt id="trtoolbox.svd.Results.time_name">
+<code class="sig-name descname">time_name</code><a class="headerlink" href="#trtoolbox.svd.Results.time_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Time name (default: time).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -1873,8 +1875,8 @@ and n as time. But it is actually not important.</p></li>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="trtoolbox.svd.Results.time_uni">
-<code class="sig-name descname">time_uni</code><a class="headerlink" href="#trtoolbox.svd.Results.time_uni" title="Permalink to this definition">¶</a></dt>
+<dt id="trtoolbox.svd.Results.time_unit">
+<code class="sig-name descname">time_unit</code><a class="headerlink" href="#trtoolbox.svd.Results.time_unit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Time uni (default: s).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -1884,8 +1886,8 @@ and n as time. But it is actually not important.</p></li>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="trtoolbox.svd.Results.__phelper">
-<code class="sig-name descname">__phelper</code><a class="headerlink" href="#trtoolbox.svd.Results.__phelper" title="Permalink to this definition">¶</a></dt>
+<dt id="trtoolbox.svd.Results._phelper">
+<code class="sig-name descname">_phelper</code><a class="headerlink" href="#trtoolbox.svd.Results._phelper" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot helper class for interactive plots.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
