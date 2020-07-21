@@ -356,19 +356,44 @@ def check_input(data, time, wn):
     return data, time, wn
 
 
-def create_kmatrix(ks, type='seq'):
-    dec = np.eye(ks.size)
-    if type == 'seq':
-        evo = np.eye(ks.size, k=-1)
-        # evo[0, -1] = 0
-        kmatrix = -1 * dec + evo
-    else:
-        kmatrix = dec
+class RateConstants:
 
-    return kmatrix
+    def __init__(self, ks):
+        if ks.ndim == 1:
+            ks = ks.reshape(ks.size, 1)
+        self.ks = ks
+        self.tcs = 1/ks
+        self.nb_exps = ks.shape
+        self.kmatrix = None
+        self.style = None
+
+    # ks over rows
+    def create_kmatrix(self, style=None):
+        if style is None and self.style is not None:
+            style = self.style
+        elif style is None and self.style is None:
+            style = 'seq'
+        nb_trans = self.nb_exps[0]
+        dec = np.eye(nb_trans)
+        if style == 'seq' and self.ks.shape[1] == 1:
+            evo = np.eye(nb_trans, k=-1)
+            kmatrix = -1 * dec + evo
+        elif style == 'dec' and self.ks.shape[1] == 1:
+            kmatrix = dec
+        elif style == 'back' and self.ks.shape[1] == 2:
+            evo = np.eye(nb_trans, k=-1)
+            kmatrix = -1 * dec + evo
+            t = -1 * dec + np.eye(nb_trans, k=1)
+            t[0, 0] = 0
+            kmatrix = kmatrix + t
+        else:
+            return
+
+        self.kmatrix = kmatrix
+        self.style = style
 
 
-def model(s, time, ks, kmatrix, back=False):
+def model(s, time, rate_constants):
     """ Creates an array of differential equations according
         to an unidirectional sequential exponential model.
         S[0]/dt = -k0*S[0]
@@ -412,13 +437,16 @@ def model(s, time, ks, kmatrix, back=False):
     #             )
     #     arr.append(ks[-2, 0] * s[-2] - ks[-1, 0] * s[-1] - ks[-2, 1] * s[-1])
 
+    kmatrix = rate_constants.kmatrix
+    ks = rate_constants.ks
+
     if kmatrix.ndim == 2:
-        diffs = (kmatrix * ks).dot(s)
+        diffs = (kmatrix * ks[:, 0]).dot(s)
 
     return diffs
 
 
-def create_profile(time, ks, kmatrix, back=False):
+def create_profile(time, rate_constants):
     """ Computes a concentration profile according to the *model()* function.
 
     Parameters
@@ -437,25 +465,27 @@ def create_profile(time, ks, kmatrix, back=False):
     """
 
     # checking for correct ks input
-    if back is True:
-        if ks.ndim == 1:
-            raise ValueError('Time constant array dimensions mismatch')
-        if ks.shape[1] != 2 and ks.shape[0] == 2:
-            ks = ks.T
-        if ks.shape[1] != 2:
-            raise ValueError('Time constant array dimensions mismatch')
+    # if back is True:
+    #     if ks.ndim == 1:
+    #         raise ValueError('Time constant array dimensions mismatch')
+    #     if ks.shape[1] != 2 and ks.shape[0] == 2:
+    #         ks = ks.T
+    #     if ks.shape[1] != 2:
+    #         raise ValueError('Time constant array dimensions mismatch')
+
+    ks = rate_constants.ks
 
     # assuming a starting population of 100% for the first species
-    s0 = np.zeros(len(ks))
+    s0 = np.zeros(ks.shape[0])
     s0[0] = 1
 
     time = time.reshape(-1)
-    profile = odeint(model, s0, time, (ks, kmatrix, back))
+    profile = odeint(model, s0, time, (rate_constants, ))
 
     return profile
 
 
-def create_tr(ks, kmatrix, pre, time):
+def create_tr(rate_constants, pre, time):
     """ Function returning exponential time traces for a given set of parameters.
 
     Parameters
@@ -484,7 +514,7 @@ def create_tr(ks, kmatrix, pre, time):
     #     individual = par[:, isvds] * np.exp(-1*par[:, svds]*time.T)
     #     fit_tr[isvds, :] = np.sum(individual, axis=1)
 
-    profile = create_profile(time, ks, kmatrix)
+    profile = create_profile(time, rate_constants)
     fit_tr = profile.dot(pre)
 
     np.seterr(**old_settings)
@@ -511,7 +541,7 @@ def create_das(profile, data):
     return das[0].T
 
 
-def calculate_fitdata(ks, kmatrix, time, data, back=False):
+def calculate_fitdata(rate_constants, time, data):
     """ Computes the final fitted dataset.
 
     Parameters
@@ -535,7 +565,7 @@ def calculate_fitdata(ks, kmatrix, time, data, back=False):
     if data.shape[1] != time.size:
         data = data.T
 
-    profile = create_profile(time, ks, kmatrix, back)
+    profile = create_profile(time, rate_constants)
     das = create_das(profile, data)
     fitdata = das.dot(profile.T)
     return fitdata
@@ -563,7 +593,7 @@ def calculate_estimate(das, data):
     return est
 
 
-def opt_func_raw(ks, time, data, back):
+def opt_func_raw(ks, time, data):
     """ Optimization function for residuals of fitted data - input data.
 
     Parameters
@@ -592,7 +622,7 @@ def opt_func_raw(ks, time, data, back):
     return r.flatten()
 
 
-def opt_func_est(ks, time, data, back):
+def opt_func_est(ks, time, data):
     """ Optimization function for residuals of concentration profile
         and estimated contributions of DAS
 
@@ -624,7 +654,7 @@ def opt_func_est(ks, time, data, back):
     return r.flatten()
 
 
-def opt_func_svd(par, kmatrix, time, svdtraces, nb_exps):
+def opt_func_svd(pars, rate_constants, time, svdtraces):
     """ Optimization function for residuals of SVD
         abstract time traces - fitted traces.
 
@@ -649,8 +679,12 @@ def opt_func_svd(par, kmatrix, time, svdtraces, nb_exps):
     """
 
     svds = np.shape(svdtraces)[0]
-    par = par.reshape(nb_exps, 1 + svds)
-    r = svdtraces.T - create_tr(par[:, 0], kmatrix, par[:, 1:], time)
+    nb_exps = rate_constants.nb_exps
+    pars = pars.reshape(nb_exps[0], nb_exps[1] + svds)
+    rate_constants.ks = pars[:, :nb_exps[1]].reshape(nb_exps)
+    pre = pars[:, nb_exps[1]:]
+
+    r = svdtraces.T - create_tr(rate_constants, pre, time)
     return r.flatten()
 
 
@@ -707,8 +741,8 @@ def doglobalanalysis(
         offset=False,
         offindex=-1,
         kmatrix=None,
-        type='seq',
-        back=False):
+        style='seq'
+):
     """ Wrapper for global fit routine. Implementation of back reactions
         is still experimental and just available for the svd method.
 
@@ -756,7 +790,7 @@ def doglobalanalysis(
     else:
         start_ks = np.array(1./tcs)
         # ensuring that start_ks has two columns if back is True
-        if back is True:
+        if style == 'back':
             if start_ks.ndim == 1:
                 raise ValueError('Time constant array dimensions mismatch')
             if start_ks.shape[1] != 2 and start_ks.shape[0] == 2:
@@ -772,31 +806,31 @@ def doglobalanalysis(
         ).T
         data = data-spectral_offset_matrix
 
-    if method == 'raw':
-        res = least_squares(
-            opt_func_raw,
-            start_ks.flatten(),
-            args=(time, data, back)
-            )
-        if back is False:
-            ks = -np.sort(-res.x)
-            var = calculate_sigma(res)
-        elif back is True:
-            ks = res.x.reshape(start_ks.shape)
-            var = np.ones(start_ks.shape)
-
-    elif method == 'est':
-        res = least_squares(
-            opt_func_est,
-            start_ks.flatten(),
-            args=(time, data, back)
-            )
-        if back is False:
-            ks = -np.sort(-res.x)
-            var = calculate_sigma(res)
-        elif back is True:
-            ks = res.x.reshape(start_ks.shape)
-            var = np.ones(start_ks.shape)
+    # if method == 'raw':
+    #     res = least_squares(
+    #         opt_func_raw,
+    #         start_ks.flatten(),
+    #         args=(time, data, back)
+    #         )
+    #     if back is False:
+    #         ks = -np.sort(-res.x)
+    #         var = calculate_sigma(res)
+    #     elif back is True:
+    #         ks = res.x.reshape(start_ks.shape)
+    #         var = np.ones(start_ks.shape)
+    #
+    # elif method == 'est':
+    #     res = least_squares(
+    #         opt_func_est,
+    #         start_ks.flatten(),
+    #         args=(time, data, back)
+    #         )
+    #     if back is False:
+    #         ks = -np.sort(-res.x)
+    #         var = calculate_sigma(res)
+    #     elif back is True:
+    #         ks = res.x.reshape(start_ks.shape)
+    #         var = np.ones(start_ks.shape)
 
     elif method == 'svd':
         u, s, vt = mysvd.wrapper_svd(data)
@@ -804,41 +838,41 @@ def doglobalanalysis(
         sigma[:s.shape[0], :s.shape[0]] = np.diag(s)
         svdtraces = sigma[0:svds, :].dot(vt)
 
-        if back is False:
-            nb_exps = np.shape(start_ks)[0]
-            pars = np.empty((nb_exps, svds+1))
-            pars[:, 0:svds] = np.ones((svds,))*0.02
-            pars[:, svds] = start_ks.T
-        elif back is True:
-            nb_exps = start_ks.size
-            pars = np.empty((nb_exps, svds+1))
-            pars[:, 0:svds] = np.ones((svds,))*0.02
-            pars[:, svds] = start_ks.flatten()
+        # if style != 'back':
+        #     nb_exps = np.shape(start_ks)[0]
+        #     pars = np.empty((nb_exps, svds+1))
+        #     pars[:, 0:svds] = np.ones((svds,))*0.02
+        #     pars[:, svds] = start_ks.T
+        # else:
+        #     nb_exps = start_ks.size
+        #     pars = np.empty((nb_exps, svds+1))
+        #     pars[:, 0:svds] = np.ones((svds,))*0.02
+        #     pars[:, svds] = start_ks.flatten()
 
+        rate_constants = RateConstants(start_ks)
         if kmatrix is None:
-            kmatrix = create_kmatrix(start_ks, type)
-        nb_exps = len(kmatrix)
-        pars = np.empty((nb_exps, svds))
+            rate_constants.create_kmatrix(style)
+        pars = np.empty((rate_constants.nb_exps[0], svds))
         pars[:, 0:svds] = np.ones((svds,)) * np.max(svdtraces)/2
-        pars = np.hstack((start_ks.reshape(start_ks.size, 1), pars))
+        pars = np.hstack((rate_constants.ks, pars))
 
         res = least_squares(
             opt_func_svd,
             pars.flatten(),
-            args=(kmatrix, time, svdtraces, nb_exps)
+            args=(rate_constants, time, svdtraces,)
         )
-        # ks = res.x[svds::svds+1]!
-        pars = res.x.reshape(nb_exps, 1 + svds)
-        ks = pars[:, 0]
-        if back is True:
-            ks = ks.reshape(start_ks.shape)
+        # ks = res.x[svds::svds+1]
+        nb_exps = rate_constants.nb_exps
+        pars = pars.reshape(nb_exps[0], nb_exps[1] + svds)
+        ks = pars[:, :nb_exps[1]]
+        # if back is True:
+        #     ks = ks.reshape(start_ks.shape)
         var = calculate_sigma(res)
         var = var[svds::svds+1]
 
     # gathering results
     gf_res = Results()
     gf_res.offset = offset
-    gf_res.back = back
     if offset is True:
         gf_res.data = data+spectral_offset_matrix
         gf_res.spectral_offset = spectral_offset
@@ -849,16 +883,16 @@ def doglobalanalysis(
     gf_res.ks = ks
     gf_res.tcs = 1/ks
     gf_res.var = 1/var
-    gf_res.fitdata = calculate_fitdata(ks, kmatrix, time, data, back)
+    gf_res.fitdata = calculate_fitdata(rate_constants, time, data)
     gf_res.method = method
-    gf_res.profile = create_profile(time, ks, kmatrix, back)
+    gf_res.profile = create_profile(time, rate_constants)
     gf_res.das = create_das(gf_res.profile, data)
     gf_res.estimates = calculate_estimate(gf_res.das, data)
     gf_res.r2 = calc_r2(data, res)
     if method == 'svd':
         gf_res.svdtraces = svdtraces
-        par = pars[:, nb_exps:]
-        gf_res.fittraces = create_tr(ks, kmatrix, pars[:, 1:], time).T
+        par = pars[:, nb_exps[1]:]
+        gf_res.fittraces = create_tr(rate_constants, pars[:, 1:], time).T
 
     gf_res.print_results()
     print('With an R^2 of %.2f%%' % gf_res.r2)

@@ -21,7 +21,8 @@ dgen.gen_data(
     avg_width=200,
     avg_std=15,
     noise=True,
-    noise_scale=0.175
+    noise_scale=0.175,
+    style='back'
 )
 
 # %% plot generated data
@@ -29,6 +30,7 @@ dgen.print_tcs()
 dgen.plot_das()
 dgen.plot_profile()
 dgen.plot_data()
+# plt.show()
 
 # %% do global fitting
 rdnm = 5 - 5 * np.random.random(dgen.tcs.shape)

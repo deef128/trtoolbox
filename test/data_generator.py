@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import numpy.random as nrand
 from scipy import signal
-from trtoolbox.globalanalysis import create_profile, create_kmatrix
+from trtoolbox.globalanalysis import create_profile, RateConstants
 from trtoolbox.plothelper import PlotHelper
 
 
@@ -35,7 +35,7 @@ class DataGenerator:
         self.das = np.array([])
         self.tcs = np.array([])
         self.profile = np.array([])
-        self.back = bool()
+        self.rate_constants = None
 
     def gen_time(self, tlimit=[1e-7, 1e-1], number=500):
         """ Generates time array.
@@ -115,7 +115,7 @@ class DataGenerator:
                 das[pos:pos+width] = das[pos:pos+width] + pre*gaus*sc
             self.das[:, i] = das.T
 
-    def gen_tcs(self, tcs=[-1, -1, -1], back=False):
+    def gen_tcs(self, tcs=[-1, -1, -1], style='seq'):
         """ Generates time constants
 
         Parameters
@@ -149,11 +149,14 @@ class DataGenerator:
             self.tcs = np.array(self.tcs)
         else:
             self.tcs = np.array(tcs)
-        if back is True:
+        if style == 'back':
             sc = -9 * nrand.random(size=(len(tcs),)) + 9
             self.tcs = np.vstack((self.tcs, self.tcs*sc)).T
 
-    def gen_data_das(self, tcs=[-1, -1, -1], back=False):
+        self.rate_constants = RateConstants(1/self.tcs)
+        self.rate_constants.style = style
+
+    def gen_data_das(self):
         """ Generates data.
 
         Parameters
@@ -164,10 +167,9 @@ class DataGenerator:
             Determines if back reactions are used.
         """
 
-        kmatrix = create_kmatrix(1/self.tcs)
-        self.profile = create_profile(self.time, 1/self.tcs, kmatrix, back=back)
+        self.rate_constants.create_kmatrix()
+        self.profile = create_profile(self.time, self.rate_constants)
         self.data = self.das.dot(self.profile.T)
-        self.back = back
 
     def gen_data(
             self,
@@ -180,7 +182,7 @@ class DataGenerator:
             avg_width=float(30),
             avg_std=float(5),
             diff=False,
-            back=False,
+            style='seq',
             noise=False,
             noise_scale=0.1
             ):
@@ -219,13 +221,13 @@ class DataGenerator:
             tcs = [-1 for i in range(tcs)]
 
         num_das = len(tcs)
-        if back is True:
+        if style == 'seq':
             num_das = int(len(tcs))
         self.gen_time(tlimit, number)
         self.gen_wn(wnlimit, wnstep)
         self.gen_das(num_das, num_peaks, avg_width, avg_std, diff=diff)
-        self.gen_tcs(tcs, back=back)
-        self.gen_data_das(back=back)
+        self.gen_tcs(tcs, style)
+        self.gen_data_das()
         if noise is True:
             self.data = self.data + \
                 nrand.normal(0, scale=noise_scale, size=self.data.shape)
@@ -235,10 +237,10 @@ class DataGenerator:
         """
 
         print('Time constants for data generation:')
-        if self.back is False:
+        if self.rate_constants.style != 'back':
             for i in range(len(self.tcs)):
                 print('%i. %e' % (i+1, self.tcs[i]))
-        elif self.back is True:
+        else:
             for i in range(len(self.tcs)):
                 print('%i. forward: %e, backward: %e'
                       % (i+1, self.tcs[i, 0], self.tcs[i, 1]))
