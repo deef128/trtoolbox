@@ -89,15 +89,15 @@ class Results:
         """ Prints time constants.
         """
 
-        print('Obtained time constants:')
-        if self.back is False:
-            for i in range(len(self.tcs)):
-                print('%i. %e with variance of %e'
-                      % (i+1, self.tcs[i], self.var[i]))
-        elif self.back is True:
-            for i in range(self.tcs.shape[0]):
-                print('%i. forward: %e, backward: %e'
-                      % (i+1, self.tcs[i, 0], self.tcs[i, 1]))
+        # print('Obtained time constants:')
+        # if self.back is False:
+        #     for i in range(len(self.tcs)):
+        #         print('%i. %e with variance of %e'
+        #               % (i+1, self.tcs[i], self.var[i]))
+        # elif self.back is True:
+        #     for i in range(self.tcs.shape[0]):
+        #         print('%i. forward: %e, backward: %e'
+        #               % (i+1, self.tcs[i, 0], self.tcs[i, 1]))
 
     def plot_traces(self):
         """ Plots interactive time traces.
@@ -307,6 +307,10 @@ class Results:
         f.close()
 
 
+def is_square(mat):
+    return all([len(i) == len(mat) for i in mat])
+
+
 def check_input(data, time, wn):
     """ Ensures that all np.arrays have float dtype and that
         time spans over columns, frequency over rows.
@@ -352,7 +356,19 @@ def check_input(data, time, wn):
     return data, time, wn
 
 
-def model(s, time, ks, back=False):
+def create_kmatrix(ks, type='seq'):
+    dec = np.eye(ks.size)
+    if type == 'seq':
+        evo = np.eye(ks.size, k=-1)
+        # evo[0, -1] = 0
+        kmatrix = -1 * dec + evo
+    else:
+        kmatrix = dec
+
+    return kmatrix
+
+
+def model(s, time, ks, kmatrix, back=False):
     """ Creates an array of differential equations according
         to an unidirectional sequential exponential model.
         S[0]/dt = -k0*S[0]
@@ -382,24 +398,27 @@ def model(s, time, ks, back=False):
         Array containing the differential equations.
     """
 
-    if back is False:
-        arr = [-ks[0] * s[0]]
-        for i in range(1, len(ks)):
-            arr.append(ks[i-1] * s[i-1] - ks[i] * s[i])
+    # if back is False:
+    #     arr = [-ks[0] * s[0]]
+    #     for i in range(1, len(ks)):
+    #         arr.append(ks[i-1] * s[i-1] - ks[i] * s[i])
 
-    elif back is True:
-        arr = [-ks[0, 0] * s[0] + ks[0, 1] * s[1]]
-        for i in range(1, len(ks)-1):
-            arr.append(
-                ks[i-1, 0] * s[i-1] - ks[i, 0] * s[i]
-                - ks[i-1, 1] * s[i] + ks[i, 1] * s[i+1]
-                )
-        arr.append(ks[-2, 0] * s[-2] - ks[-1, 0] * s[-1] - ks[-2, 1] * s[-1])
+    # elif back is True:
+    #     arr = [-ks[0, 0] * s[0] + ks[0, 1] * s[1]]
+    #     for i in range(1, len(ks)-1):
+    #         arr.append(
+    #             ks[i-1, 0] * s[i-1] - ks[i, 0] * s[i]
+    #             - ks[i-1, 1] * s[i] + ks[i, 1] * s[i+1]
+    #             )
+    #     arr.append(ks[-2, 0] * s[-2] - ks[-1, 0] * s[-1] - ks[-2, 1] * s[-1])
 
-    return arr
+    if kmatrix.ndim == 2:
+        diffs = (kmatrix * ks).dot(s)
+
+    return diffs
 
 
-def create_profile(time, ks, back=False):
+def create_profile(time, ks, kmatrix, back=False):
     """ Computes a concentration profile according to the *model()* function.
 
     Parameters
@@ -431,12 +450,12 @@ def create_profile(time, ks, back=False):
     s0[0] = 1
 
     time = time.reshape(-1)
-    profile = odeint(model, s0, time, (ks, back))
+    profile = odeint(model, s0, time, (ks, kmatrix, back))
 
     return profile
 
 
-def create_tr(par, time):
+def create_tr(ks, kmatrix, pre, time):
     """ Function returning exponential time traces for a given set of parameters.
 
     Parameters
@@ -457,13 +476,17 @@ def create_tr(par, time):
     # logsumexp encounters an invalid value error
     old_settings = np.seterr(all='ignore')
 
-    svds = np.shape(par)[1]-1
-    time = time.reshape((1, time.size))
-    fit_tr = np.empty((svds, time.size))
-    # par[:, svds] : rate constants
-    for isvds in range(0, svds):
-        individual = par[:, isvds] * np.exp(-1*par[:, svds]*time.T)
-        fit_tr[isvds, :] = np.sum(individual, axis=1)
+    # svds = np.shape(par)[1]-1
+    # time = time.reshape((1, time.size))
+    # fit_tr = np.empty((svds, time.size))
+    # # par[:, svds] : rate constants
+    # for isvds in range(0, svds):
+    #     individual = par[:, isvds] * np.exp(-1*par[:, svds]*time.T)
+    #     fit_tr[isvds, :] = np.sum(individual, axis=1)
+
+    profile = create_profile(time, ks, kmatrix)
+    fit_tr = profile.dot(pre)
+
     np.seterr(**old_settings)
     return fit_tr
 
@@ -488,7 +511,7 @@ def create_das(profile, data):
     return das[0].T
 
 
-def calculate_fitdata(ks, time, data, back=False):
+def calculate_fitdata(ks, kmatrix, time, data, back=False):
     """ Computes the final fitted dataset.
 
     Parameters
@@ -512,7 +535,7 @@ def calculate_fitdata(ks, time, data, back=False):
     if data.shape[1] != time.size:
         data = data.T
 
-    profile = create_profile(time, ks, back)
+    profile = create_profile(time, ks, kmatrix, back)
     das = create_das(profile, data)
     fitdata = das.dot(profile.T)
     return fitdata
@@ -601,7 +624,7 @@ def opt_func_est(ks, time, data, back):
     return r.flatten()
 
 
-def opt_func_svd(par, time, data, svdtraces, nb_exps):
+def opt_func_svd(par, kmatrix, time, svdtraces, nb_exps):
     """ Optimization function for residuals of SVD
         abstract time traces - fitted traces.
 
@@ -626,8 +649,8 @@ def opt_func_svd(par, time, data, svdtraces, nb_exps):
     """
 
     svds = np.shape(svdtraces)[0]
-    par = par.reshape(nb_exps, svds+1)
-    r = svdtraces - create_tr(par, time)
+    par = par.reshape(nb_exps, 1 + svds)
+    r = svdtraces.T - create_tr(par[:, 0], kmatrix, par[:, 1:], time)
     return r.flatten()
 
 
@@ -683,6 +706,8 @@ def doglobalanalysis(
         svds=5,
         offset=False,
         offindex=-1,
+        kmatrix=None,
+        type='seq',
         back=False):
     """ Wrapper for global fit routine. Implementation of back reactions
         is still experimental and just available for the svd method.
@@ -729,7 +754,7 @@ def doglobalanalysis(
     if len(tcs) < 1:
         raise ValueError('I need at least two time constants.')
     else:
-        start_ks = 1./tcs
+        start_ks = np.array(1./tcs)
         # ensuring that start_ks has two columns if back is True
         if back is True:
             if start_ks.ndim == 1:
@@ -790,12 +815,21 @@ def doglobalanalysis(
             pars[:, 0:svds] = np.ones((svds,))*0.02
             pars[:, svds] = start_ks.flatten()
 
+        if kmatrix is None:
+            kmatrix = create_kmatrix(start_ks, type)
+        nb_exps = len(kmatrix)
+        pars = np.empty((nb_exps, svds))
+        pars[:, 0:svds] = np.ones((svds,)) * np.max(svdtraces)/2
+        pars = np.hstack((start_ks.reshape(start_ks.size, 1), pars))
+
         res = least_squares(
             opt_func_svd,
             pars.flatten(),
-            args=(time, data, svdtraces, nb_exps)
+            args=(kmatrix, time, svdtraces, nb_exps)
         )
-        ks = res.x[svds::svds+1]
+        # ks = res.x[svds::svds+1]!
+        pars = res.x.reshape(nb_exps, 1 + svds)
+        ks = pars[:, 0]
         if back is True:
             ks = ks.reshape(start_ks.shape)
         var = calculate_sigma(res)
@@ -815,16 +849,16 @@ def doglobalanalysis(
     gf_res.ks = ks
     gf_res.tcs = 1/ks
     gf_res.var = 1/var
-    gf_res.fitdata = calculate_fitdata(ks, time, data, back)
+    gf_res.fitdata = calculate_fitdata(ks, kmatrix, time, data, back)
     gf_res.method = method
-    gf_res.profile = create_profile(time, ks, back)
+    gf_res.profile = create_profile(time, ks, kmatrix, back)
     gf_res.das = create_das(gf_res.profile, data)
     gf_res.estimates = calculate_estimate(gf_res.das, data)
     gf_res.r2 = calc_r2(data, res)
     if method == 'svd':
         gf_res.svdtraces = svdtraces
-        par = res.x.reshape(nb_exps, svds+1)
-        gf_res.fittraces = create_tr(par, time)
+        par = pars[:, nb_exps:]
+        gf_res.fittraces = create_tr(ks, kmatrix, pars[:, 1:], time).T
 
     gf_res.print_results()
     print('With an R^2 of %.2f%%' % gf_res.r2)

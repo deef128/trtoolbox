@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import numpy.random as nrand
 from scipy import signal
-from trtoolbox.globalanalysis import create_profile
+from trtoolbox.globalanalysis import create_profile, create_kmatrix
 from trtoolbox.plothelper import PlotHelper
 
 
@@ -164,7 +164,8 @@ class DataGenerator:
             Determines if back reactions are used.
         """
 
-        self.profile = create_profile(self.time, 1/self.tcs, back=back)
+        kmatrix = create_kmatrix(1/self.tcs)
+        self.profile = create_profile(self.time, 1/self.tcs, kmatrix, back=back)
         self.data = self.das.dot(self.profile.T)
         self.back = back
 
