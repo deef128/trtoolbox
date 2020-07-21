@@ -1,9 +1,10 @@
 # TODO: avg_std
+
 import numpy as np
 import matplotlib.pyplot as plt
 import numpy.random as nrand
 from scipy import signal
-from trtoolbox.globalanalysis import create_profile, RateConstants
+from trtoolbox.globalanalysis import create_profile, convert_tcs, RateConstants
 from trtoolbox.plothelper import PlotHelper
 
 
@@ -18,10 +19,8 @@ class DataGenerator:
         Wavenumber array.
     data : np.array
         Data matrix.
-    back : boolean
-        Determines if a model with back-reactions was used.
-    tcs : np.array
-        Time constants obtained by fitting.
+    rate_constants : globalanalysis.RateConstants
+        Object containing information about rate constants.
     das : np.array
         Decay associated spectra.
     profile : np.array
@@ -32,10 +31,9 @@ class DataGenerator:
         self.time = np.array([])
         self.wn = np.array([])
         self.data = np.array([])
-        self.das = np.array([])
-        self.tcs = np.array([])
-        self.profile = np.array([])
         self.rate_constants = None
+        self.das = np.array([])
+        self.profile = np.array([])
 
     def gen_time(self, tlimit=[1e-7, 1e-1], number=500):
         """ Generates time array.
@@ -123,8 +121,8 @@ class DataGenerator:
         tcs : list or int
             List of tcs. -1 is placeholder for random tcs. Number of
             generated tcs can be specified if tcs is an integer.
-        back : bool
-            Determines if back reactions are used.
+        style : str
+            Determines the conctruction of the model ('dec', 'seq, 'back')
         """
 
         if isinstance(tcs, int):
@@ -144,27 +142,25 @@ class DataGenerator:
             expo = np.sort(expo)
             pre = -9 * nrand.random(size=(len(tcs),)) + 9
             gen_tcs = np.array([pre[i]*10.**expo[i] for i in range(len(tcs))])
-            self.tcs = \
-                [gen_tcs[i] if x == -1 else x for i, x in enumerate(tcs)]
-            self.tcs = np.array(self.tcs)
+            tcs = np.array(
+                    [gen_tcs[i] if x == -1 else x for i, x in enumerate(tcs)]
+            )
         else:
-            self.tcs = np.array(tcs)
-        if style == 'back':
-            sc = -9 * nrand.random(size=(len(tcs),)) + 9
-            self.tcs = np.vstack((self.tcs, self.tcs*sc)).T
+            tcs = np.array(tcs)
 
-        self.rate_constants = RateConstants(1/self.tcs)
+        if style == 'back' and tcs.ndim == 1:
+            sc = -5 * nrand.random(size=(len(tcs),)) + 5
+            back_tcs = np.roll(tcs*sc, 1)
+            back_tcs[0] = 0  # no back reaction for the first state
+            tcs = np.vstack((tcs, back_tcs)).T
+
+        # self.tcs = np.array([[1e-3, 1e-3], [1e3, 1e-3]])
+        ks = convert_tcs(tcs)
+        self.rate_constants = RateConstants(ks)
         self.rate_constants.style = style
 
     def gen_data_das(self):
         """ Generates data.
-
-        Parameters
-        ----------
-        tcs : list
-            List of tcs. -1 is placeholder for random tcs.
-        back : bool
-            Determines if back reactions are used.
         """
 
         self.rate_constants.create_kmatrix()
@@ -209,8 +205,8 @@ class DataGenerator:
         tcs : list or int
             List of tcs. -1 is placeholder for random tcs. Number of
             generated tcs can be specified if tcs is an integer.
-        back : bool
-            Determines if back reactions are used.
+        style : str
+            Determines the conctruction of the model ('dec', 'seq, 'back')
         noise : bool
             Addition of noise.
         noise_scale : float
@@ -221,8 +217,6 @@ class DataGenerator:
             tcs = [-1 for i in range(tcs)]
 
         num_das = len(tcs)
-        if style == 'seq':
-            num_das = int(len(tcs))
         self.gen_time(tlimit, number)
         self.gen_wn(wnlimit, wnstep)
         self.gen_das(num_das, num_peaks, avg_width, avg_std, diff=diff)
@@ -237,13 +231,14 @@ class DataGenerator:
         """
 
         print('Time constants for data generation:')
+        tcs = self.rate_constants.tcs
         if self.rate_constants.style != 'back':
-            for i in range(len(self.tcs)):
-                print('%i. %e' % (i+1, self.tcs[i]))
+            for i in range(tcs.shape[0]):
+                print('%i. %e' % (i+1, tcs[i, 0]))
         else:
-            for i in range(len(self.tcs)):
+            for i in range(tcs.shape[0]):
                 print('%i. forward: %e, backward: %e'
-                      % (i+1, self.tcs[i, 0], self.tcs[i, 1]))
+                      % (i+1, tcs[i, 0], tcs[i, 1]))
 
     def plot_profile(self):
         """ Plots concentration profile.

@@ -15,7 +15,7 @@ class TestGF(unittest.TestCase):
         cls.data = dgen.data
         cls.wn = dgen.wn
         cls.time = dgen.time
-        cls.tcs = dgen.tcs
+        cls.tcs = dgen.rate_constants.tcs
         cls.profile = dgen.profile
         cls.das = dgen.das
 

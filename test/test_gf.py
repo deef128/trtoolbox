@@ -16,7 +16,8 @@ class TestGF(unittest.TestCase):
         cls.data = dgen.data
         cls.wn = dgen.wn
         cls.time = dgen.time
-        cls.tcs = dgen.tcs
+        cls.tcs = dgen.rate_constants.tcs
+        cls.rate_constants = dgen.rate_constants
         cls.profile = dgen.profile
         cls.das = dgen.das
 
@@ -79,7 +80,7 @@ class TestGF(unittest.TestCase):
 
     def test_model(self):
         s = [1, 0, 0]
-        arr = mygf.model(s, self.time, 1/self.tcs)
+        arr = mygf.model(s, self.time, self.rate_constants)
         self.assertEqual(len(arr), len(s))
 
         arr = mygf.model(

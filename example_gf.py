@@ -15,14 +15,14 @@ except NameError:
 dgen = DataGenerator()
 dgen.gen_data(
     wnlimit=[800, 1900],
-    tcs=4,
+    tcs=3,
     num_peaks=5,
     diff=True,
     avg_width=200,
     avg_std=15,
     noise=True,
     noise_scale=0.175,
-    style='back'
+    style='seq'
 )
 
 # %% plot generated data
@@ -33,9 +33,10 @@ dgen.plot_data()
 # plt.show()
 
 # %% do global fitting
-rdnm = 5 - 5 * np.random.random(dgen.tcs.shape)
-start_tcs = dgen.tcs * rdnm
-res = ga.doglobalanalysis(dgen.data, dgen.time, dgen.wn, dgen.tcs, svds=3)
+sc = 5
+rdnm = sc - sc * np.random.random(dgen.rate_constants.tcs.shape)
+start_tcs = dgen.rate_constants.tcs * rdnm
+res = ga.doglobalanalysis(dgen.data, dgen.time, dgen.wn, start_tcs, svds=3, style='seq', method='svd')
 res.plot_results()
 res.plot_traces()
 res.plot_spectra()
