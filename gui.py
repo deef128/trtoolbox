@@ -290,6 +290,10 @@ class DgenDialog(QtWidgets.QDialog, Ui_Dialog):
             txt_std = self.txt_std.text()
             cb_diff = self.cb_diff.isChecked()
             cb_back = self.cb_back.isChecked()
+            if cb_back == True:
+                cb_back = 'back'
+            else:
+                cb_back = 'seq'
             cb_noise = self.cb_noise.isChecked()
             txt_noise = self.txt_noise.text()
 
@@ -302,7 +306,7 @@ class DgenDialog(QtWidgets.QDialog, Ui_Dialog):
                 avg_width=float(txt_width),
                 avg_std=float(txt_std),
                 diff=cb_diff,
-                back=cb_back,
+                style=cb_back,
                 noise=cb_noise,
                 noise_scale=float(txt_noise)
             )
@@ -442,10 +446,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
             self.data.data = dgen.data
             str_taus = ''
-            if dgen.back is False:
-                for t in dgen.tcs:
+            if dgen.rate_constants.style != 'back':
+                for t in dgen.tcs[:, 0]:
                     str_taus = str_taus + format(t, '.1e') + ', '
-            elif dgen.back is True:
+            else:
                 for row in dgen.tcs.transpose():
                     for t in row:
                         str_taus = str_taus + format(t, '.1e') + ', '
@@ -663,8 +667,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         """
 
         res_str = ''
-        for i, t in enumerate(self.results.gf.tcs):
-            res_str = res_str + '%i. %.2e (%.2e)\n' % (i+1, t, self.results.gf.var[i])
+        for i, t in enumerate(self.results.gf.tcs[:, 0]):
+            res_str = res_str + '%i. %.2e (%.2e)\n' % (i+1, t, self.results.gf.rate_constants.var[i])
         res_str = res_str + 'R^2 = %.2f%%' % self.results.gf.r2
         self.txt_gf_results.clear()
         self.txt_gf_results.insertPlainText(res_str)
@@ -687,7 +691,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         if self.cb_gf_profile.isChecked() is True:
             self.results.gf.plot_profile()
         if self.cb_gf_das.isChecked() is True:
-            self.results.gf.plot_das()
+            self.results.gf.plot_xas()
         plt.show()
 
     def dolda(self):

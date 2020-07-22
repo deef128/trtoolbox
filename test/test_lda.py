@@ -17,7 +17,7 @@ class TestGF(unittest.TestCase):
         cls.time = dgen.time
         cls.tcs = dgen.rate_constants.tcs
         cls.profile = dgen.profile
-        cls.das = dgen.das
+        cls.das = dgen.sas
 
         # prevents plt.show() from blocking execution
         plt.ion()

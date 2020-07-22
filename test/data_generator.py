@@ -21,8 +21,8 @@ class DataGenerator:
         Data matrix.
     rate_constants : globalanalysis.RateConstants
         Object containing information about rate constants.
-    das : np.array
-        Decay associated spectra.
+    sas : np.array
+        Species associated spectra.
     profile : np.array
         Concentration profile determined by *tcs*
     """
@@ -32,7 +32,7 @@ class DataGenerator:
         self.wn = np.array([])
         self.data = np.array([])
         self.rate_constants = None
-        self.das = np.array([])
+        self.sas = np.array([])
         self.profile = np.array([])
 
     @property
@@ -73,7 +73,7 @@ class DataGenerator:
         self.wn = np.linspace(min(wnlimit), max(wnlimit), num=step_size)
         self.wn = self.wn.reshape((self.wn.size, 1))
 
-    def gen_das(
+    def gen_sas(
             self,
             num_das=3,
             num_peaks=1,
@@ -97,7 +97,7 @@ class DataGenerator:
             Peaks can be negative if True.
         """
 
-        self.das = np.zeros((self.wn.shape[0], num_das))
+        self.sas = np.zeros((self.wn.shape[0], num_das))
 
         for i in range(num_das):
             das = np.zeros(self.wn.shape[0])
@@ -115,7 +115,7 @@ class DataGenerator:
                     pre = 1
                 sc = 1.5 * nrand.random() + 0.5
                 das[pos:pos+width] = das[pos:pos+width] + pre*gaus*sc
-            self.das[:, i] = das.T
+            self.sas[:, i] = das.T
 
     def gen_tcs(self, tcs=[-1, -1, -1], style='seq'):
         """ Generates time constants
@@ -163,13 +163,13 @@ class DataGenerator:
         self.rate_constants = RateConstants(ks)
         self.rate_constants.style = style
 
-    def gen_data_das(self):
+    def gen_data_sas(self):
         """ Generates data.
         """
 
         self.rate_constants.create_kmatrix()
         self.profile = create_profile(self.time, self.rate_constants)
-        self.data = self.das.dot(self.profile.T)
+        self.data = self.sas.dot(self.profile.T)
 
     def gen_data(
             self,
@@ -223,9 +223,9 @@ class DataGenerator:
         num_das = len(tcs)
         self.gen_time(tlimit, number)
         self.gen_wn(wnlimit, wnstep)
-        self.gen_das(num_das, num_peaks, avg_width, avg_std, diff=diff)
+        self.gen_sas(num_das, num_peaks, avg_width, avg_std, diff=diff)
         self.gen_tcs(tcs, style)
-        self.gen_data_das()
+        self.gen_data_sas()
         if noise is True:
             self.data = self.data + \
                 nrand.normal(0, scale=noise_scale, size=self.data.shape)
@@ -267,7 +267,7 @@ class DataGenerator:
         plt.ylabel('frequency')
         plt.xlabel('time')
 
-    def plot_das(self):
+    def plot_sas(self):
         """ Plots decay associated spectra.
         """
 
@@ -277,9 +277,9 @@ class DataGenerator:
             '--', color='k',
             label='_nolegend_'
         )
-        plt.plot(self.wn, self.das, 'o-', markersize=4)
+        plt.plot(self.wn, self.sas, 'o-', markersize=4)
         plt.gca().set_xlim(self.wn[-1], self.wn[0])
         plt.ylabel('absorbance / a.u.')
         plt.xlabel('wavenumber / cm^{-1}')
-        plt.title('Decay Associated Spectra')
-        plt.legend([str(i+1) for i in range(self.das.shape[0])])
+        plt.title('Species Associated Spectra')
+        plt.legend([str(i+1) for i in range(self.sas.shape[0])])

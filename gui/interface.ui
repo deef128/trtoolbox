@@ -430,7 +430,7 @@ p, li { white-space: pre-wrap; }
       <item>
        <widget class="QCheckBox" name="cb_gf_das">
         <property name="text">
-         <string>DAS</string>
+         <string>SAS</string>
         </property>
        </widget>
       </item>

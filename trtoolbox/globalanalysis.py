@@ -1,4 +1,3 @@
-# TODO: DAS / EAS / SAS -> rename
 # TODO: fix ks in case of species branching
 # TODO: rate branching
 # TODO: still overflow --> laplace transforms
@@ -59,7 +58,7 @@ class Results:
         self.spectral_offset = np.array([])
         self.method = str()
         self.rate_constants = None
-        self.das = np.array([])
+        self.xas = np.array([])
         self.profile = np.array([])
         self.artefact = False
         self.estimates = np.array([])
@@ -141,7 +140,7 @@ class Results:
         plt.xlabel('time / s')
         plt.title('Concentration Profile')
 
-    def plot_das(self):
+    def plot_xas(self):
         """ Plots decay associated spectra.
         """
 
@@ -153,12 +152,12 @@ class Results:
         )
         # for choosing a specific colormap
         # plt.gca().set_prop_cycle(color=cm)
-        plt.plot(self.wn, self.das)
+        plt.plot(self.wn, self.xas)
         plt.gca().set_xlim(self.wn[-1], self.wn[0])
         plt.ylabel('absorbance / a.u.')
         plt.xlabel('wavenumber / cm^{-1}')
-        plt.title('Decay Associated Spectra')
-        plt.legend([str(i+1) for i in range(self.das.shape[0])])
+        plt.title('Model Associated Spectra')
+        plt.legend([str(i+1) for i in range(self.xas.shape[0])])
 
     def plot_fitdata(self):
         """ Plots fitted data.
@@ -190,7 +189,7 @@ class Results:
         """
 
         self.plot_profile()
-        self.plot_das()
+        self.plot_xas()
         self.plot_fitdata()
 
         if self.method == 'svd':
@@ -278,7 +277,7 @@ class Results:
             else:
                 return
 
-        to_save = ['das', 'data', 'estimates', 'fitdata', 'profile']
+        to_save = ['xas', 'data', 'estimates', 'fitdata', 'profile']
         for k, i in vars(self).items():
             if k in to_save:
                 fname = k + '.dat'
@@ -303,7 +302,7 @@ class Results:
                 'R^2: %.2f%%\n' % self.r2 +
                 '----------------------\n\n' +
                 'Files:\n' +
-                '\t- das.dat (Decay associated spectra)\n' +
+                '\t- xas.dat (Decay/Evolution/Species associated spectra)\n' +
                 '\t- data.dat (Raw data)\n' +
                 '\t- estimates.dat (Estimated DAS contributions)\n' +
                 '\t- fitdata.dat (Fitted data)\n' +
@@ -598,7 +597,7 @@ def create_tr(rate_constants, pre, time):
     return fit_tr
 
 
-def create_das(profile, data):
+def create_xas(profile, data):
     """ Obtains decay associated spectra.
 
     Parameters
@@ -610,8 +609,8 @@ def create_das(profile, data):
 
     Returns
     -------
-    das : np.array
-        Decay associated spectra
+    xas : np.array
+        Decay/Evolution/Species associated spectra
     """
 
     das = lstsq(profile, data.T)
@@ -637,8 +636,8 @@ def calculate_fitdata(rate_constants, time, data):
     """
 
     profile = create_profile(time, rate_constants)
-    das = create_das(profile, data)
-    fitdata = das.dot(profile.T)
+    xas = create_xas(profile, data)
+    fitdata = xas.dot(profile.T)
     return fitdata
 
 
@@ -715,8 +714,8 @@ def opt_func_est(ks, rate_constants, time, data):
     rate_constants.set_ks(ks)
 
     profile = create_profile(time, rate_constants)
-    das = create_das(profile, data)
-    est = calculate_estimate(das, data)
+    xas = create_xas(profile, data)
+    est = calculate_estimate(xas, data)
     r = profile - est
     return r.flatten()
 
@@ -949,8 +948,8 @@ def doglobalanalysis(
         merged = gf_res.profile[:, 1:]
         merged[:, 0] = merged[:, 0] + gf_res.profile[:, 0]
         gf_res.profile = merged
-    gf_res.das = create_das(gf_res.profile, data)
-    gf_res.estimates = calculate_estimate(gf_res.das, data)
+    gf_res.xas = create_xas(gf_res.profile, data)
+    gf_res.estimates = calculate_estimate(gf_res.xas, data)
     gf_res.r2 = calc_r2(data, res)
     if method == 'svd':
         gf_res.svdtraces = svdtraces

@@ -25,7 +25,7 @@ dgen.gen_data(
 
 # %% plot generated data
 dgen.print_tcs()
-dgen.plot_das()
+dgen.plot_sas()
 dgen.plot_profile()
 dgen.plot_data()
 
