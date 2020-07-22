@@ -1,7 +1,6 @@
 # TODO: DAS / EAS / SAS
 # TODO: check branching
-# TODO: check 'dec'
-# TODO: laplace transforms
+# TODO: still overflow --> laplace transforms
 
 import os
 from scipy.integrate import odeint
@@ -74,6 +73,10 @@ class Results:
         self.time_unit = 's'
         self._phelper = PlotHelper()
 
+    @property
+    def tcs(self):
+        return self.rate_constants.tcs
+
     def init_phelper(self):
         """ Initiliazes phelper after clean().
         """
@@ -87,7 +90,7 @@ class Results:
 
         tcs = self.rate_constants.tcs
         print('Obtained time constants:')
-        if self.rate_constants.style in ['seq']:
+        if self.rate_constants.style in ['dec', 'seq']:
             for i in range(tcs.shape[0]):
                 print('%i. %e with variance of %e'
                       % (i+1, tcs[i, 0], self.rate_constants.var[i]))
@@ -316,6 +319,8 @@ class RateConstants:
         self.nb_exps = ks.shape
         self.kmatrix = None
         self.style = None
+        self.alphas = None
+        self.var = []
 
     def set_ks(self, ks):
         if ks.ndim == 1 and self.nb_exps is None:
@@ -440,6 +445,9 @@ def model(s, time, rate_constants):
     """
 
     kmatrix = rate_constants.kmatrix
+    alphas = rate_constants.alphas
+    nb_exps = rate_constants.nb_exps
+    style = rate_constants.style
     ks = rate_constants.ks
 
     if kmatrix is None:
@@ -447,10 +455,15 @@ def model(s, time, rate_constants):
 
     if kmatrix.ndim == 2:
         diffs = (kmatrix * ks[:, 0]).dot(s)
-    elif kmatrix.ndim == 3:
+    elif kmatrix.ndim == 3 and style == 'back':
         diffs = (kmatrix[:, :, 0] * ks[:, 0]).dot(s)
-        for i in range(1, kmatrix.shape[2]):
-            diffs = diffs + (kmatrix[:, :, i] * ks[:, i]).dot(s)
+        diffs = diffs + (kmatrix[:, :, 1] * ks[:, 1]).dot(s)
+    elif kmatrix.ndim == 3 and style == 'custom':
+        s = s.reshape(nb_exps)
+        diff1 = (kmatrix[:, :, 0] * ks[:, 0]).dot(alphas[:, 0] * s[:, 0])
+        diff2 = (kmatrix[:, :, 1] * ks[:, 1]).dot(alphas[:, 1] * s[:, 1])
+        diffs = np.vstack((diff1, diff2))
+        diffs = diffs.reshape((diffs.size, ))
     else:
         raise ValueError('No suitable K-matrix')
 
@@ -477,9 +490,14 @@ def create_profile(time, rate_constants):
 
     ks = rate_constants.ks
 
-    # assuming a starting population of 100% for the first species
-    s0 = np.zeros(ks.shape[0])
-    s0[0] = 1
+    if rate_constants.style == 'dec':
+        s0 = np.ones(ks.shape[0])
+    elif rate_constants.style == 'custom':
+        s0 = np.ones(ks.shape[0] * 2)
+    else:
+        # assuming a starting population of 100% for the first species
+        s0 = np.zeros(ks.shape[0])
+        s0[0] = 1
 
     time = time.reshape(-1)
     profile = odeint(model, s0, time, (rate_constants, ))
@@ -721,8 +739,9 @@ def doglobalanalysis(
         svds=5,
         offset=False,
         offindex=-1,
+        style='seq',
         kmatrix=None,
-        style='seq'
+        alphas=None
 ):
     """ Wrapper for global fit routine. Implementation of back reactions
         is still experimental and just available for the svd method.
@@ -793,6 +812,10 @@ def doglobalanalysis(
 
     if kmatrix is None:
         rate_constants.create_kmatrix(style)
+    else:
+        rate_constants.kmatrix = kmatrix
+        rate_constants.alphas = alphas
+        rate_constants.style = 'custom'
 
     if method == 'raw':
         res = least_squares(
@@ -838,7 +861,7 @@ def doglobalanalysis(
     gf_res.time = time
     gf_res.wn = wn
     gf_res.rate_constants = rate_constants
-    if style in ['seq']:
+    if rate_constants.style in ['dec', 'seq']:
         var = calculate_sigma(res)
         if method == 'svd':
             var = var[svds::svds + 1]

@@ -1,3 +1,6 @@
+# TODO: more testing on k-matrix
+# TODO: errors on functions
+
 import unittest
 import numpy as np
 import matplotlib.pyplot as plt
@@ -17,9 +20,14 @@ class TestGF(unittest.TestCase):
         cls.wn = dgen.wn
         cls.time = dgen.time
         cls.tcs = dgen.rate_constants.tcs
+        cls.ks = dgen.rate_constants.ks
         cls.rate_constants = dgen.rate_constants
         cls.profile = dgen.profile
         cls.das = dgen.das
+
+        dgen.gen_data(style='back')
+        cls.tcs_back = dgen.rate_constants.tcs
+        cls.rate_constants_back = dgen.rate_constants
 
         # prevents plt.show() from blocking execution
         plt.ion()
@@ -86,66 +94,38 @@ class TestGF(unittest.TestCase):
         arr = mygf.model(
             s,
             self.time,
-            1/np.c_[self.tcs, self.tcs],
-            back=True
+            self.rate_constants_back
         )
         self.assertEqual(len(arr), len(s))
 
     def test_create_profile(self):
-        profile = mygf.create_profile(self.time, 1/self.tcs)
+        profile = mygf.create_profile(self.time, self.rate_constants)
         np.testing.assert_array_equal(
             profile,
             self.profile
         )
 
-        profile = mygf.create_profile(self.time.T, 1/self.tcs)
+        profile = mygf.create_profile(self.time.T, self.rate_constants)
         np.testing.assert_array_equal(
             profile,
             self.profile
         )
 
-        back_tcs = 1/np.c_[self.tcs, self.tcs]
         profile = mygf.create_profile(
             self.time,
-            back_tcs,
-            back=True
+            self.rate_constants_back
         )
         np.testing.assert_array_equal(
             profile.shape,
             self.profile.shape
         )
-
-        profile = mygf.create_profile(
-            self.time,
-            back_tcs.T,
-            back=True
-        )
-        np.testing.assert_array_equal(
-            profile.shape,
-            self.profile.shape
-        )
-
-        with self.assertRaises(ValueError):
-            mygf.create_profile(
-                self.time,
-                np.ones((4, 5)),
-                back=True
-            )
-
-        with self.assertRaises(ValueError):
-            mygf.create_profile(
-                self.time,
-                1/self.tcs,
-                back=True
-            )
 
     def test_create_tr(self):
         pre = np.ones((self.tcs.size, 4))
-        par = np.c_[pre, self.tcs]
-        traces = mygf.create_tr(par, self.time)
+        traces = mygf.create_tr(self.rate_constants, pre, self.time)
         self.assertEqual(
             traces.shape,
-            (pre.shape[1], self.time.size)
+            (self.time.size, pre.shape[1])
         )
 
     def test_create_das(self):
@@ -154,31 +134,16 @@ class TestGF(unittest.TestCase):
 
     def test_calculate_fitdata(self):
         fitdata = mygf.calculate_fitdata(
-            1/self.tcs,
+            self.rate_constants,
             self.time,
             self.data
         )
         self.assertEqual(fitdata.shape, self.data.shape)
 
         fitdata = mygf.calculate_fitdata(
-            1/self.tcs,
-            self.time.T,
-            self.data
-        )
-        self.assertEqual(fitdata.shape, self.data.shape)
-
-        fitdata = mygf.calculate_fitdata(
-            1/self.tcs,
-            self.time,
-            self.data.T
-        )
-        self.assertEqual(fitdata.shape, self.data.shape)
-
-        fitdata = mygf.calculate_fitdata(
-            1/np.c_[self.tcs, self.tcs],
+            self.rate_constants_back,
             self.time,
             self.data,
-            back=True
         )
         self.assertEqual(fitdata.shape, self.data.shape)
 
@@ -187,7 +152,7 @@ class TestGF(unittest.TestCase):
         self.assertEqual(est.shape, self.profile.shape)
 
     def test_opt_func_raw(self):
-        r = mygf.opt_func_raw(1/self.tcs, self.time, self.data)
+        r = mygf.opt_func_raw(self.ks, self.rate_constants, self.time, self.data)
         self.assertEqual(r.shape, self.data.flatten().shape)
 
         # back_tcs = 1/np.c_[self.tcs, self.tcs]
@@ -195,7 +160,7 @@ class TestGF(unittest.TestCase):
         # self.assertEqual(r.shape, self.data.flatten().shape)
 
     def test_opt_func_est(self):
-        r = mygf.opt_func_est(1/self.tcs, self.time, self.data)
+        r = mygf.opt_func_est(self.ks, self.rate_constants, self.time, self.data)
         self.assertEqual(r.shape, self.profile.flatten().shape)
 
         # back_tcs = 1/np.c_[self.tcs, self.tcs]
@@ -204,19 +169,17 @@ class TestGF(unittest.TestCase):
 
     def test_opt_func_svd(self):
         pre = np.ones((self.tcs.size, 4))
-        par = np.c_[pre, self.tcs]
+        pars = np.hstack((self.rate_constants.ks, pre))
         svds = 4
         u, s, vt = mysvd.wrapper_svd(self.data)
         sigma = np.zeros((u.shape[0], vt.shape[0]))
         sigma[:s.shape[0], :s.shape[0]] = np.diag(s)
         svdtraces = sigma[0:svds, :].dot(vt)
         r = mygf.opt_func_svd(
-            par,
+            pars,
+            self.rate_constants,
             self.time,
-            self.data,
-            svdtraces,
-            self.tcs.size,
-            False
+            svdtraces
         )
         self.assertEqual(r.shape, svdtraces.flatten().shape)
 
@@ -235,7 +198,7 @@ class TestGF(unittest.TestCase):
             method='svd'
         )
         np.testing.assert_almost_equal(res.tcs, self.tcs, decimal=1)
-        np.testing.assert_almost_equal(res.fitdata, self.data, decimal=5)
+        np.testing.assert_almost_equal(res.fitdata, self.data, decimal=4)
 
         print('Raw')
         res = mygf.doglobalanalysis(
@@ -260,7 +223,7 @@ class TestGF(unittest.TestCase):
         np.testing.assert_almost_equal(res.fitdata, self.data, decimal=0)
 
         dgen = DataGenerator()
-        dgen.gen_data(back=True)
+        dgen.gen_data(style='back')
         print()
         dgen.print_tcs()
         rdnm = 5 - 5 * np.random.random(dgen.tcs.shape)
@@ -273,27 +236,27 @@ class TestGF(unittest.TestCase):
             dgen.wn,
             start_tcs,
             method='svd',
-            back=True
+            style='back'
         )
         np.testing.assert_almost_equal(res.tcs, dgen.tcs, decimal=-1)
         np.testing.assert_almost_equal(res.fitdata, dgen.data, decimal=-1)
 
-        with self.assertRaises(ValueError):
-            res = mygf.doglobalanalysis(
-                dgen.data,
-                dgen.time,
-                dgen.wn,
-                start_tcs,
-                method='raw',
-                back=True
-            )
-
-        with self.assertRaises(ValueError):
-            res = mygf.doglobalanalysis(
-                dgen.data,
-                dgen.time,
-                dgen.wn,
-                start_tcs,
-                method='est',
-                back=True
-            )
+        # with self.assertRaises(ValueError):
+        #     res = mygf.doglobalanalysis(
+        #         dgen.data,
+        #         dgen.time,
+        #         dgen.wn,
+        #         start_tcs,
+        #         method='raw',
+        #         back=True
+        #     )
+        #
+        # with self.assertRaises(ValueError):
+        #     res = mygf.doglobalanalysis(
+        #         dgen.data,
+        #         dgen.time,
+        #         dgen.wn,
+        #         start_tcs,
+        #         method='est',
+        #         back=True
+        #     )

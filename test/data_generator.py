@@ -35,6 +35,10 @@ class DataGenerator:
         self.das = np.array([])
         self.profile = np.array([])
 
+    @property
+    def tcs(self):
+        return self.rate_constants.tcs
+
     def gen_time(self, tlimit=[1e-7, 1e-1], number=500):
         """ Generates time array.
 
