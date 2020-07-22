@@ -1,8 +1,10 @@
-# TODO: DAS / EAS / SAS
-# TODO: check branching
+# TODO: DAS / EAS / SAS -> rename
+# TODO: fix ks in case of species branching
+# TODO: rate branching
 # TODO: still overflow --> laplace transforms
 
 import os
+import scipy.special as scsp
 from scipy.integrate import odeint
 from scipy.optimize import least_squares
 from scipy.optimize import nnls
@@ -11,7 +13,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import trtoolbox.svd as mysvd
 from trtoolbox.plothelper import PlotHelper
-# from scipy.special import logsumexp
 
 
 class Results:
@@ -25,24 +26,20 @@ class Results:
         Time array.
     wn : np.array
         Wavenumber array.
-    offset : str
-        Default is *'no'*.
-    back : boolean
-        Determines if a model with back-reactions was used.
+    offset : bool
+        True if an offset was used.
     spectral_offset : np.array
         *optional if offset was chosen*
     method : str
         Chosen method (default is *'svd'*).
-    ks : np.array
-        Rate constants obtained by fitting.
-    var: np.array
-        Variance of the rate constants.
-    tcs : np.array
-        Time constants obtained by fitting.
-    das : np.array
-        Decay associated spectra.
+    rate_constants: RateConstants
+        Object containing everything on the rate constants
+    xas : np.array
+        Decay/Evolution/Species associated spectra.
     profile : np.array
         Concentration profile determined by *ks*
+    artefact : bool
+        If True, the first two species are merged
     estimates : np.array
          Contribution of *das* to the dataset for each datapoint.
     fitdata : np.array
@@ -62,7 +59,9 @@ class Results:
         self.spectral_offset = np.array([])
         self.method = str()
         self.rate_constants = None
+        self.das = np.array([])
         self.profile = np.array([])
+        self.artefact = False
         self.estimates = np.array([])
         self.fitdata = np.array([])
         self.fittraces = np.array([])
@@ -293,9 +292,13 @@ class Results:
 
         f = open(os.path.join(path, '00_comments.txt'), 'w')
         print('Writing 00_comments.txt')
-        tcs_str = ['\n\t%.2e' % i for i in self.tcs]
+        if self.tcs.shape[1] == 1:
+            tcs_str = ['\n\t%.2e' % i for i in self.tcs]
+        else:
+            tcs_str = '\n' + str(self.tcs)
         f.write('Created with trtoolbox\n' +
                 '----------------------\n\n' +
+                'Model used: %s\n' % self.rate_constants.style +
                 'Obtained time constants: %s\n' % (''.join(tcs_str)) +
                 'R^2: %.2f%%\n' % self.r2 +
                 '----------------------\n\n' +
@@ -310,6 +313,29 @@ class Results:
 
 
 class RateConstants:
+    """ Container for rate contants related stuff
+
+    Attributes
+    ----------
+    ks : np.array
+        Rate constants
+    tcs : np.array
+        Time constants
+    nb_exps : tuple
+        shape of the ks-matrix
+    kmatrix : np.array
+        K-matrix used for generating differential equations.
+    style : str
+        Which style of k-matrix was used.
+        'dec': parallel decaying processes
+        'seq': sequential model
+        'back': sequential model with back reactions
+        'custom': custom k-matrix
+    alphas : np.array
+        Defines starting population ratio of 'custom' is choosen
+    var : np.array
+        Variance of the fit.
+    """
 
     def __init__(self, ks):
         if ks.ndim == 1:
@@ -320,9 +346,17 @@ class RateConstants:
         self.kmatrix = None
         self.style = None
         self.alphas = None
-        self.var = []
+        self.var = np.array([])
 
     def set_ks(self, ks):
+        """ Sets ks and also tcs accordingly.
+
+        Parameters
+        ----------
+        ks : np.array
+            Rate constants
+        """
+
         if ks.ndim == 1 and self.nb_exps is None:
             ks = ks.reshape(ks.size, 1)
         elif ks.ndim == 1 and self.nb_exps is not None:
@@ -330,8 +364,15 @@ class RateConstants:
         self.ks = ks
         self.tcs = convert_tcs(ks)
 
-    # ks over rows
     def create_kmatrix(self, style=None):
+        """ Creates K-matrix. Rate constants should be over rows.
+
+        Parameters
+        ----------
+        style : str
+            Determines how the K-matrix is generated
+        """
+
         if style is None and self.style is not None:
             style = self.style
         elif style is None and self.style is None:
@@ -362,6 +403,18 @@ class RateConstants:
 
 
 def is_square(mat):
+    """ Checks if a matrix is square.
+
+    Parameters
+    ----------
+    mat : np.array
+        Matrix
+
+    Returns
+    -------
+    bool
+    """
+
     return all([len(i) == len(mat) for i in mat])
 
 
@@ -383,7 +436,7 @@ def check_input(data, time, wn):
     data : np.array
         Data matrix.
     time : np.array
-        TIme array.
+        Time array.
     wn : np.array
         Frequency array.
     """
@@ -411,16 +464,24 @@ def check_input(data, time, wn):
 
 
 def convert_tcs(arr):
+    """ Converts time to rate constants and vice versa. Necessary due to zeros.
+
+    Parameters
+    ----------
+    arr : np.array
+
+    Returns
+    -------
+    np.array
+    """
+
     return np.divide(1, arr, out=np.zeros_like(arr), where=arr != 0)
 
 
 def model(s, time, rate_constants):
-    """ Creates an array of differential equations according
-        to an unidirectional sequential exponential model.
-        S[0]/dt = -k0*S[0]
-        S[1]/dt = k0*S[0] - k1*S[1]
-        S[2]/dt = k1*S[1] - k2*S[2]
-        and so on
+    """ Creates an array of differential equations according to
+        (kmatrix * ks).dot(s)
+        with ks as rate constants and s as species concentration.
 
     Parameters
     ----------
@@ -428,15 +489,8 @@ def model(s, time, rate_constants):
         Starting concentrations for each species.
     time : np.array
         Time array.
-    ks : np.array
-        Decay rate constants for each species.
-    back : boolean
-        Determines if a model with back-reactions is used. If yes,
-        ks has to be a matrix with 1st column forward and
-        2nd column backward rate constants.
-        A -> B with ks[i, 0]
-        A <- B with ks[i, 1]
-        Therefore ks[-1] is not used.
+    rate_constants : RateConstants
+        RateConstants object.
 
     Returns
     -------
@@ -445,7 +499,6 @@ def model(s, time, rate_constants):
     """
 
     kmatrix = rate_constants.kmatrix
-    alphas = rate_constants.alphas
     nb_exps = rate_constants.nb_exps
     style = rate_constants.style
     ks = rate_constants.ks
@@ -459,10 +512,11 @@ def model(s, time, rate_constants):
         diffs = (kmatrix[:, :, 0] * ks[:, 0]).dot(s)
         diffs = diffs + (kmatrix[:, :, 1] * ks[:, 1]).dot(s)
     elif kmatrix.ndim == 3 and style == 'custom':
-        s = s.reshape(nb_exps)
-        diff1 = (kmatrix[:, :, 0] * ks[:, 0]).dot(alphas[:, 0] * s[:, 0])
-        diff2 = (kmatrix[:, :, 1] * ks[:, 1]).dot(alphas[:, 1] * s[:, 1])
-        diffs = np.vstack((diff1, diff2))
+        s = s.reshape(nb_exps, order='F')
+        diffs = (kmatrix[:, :, 0] * ks[:, 0]).dot(s[:, 0])
+        for i in range(1, kmatrix.shape[2]):
+            diff2 = (kmatrix[:, :, i] * ks[:, i]).dot(s[:, i])
+            diffs = np.vstack((diffs, diff2))
         diffs = diffs.reshape((diffs.size, ))
     else:
         raise ValueError('No suitable K-matrix')
@@ -477,10 +531,8 @@ def create_profile(time, rate_constants):
     ----------
     time : np.array
         Time array.
-    ks : np.array
-        Decay rate constants for each species.
-    back : boolean
-        Determines if a model with back-reactions is used.
+    rate_constants : RateConstants
+        RateConstants object.
 
     Returns
     -------
@@ -489,18 +541,35 @@ def create_profile(time, rate_constants):
     """
 
     ks = rate_constants.ks
+    alphas = rate_constants.alphas
 
     if rate_constants.style == 'dec':
         s0 = np.ones(ks.shape[0])
     elif rate_constants.style == 'custom':
-        s0 = np.ones(ks.shape[0] * 2)
+        s0 = np.zeros(ks.shape)
+        for i in range(s0.shape[1]):
+            s0[0, i] = alphas[i]
+        s0 = s0.flatten('F')
     else:
         # assuming a starting population of 100% for the first species
         s0 = np.zeros(ks.shape[0])
         s0[0] = 1
 
     time = time.reshape(-1)
+
+    # sometimes odeint encounters an overflow
+    errs = scsp.geterr()
+    errs['overflow'] = 'ignore'
+    scsp.seterr(**errs)
+
     profile = odeint(model, s0, time, (rate_constants, ))
+
+    errs['overflow'] = 'warn'
+    scsp.seterr(**errs)
+
+    if rate_constants.style == 'custom':
+        profile = np.split(profile, ks.shape[1], axis=1)
+        profile = np.sum(profile, axis=0)
 
     return profile
 
@@ -510,9 +579,10 @@ def create_tr(rate_constants, pre, time):
 
     Parameters
     ----------
-    par : np.array
-        Parameter matrix. Last column contains rate constants. Remaining
-        columns are prefactors (rate constants x SVD components)
+    rate_constants : RateConstants
+        RateConstants object.
+    pre : np.array
+        Exponential pre-factors.
     time : np.array
         Time array.
 
@@ -553,14 +623,12 @@ def calculate_fitdata(rate_constants, time, data):
 
     Parameters
     ----------
-    ks : np.array
-        Rate constants
+    rate_constants : RateConstants
+        RateConstants object.
     time : np.array
         Time array.
     data : np.array
         Data matrix.
-    back : boolean
-        Determines if a model with back-reactions is used.
 
     Returns
     -------
@@ -603,12 +671,12 @@ def opt_func_raw(ks, rate_constants, time, data):
     ----------
     ks : np.array
         Rate constants
+    rate_constants : RateConstants
+        RateConstants object.
     time : np.array
         Time array.
     data : np.array
         Data matrix.
-    back : boolean
-        Determines if a model with back-reactions is used.
 
     Returns
     -------
@@ -631,12 +699,12 @@ def opt_func_est(ks, rate_constants, time, data):
     ----------
     ks : np.array
         Rate constants
+    rate_constants : RateConstants
+        RateConstants object.
     time : np.array
         Time array.
     data : np.array
         Data matrix.
-    back : boolean
-        Determines if a model with back-reactions is used.
 
     Returns
     -------
@@ -659,17 +727,14 @@ def opt_func_svd(pars, rate_constants, time, svdtraces):
 
     Parameters
     ----------
-    par : np.array
+    pars : np.array
         Flattened parameter array
+    rate_constants : RateConstants
+        RateConstants object.
     time : np.array
         Time array.
-    data : np.array
-        Data matrix.
     svdtraces : np.array
         SVD traces
-    nb_exps : int
-        Number of exponential decay processes. Needed for reshaping the
-        flattened paramater array.
 
     Returns
     -------
@@ -692,7 +757,7 @@ def calculate_sigma(res):
 
     Parameters
     ----------
-    res : *scipy.optimize.OptimizeResult*
+    res : scipy.optimize.OptimizeResult
         Results object obtained with least squares.
 
     Returns
@@ -714,7 +779,7 @@ def calc_r2(data, res):
     ----------
     data : np.array
         Data matrix.
-    res : *scipy.optimize.OptimizeResult*
+    res : scipy.optimize.OptimizeResult
         Results object obtained with least squares.
 
     Returns
@@ -741,10 +806,10 @@ def doglobalanalysis(
         offindex=-1,
         style='seq',
         kmatrix=None,
-        alphas=None
+        alphas=None,
+        artefact=False
 ):
-    """ Wrapper for global fit routine. Implementation of back reactions
-        is still experimental and just available for the svd method.
+    """ Wrapper for global fit routine.
 
     Parameters
     ----------
@@ -768,17 +833,25 @@ def doglobalanalysis(
         Considering the last spectrum to be an offset. Default: False.
     offindex : int
         Index of spectral offset.
-    back : boolean
-        Determines if a model with back-reactions is used. If yes,
-        ks has to be a matrix with 1st column forward and
-        2nd column backward rate constants.
-        A -> B with ks[i, 0]
-        A <- B with ks[i, 1]
-        Therefore ks[-1] is not used.
+    style : str
+        Which style of K-matrix to use.
+        'dec': parallel decaying processes
+        'seq': sequential model
+        'back': sequential model with back reactions. tcs-matrix should have forward time constants in the first
+            column and backward in the second.
+        'custom': custom k-matrix
+    kmatrix : np.array
+        K-matrix. Providing an 3D K-matrix is interpreted as parallel reaction pathways. This also useful if
+        branching occurs due to heterogeneity. Starting populations can be set with the alpha attribute.
+        For more info please see the documentation.
+    alphas : np.array
+        Sets starting population of the first species.
+    artefact : bool
+        If True, the first two species are merged
 
     Returns
     -------
-    gf_res : *globalanalysis.results*
+    gf_res : globalanalysis.results
         Results objects.
     """
 
@@ -871,6 +944,11 @@ def doglobalanalysis(
     gf_res.fitdata = calculate_fitdata(rate_constants, time, data)
     gf_res.method = method
     gf_res.profile = create_profile(time, rate_constants)
+    gf_res.artefact = artefact
+    if artefact is True:
+        merged = gf_res.profile[:, 1:]
+        merged[:, 0] = merged[:, 0] + gf_res.profile[:, 0]
+        gf_res.profile = merged
     gf_res.das = create_das(gf_res.profile, data)
     gf_res.estimates = calculate_estimate(gf_res.das, data)
     gf_res.r2 = calc_r2(data, res)
@@ -880,5 +958,5 @@ def doglobalanalysis(
         gf_res.fittraces = create_tr(rate_constants, gf_res.pre, time).T
 
     gf_res.print_results()
-    print('With an R^2 of %.2f%%' % gf_res.r2)
+    print('With a R^2 of %.2f%%' % gf_res.r2)
     return gf_res

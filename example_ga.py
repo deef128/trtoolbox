@@ -30,7 +30,6 @@ dgen.print_tcs()
 dgen.plot_das()
 dgen.plot_profile()
 dgen.plot_data()
-# plt.show()
 
 # %% do global fitting
 sc = 5
