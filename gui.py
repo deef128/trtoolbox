@@ -368,7 +368,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open time file')
         if os.path.exists(fname[0]):
             try:
-                self.data.time = np.loadtxt(fname[0], delimiter=self.data.delimiter)
+                if self.data.delimiter == 'tab':
+                    self.data.time = np.loadtxt(fname[0])
+                else:
+                    self.data.time = np.loadtxt(fname[0], delimiter=self.data.delimiter)
                 self.label_file_time.setText(
                     'Time file:\n' + fname[0].split(os.path.sep)[-1][-22:])
                 str_trunc = '%.1e, %.1e' % (tuple(self.data.trunc_time))
@@ -390,7 +393,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         )
         if os.path.exists(fname[0]):
             try:
-                self.data.wn = np.loadtxt(fname[0], delimiter=self.data.delimiter)
+                if self.data.delimiter == 'tab':
+                    self.data.wn = np.loadtxt(fname[0])
+                else:
+                    self.data.wn = np.loadtxt(fname[0], delimiter=self.data.delimiter)
                 self.label_file_freq.setText(
                     'Freq file:\n' + fname[0].split(os.path.sep)[-1][-22:])
                 str_trunc = '%.1f, %.1f' % (tuple(self.data.trunc_wn))
@@ -508,7 +514,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         text, ok = QtWidgets.QInputDialog.getText(
             self,
             'Text Input Dialog',
-            'Delimiter:'
+            'Delimiter (type tab for tabulator):'
         )
         if ok:
             self.data.delimiter = text
