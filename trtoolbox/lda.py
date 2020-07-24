@@ -270,7 +270,7 @@ class Results:
 
         self._phelper = []
 
-    def save_to_files(self, path, alpha=-1, index_alpha=-1):
+    def save_to_files(self, path, alpha=-1, index_alpha=-1, comment=''):
         """ Saving results to .dat files.
 
         Parameters
@@ -281,6 +281,8 @@ class Results:
             Plot for the closest alpha as specified.
         index_alpha : int
             Plot for specified alpha at index.
+        comment : str
+            Personal comment.
         """
 
         if os.path.exists(path) is False:
@@ -290,7 +292,7 @@ class Results:
             else:
                 return
 
-        to_save = ['alphas', 'data', 'lcruve', 'taus']
+        to_save = ['alphas', 'data', 'lcurve', 'taus']
         for k, i in vars(self).items():
             if k in to_save:
                 fname = k + '.dat'
@@ -323,6 +325,9 @@ class Results:
                     fmt='%.4e'
                 )
 
+        if comment != '':
+            comment = '----------------------\n\nComment:\n' + comment
+
         f = open(os.path.join(path, '00_comments.txt'), 'w')
         print('Writing 00_comments.txt')
         f.write('Created with trtoolbox\n' +
@@ -338,7 +343,8 @@ class Results:
                 '\t- data.dat (Raw data)\n' +
                 '\t- fitdata.dat (Fitted data)\n' +
                 '\t- lcurve.dat (L-curve)\n' +
-                '\t- taus.dat (Used time constants)'
+                '\t- taus.dat (Used time constants)' +
+                comment
                 )
         f.close()
 

@@ -83,10 +83,11 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="svd.html">Singular value decomposition</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ga.html">Global target analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ga.html">Global analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lda.html">Lifetime density analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gui.html">Using the GUI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dgen.html">Data generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">trtoolbox</a></li>
 </ul>
 
             
@@ -155,7 +156,6 @@
 <div class="genindex-jumpbox">
  <a href="#_"><strong>_</strong></a>
  | <a href="#A"><strong>A</strong></a>
- | <a href="#B"><strong>B</strong></a>
  | <a href="#C"><strong>C</strong></a>
  | <a href="#D"><strong>D</strong></a>
  | <a href="#E"><strong>E</strong></a>
@@ -188,16 +188,22 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="trtoolbox.html#trtoolbox.lda.Results.alphas">alphas (trtoolbox.lda.Results attribute)</a>
+      <li><a href="trtoolbox.html#trtoolbox.globalanalysis.RateConstants.alphas">alphas (trtoolbox.globalanalysis.RateConstants attribute)</a>
+
+      <ul>
+        <li><a href="trtoolbox.html#trtoolbox.lda.Results.alphas">(trtoolbox.lda.Results attribute)</a>
 </li>
+      </ul></li>
       <li><a href="trtoolbox.html#trtoolbox.plothelper.PlotHelper.append_ldamap">append_ldamap() (trtoolbox.plothelper.PlotHelper static method)</a>
+</li>
+      <li><a href="trtoolbox.html#trtoolbox.globalanalysis.Results.artefact">artefact (trtoolbox.globalanalysis.Results attribute)</a>
 </li>
       <li><a href="trtoolbox.html#trtoolbox.plothelper.PlotHelper.ax_spectra">ax_spectra (trtoolbox.plothelper.PlotHelper attribute)</a>
 </li>
-      <li><a href="trtoolbox.html#trtoolbox.plothelper.PlotHelper.ax_traces">ax_traces (trtoolbox.plothelper.PlotHelper attribute)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="trtoolbox.html#trtoolbox.plothelper.PlotHelper.ax_traces">ax_traces (trtoolbox.plothelper.PlotHelper attribute)</a>
+</li>
       <li><a href="trtoolbox.html#trtoolbox.plothelper.PlotHelper.axalpha">axalpha (trtoolbox.plothelper.PlotHelper attribute)</a>
 </li>
       <li><a href="trtoolbox.html#trtoolbox.plothelper.PlotHelper.axcolor">axcolor (trtoolbox.plothelper.PlotHelper attribute)</a>
@@ -207,14 +213,6 @@
       <li><a href="trtoolbox.html#trtoolbox.plothelper.PlotHelper.axs_lda">axs_lda (trtoolbox.plothelper.PlotHelper attribute)</a>
 </li>
       <li><a href="trtoolbox.html#trtoolbox.plothelper.PlotHelper.axtime">axtime (trtoolbox.plothelper.PlotHelper attribute)</a>
-</li>
-  </ul></td>
-</tr></table>
-
-<h2 id="B">B</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="trtoolbox.html#trtoolbox.globalanalysis.Results.back">back (trtoolbox.globalanalysis.Results attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -250,11 +248,15 @@
         <li><a href="trtoolbox.html#trtoolbox.svd.Results.clean">(trtoolbox.svd.Results method)</a>
 </li>
       </ul></li>
-      <li><a href="trtoolbox.html#trtoolbox.globalanalysis.create_das">create_das() (in module trtoolbox.globalanalysis)</a>
+      <li><a href="trtoolbox.html#trtoolbox.globalanalysis.convert_tcs">convert_tcs() (in module trtoolbox.globalanalysis)</a>
+</li>
+      <li><a href="trtoolbox.html#trtoolbox.globalanalysis.RateConstants.create_kmatrix">create_kmatrix() (trtoolbox.globalanalysis.RateConstants method)</a>
 </li>
       <li><a href="trtoolbox.html#trtoolbox.globalanalysis.create_profile">create_profile() (in module trtoolbox.globalanalysis)</a>
 </li>
       <li><a href="trtoolbox.html#trtoolbox.globalanalysis.create_tr">create_tr() (in module trtoolbox.globalanalysis)</a>
+</li>
+      <li><a href="trtoolbox.html#trtoolbox.globalanalysis.create_xas">create_xas() (in module trtoolbox.globalanalysis)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -262,8 +264,6 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="trtoolbox.html#trtoolbox.globalanalysis.Results.das">das (trtoolbox.globalanalysis.Results attribute)</a>
-</li>
       <li><a href="trtoolbox.html#trtoolbox.globalanalysis.Results.data">data (trtoolbox.globalanalysis.Results attribute)</a>
 
       <ul>
@@ -350,6 +350,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="trtoolbox.html#trtoolbox.lda.inversesvd">inversesvd() (in module trtoolbox.lda)</a>
 </li>
+      <li><a href="trtoolbox.html#trtoolbox.globalanalysis.is_square">is_square() (in module trtoolbox.globalanalysis)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -360,7 +362,9 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="trtoolbox.html#trtoolbox.globalanalysis.Results.ks">ks (trtoolbox.globalanalysis.Results attribute)</a>
+      <li><a href="trtoolbox.html#trtoolbox.globalanalysis.RateConstants.kmatrix">kmatrix (trtoolbox.globalanalysis.RateConstants attribute)</a>
+</li>
+      <li><a href="trtoolbox.html#trtoolbox.globalanalysis.RateConstants.ks">ks (trtoolbox.globalanalysis.RateConstants attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -432,6 +436,10 @@
       <li><a href="trtoolbox.html#trtoolbox.svd.Results.n">n (trtoolbox.svd.Results attribute)</a>
 </li>
   </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="trtoolbox.html#trtoolbox.globalanalysis.RateConstants.nb_exps">nb_exps (trtoolbox.globalanalysis.RateConstants attribute)</a>
+</li>
+  </ul></td>
 </tr></table>
 
 <h2 id="O">O</h2>
@@ -458,8 +466,6 @@
       <li><a href="trtoolbox.html#trtoolbox.svd.Results.plot_abstract_traces">plot_abstract_traces() (trtoolbox.svd.Results method)</a>
 </li>
       <li><a href="trtoolbox.html#trtoolbox.plothelper.PlotHelper.plot_contourmap">plot_contourmap() (trtoolbox.plothelper.PlotHelper static method)</a>
-</li>
-      <li><a href="trtoolbox.html#trtoolbox.globalanalysis.Results.plot_das">plot_das() (trtoolbox.globalanalysis.Results method)</a>
 </li>
       <li><a href="trtoolbox.html#trtoolbox.svd.Results.plot_data">plot_data() (trtoolbox.svd.Results method)</a>
 </li>
@@ -527,6 +533,8 @@
         <li><a href="trtoolbox.html#trtoolbox.svd.Results.plot_traces">(trtoolbox.svd.Results method)</a>
 </li>
       </ul></li>
+      <li><a href="trtoolbox.html#trtoolbox.globalanalysis.Results.plot_xas">plot_xas() (trtoolbox.globalanalysis.Results method)</a>
+</li>
       <li><a href="trtoolbox.html#trtoolbox.plothelper.PlotHelper">PlotHelper (class in trtoolbox.plothelper)</a>
 </li>
       <li><a href="trtoolbox.html#trtoolbox.globalanalysis.Results.print_results">print_results() (trtoolbox.globalanalysis.Results method)</a>
@@ -541,10 +549,14 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="trtoolbox.html#trtoolbox.globalanalysis.Results.r2">r2 (trtoolbox.globalanalysis.Results attribute)</a>
 </li>
-      <li><a href="trtoolbox.html#trtoolbox.svd.reconstruct">reconstruct() (in module trtoolbox.svd)</a>
+      <li><a href="trtoolbox.html#trtoolbox.globalanalysis.Results.rate_constants">rate_constants (trtoolbox.globalanalysis.Results attribute)</a>
+</li>
+      <li><a href="trtoolbox.html#trtoolbox.globalanalysis.RateConstants">RateConstants (class in trtoolbox.globalanalysis)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="trtoolbox.html#trtoolbox.svd.reconstruct">reconstruct() (in module trtoolbox.svd)</a>
+</li>
       <li><a href="trtoolbox.html#trtoolbox.globalanalysis.Results">Results (class in trtoolbox.globalanalysis)</a>
 
       <ul>
@@ -571,6 +583,8 @@
         <li><a href="trtoolbox.html#trtoolbox.svd.Results.save_to_files">(trtoolbox.svd.Results method)</a>
 </li>
       </ul></li>
+      <li><a href="trtoolbox.html#trtoolbox.globalanalysis.RateConstants.set_ks">set_ks() (trtoolbox.globalanalysis.RateConstants method)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="trtoolbox.html#trtoolbox.plothelper.PlotHelper.sfreq">sfreq (trtoolbox.plothelper.PlotHelper attribute)</a>
@@ -581,7 +595,11 @@
 </li>
       <li><a href="trtoolbox.html#trtoolbox.plothelper.PlotHelper.stime">stime (trtoolbox.plothelper.PlotHelper attribute)</a>
 </li>
+      <li><a href="trtoolbox.html#trtoolbox.globalanalysis.RateConstants.style">style (trtoolbox.globalanalysis.RateConstants attribute)</a>
+</li>
       <li><a href="trtoolbox.html#trtoolbox.svd.Results.svddata">svddata (trtoolbox.svd.Results attribute)</a>
+</li>
+      <li><a href="trtoolbox.html#trtoolbox.globalanalysis.Results.svdtraces">svdtraces (trtoolbox.globalanalysis.Results attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -591,7 +609,9 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="trtoolbox.html#trtoolbox.lda.Results.taus">taus (trtoolbox.lda.Results attribute)</a>
 </li>
-      <li><a href="trtoolbox.html#trtoolbox.globalanalysis.Results.tcs">tcs (trtoolbox.globalanalysis.Results attribute)</a>
+      <li><a href="trtoolbox.html#trtoolbox.globalanalysis.RateConstants.tcs">tcs (trtoolbox.globalanalysis.RateConstants attribute)</a>
+</li>
+      <li><a href="trtoolbox.html#trtoolbox.globalanalysis.Results.tcs">tcs() (trtoolbox.globalanalysis.Results property)</a>
 </li>
       <li><a href="trtoolbox.html#trtoolbox.lda.tik">tik() (in module trtoolbox.lda)</a>
 </li>
@@ -607,15 +627,19 @@
         <li><a href="trtoolbox.html#trtoolbox.svd.Results.time">(trtoolbox.svd.Results attribute)</a>
 </li>
       </ul></li>
-      <li><a href="trtoolbox.html#trtoolbox.lda.Results.time_name">time_name (trtoolbox.lda.Results attribute)</a>
+      <li><a href="trtoolbox.html#trtoolbox.globalanalysis.Results.time_name">time_name (trtoolbox.globalanalysis.Results attribute)</a>
 
       <ul>
+        <li><a href="trtoolbox.html#trtoolbox.lda.Results.time_name">(trtoolbox.lda.Results attribute)</a>
+</li>
         <li><a href="trtoolbox.html#trtoolbox.svd.Results.time_name">(trtoolbox.svd.Results attribute)</a>
 </li>
       </ul></li>
-      <li><a href="trtoolbox.html#trtoolbox.lda.Results.time_unit">time_unit (trtoolbox.lda.Results attribute)</a>
+      <li><a href="trtoolbox.html#trtoolbox.globalanalysis.Results.time_unit">time_unit (trtoolbox.globalanalysis.Results attribute)</a>
 
       <ul>
+        <li><a href="trtoolbox.html#trtoolbox.lda.Results.time_unit">(trtoolbox.lda.Results attribute)</a>
+</li>
         <li><a href="trtoolbox.html#trtoolbox.svd.Results.time_unit">(trtoolbox.svd.Results attribute)</a>
 </li>
       </ul></li>
@@ -678,7 +702,7 @@
 <h2 id="V">V</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="trtoolbox.html#trtoolbox.globalanalysis.Results.var">var (trtoolbox.globalanalysis.Results attribute)</a>
+      <li><a href="trtoolbox.html#trtoolbox.globalanalysis.RateConstants.var">var (trtoolbox.globalanalysis.RateConstants attribute)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -698,17 +722,21 @@
         <li><a href="trtoolbox.html#trtoolbox.svd.Results.wn">(trtoolbox.svd.Results attribute)</a>
 </li>
       </ul></li>
-      <li><a href="trtoolbox.html#trtoolbox.lda.Results.wn_name">wn_name (trtoolbox.lda.Results attribute)</a>
+      <li><a href="trtoolbox.html#trtoolbox.globalanalysis.Results.wn_name">wn_name (trtoolbox.globalanalysis.Results attribute)</a>
 
       <ul>
+        <li><a href="trtoolbox.html#trtoolbox.lda.Results.wn_name">(trtoolbox.lda.Results attribute)</a>
+</li>
         <li><a href="trtoolbox.html#trtoolbox.svd.Results.wn_name">(trtoolbox.svd.Results attribute)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="trtoolbox.html#trtoolbox.lda.Results.wn_unit">wn_unit (trtoolbox.lda.Results attribute)</a>
+      <li><a href="trtoolbox.html#trtoolbox.globalanalysis.Results.wn_unit">wn_unit (trtoolbox.globalanalysis.Results attribute)</a>
 
       <ul>
+        <li><a href="trtoolbox.html#trtoolbox.lda.Results.wn_unit">(trtoolbox.lda.Results attribute)</a>
+</li>
         <li><a href="trtoolbox.html#trtoolbox.svd.Results.wn_unit">(trtoolbox.svd.Results attribute)</a>
 </li>
       </ul></li>
@@ -721,6 +749,10 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="trtoolbox.html#trtoolbox.lda.Results.x_k">x_k (trtoolbox.lda.Results attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="trtoolbox.html#trtoolbox.globalanalysis.Results.xas">xas (trtoolbox.globalanalysis.Results attribute)</a>
 </li>
   </ul></td>
 </tr></table>

@@ -45,8 +45,18 @@ class Results:
         Fitted dataset.
     fittraces : np.array
         *optional if method='svd' was chosen*. Fitted abstract time traces.
+    svdtraces : np.array
+        SVD abstract time traces.
     r2 : float
         R^2 of fit.
+    wn_name : str
+        Name of the frequency unit (default: wavenumber).
+    wn_unit : str
+        Frequency unit (default cm^{-1}).
+    time_name : str
+        Time name (default: time).
+    time_unit : str
+        Time uni (default: s).
     """
 
     def __init__(self):
@@ -64,6 +74,7 @@ class Results:
         self.estimates = np.array([])
         self.fitdata = np.array([])
         self.fittraces = np.array([])
+        self.svdtraces = np.array([])
         self.r2 = 0
         self.wn_name = 'wavenumber'
         self.wn_unit = 'cm^{-1}'
@@ -261,13 +272,15 @@ class Results:
         # delattr(self, '_phelper')
         self._phelper = []
 
-    def save_to_files(self, path):
+    def save_to_files(self, path, comment=''):
         """ Saving results to .dat files.
 
         Parameters
         ----------
         path : str
             Path for saving.
+        comment : str
+            Personal comment.
         """
 
         if os.path.exists(path) is False:
@@ -295,6 +308,10 @@ class Results:
             tcs_str = ['\n\t%.2e' % i for i in self.tcs]
         else:
             tcs_str = '\n' + str(self.tcs)
+
+        if comment != '':
+            comment = '----------------------\n\nComment:\n' + comment
+
         f.write('Created with trtoolbox\n' +
                 '----------------------\n\n' +
                 'Model used: %s\n' % self.rate_constants.style +
@@ -306,7 +323,8 @@ class Results:
                 '\t- data.dat (Raw data)\n' +
                 '\t- estimates.dat (Estimated DAS contributions)\n' +
                 '\t- fitdata.dat (Fitted data)\n' +
-                '\t- profile.dat (Obtained concentration profile)\n'
+                '\t- profile.dat (Obtained concentration profile)\n' +
+                comment
                 )
         f.close()
 
@@ -837,7 +855,7 @@ def doglobalanalysis(
         'dec': parallel decaying processes
         'seq': sequential model
         'back': sequential model with back reactions. tcs-matrix should have forward time constants in the first
-            column and backward in the second.
+        column and backward in the second.
         'custom': custom k-matrix
     kmatrix : np.array
         K-matrix. Providing an 3D K-matrix is interpreted as parallel reaction pathways. This also useful if

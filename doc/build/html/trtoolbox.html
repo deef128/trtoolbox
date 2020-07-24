@@ -35,7 +35,8 @@
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="trtoolbox" href="modules.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -80,13 +81,25 @@
             
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="svd.html">Singular value decomposition</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ga.html">Global target analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ga.html">Global analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lda.html">Lifetime density analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gui.html">Using the GUI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dgen.html">Data generator</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">trtoolbox</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">trtoolbox package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-trtoolbox.globalanalysis">trtoolbox.globalanalysis module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-trtoolbox.lda">trtoolbox.lda module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-trtoolbox.plothelper">trtoolbox.plothelper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-trtoolbox.svd">trtoolbox.svd module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-trtoolbox">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 
             
@@ -132,6 +145,8 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
+          <li><a href="modules.html">trtoolbox</a> &raquo;</li>
+        
       <li>trtoolbox package</li>
     
     
@@ -158,6 +173,116 @@
 </div>
 <div class="section" id="module-trtoolbox.globalanalysis">
 <span id="trtoolbox-globalanalysis-module"></span><h2>trtoolbox.globalanalysis module<a class="headerlink" href="#module-trtoolbox.globalanalysis" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="trtoolbox.globalanalysis.RateConstants">
+<em class="property">class </em><code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">RateConstants</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ks</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#RateConstants"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.RateConstants" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Container for rate contants related stuff</p>
+<dl class="py attribute">
+<dt id="trtoolbox.globalanalysis.RateConstants.ks">
+<code class="sig-name descname">ks</code><a class="headerlink" href="#trtoolbox.globalanalysis.RateConstants.ks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rate constants</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="trtoolbox.globalanalysis.RateConstants.tcs">
+<code class="sig-name descname">tcs</code><a class="headerlink" href="#trtoolbox.globalanalysis.RateConstants.tcs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time constants</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="trtoolbox.globalanalysis.RateConstants.nb_exps">
+<code class="sig-name descname">nb_exps</code><a class="headerlink" href="#trtoolbox.globalanalysis.RateConstants.nb_exps" title="Permalink to this definition">¶</a></dt>
+<dd><p>shape of the ks-matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="trtoolbox.globalanalysis.RateConstants.kmatrix">
+<code class="sig-name descname">kmatrix</code><a class="headerlink" href="#trtoolbox.globalanalysis.RateConstants.kmatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>K-matrix used for generating differential equations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="trtoolbox.globalanalysis.RateConstants.style">
+<code class="sig-name descname">style</code><a class="headerlink" href="#trtoolbox.globalanalysis.RateConstants.style" title="Permalink to this definition">¶</a></dt>
+<dd><p>Which style of k-matrix was used.
+‘dec’: parallel decaying processes
+‘seq’: sequential model
+‘back’: sequential model with back reactions
+‘custom’: custom k-matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="trtoolbox.globalanalysis.RateConstants.alphas">
+<code class="sig-name descname">alphas</code><a class="headerlink" href="#trtoolbox.globalanalysis.RateConstants.alphas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines starting population ratio of ‘custom’ is choosen</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="trtoolbox.globalanalysis.RateConstants.var">
+<code class="sig-name descname">var</code><a class="headerlink" href="#trtoolbox.globalanalysis.RateConstants.var" title="Permalink to this definition">¶</a></dt>
+<dd><p>Variance of the fit.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="trtoolbox.globalanalysis.RateConstants.create_kmatrix">
+<code class="sig-name descname">create_kmatrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">style</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#RateConstants.create_kmatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.RateConstants.create_kmatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates K-matrix. Rate constants should be over rows.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>style</strong> (<em>str</em>) – Determines how the K-matrix is generated</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="trtoolbox.globalanalysis.RateConstants.set_ks">
+<code class="sig-name descname">set_ks</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ks</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#RateConstants.set_ks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.RateConstants.set_ks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets ks and also tcs accordingly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ks</strong> (<em>np.array</em>) – Rate constants</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="py class">
 <dt id="trtoolbox.globalanalysis.Results">
 <em class="property">class </em><code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">Results</code><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#Results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.Results" title="Permalink to this definition">¶</a></dt>
@@ -199,21 +324,10 @@
 <dl class="py attribute">
 <dt id="trtoolbox.globalanalysis.Results.offset">
 <code class="sig-name descname">offset</code><a class="headerlink" href="#trtoolbox.globalanalysis.Results.offset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Default is <em>‘no’</em>.</p>
+<dd><p>True if an offset was used.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt id="trtoolbox.globalanalysis.Results.back">
-<code class="sig-name descname">back</code><a class="headerlink" href="#trtoolbox.globalanalysis.Results.back" title="Permalink to this definition">¶</a></dt>
-<dd><p>Determines if a model with back-reactions was used.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>boolean</p>
+<dd class="field-odd"><p>bool</p>
 </dd>
 </dl>
 </dd></dl>
@@ -241,42 +355,20 @@
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="trtoolbox.globalanalysis.Results.ks">
-<code class="sig-name descname">ks</code><a class="headerlink" href="#trtoolbox.globalanalysis.Results.ks" title="Permalink to this definition">¶</a></dt>
-<dd><p>Rate constants obtained by fitting.</p>
+<dt id="trtoolbox.globalanalysis.Results.rate_constants">
+<code class="sig-name descname">rate_constants</code><a class="headerlink" href="#trtoolbox.globalanalysis.Results.rate_constants" title="Permalink to this definition">¶</a></dt>
+<dd><p>Object containing everything on the rate constants</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>np.array</p>
+<dd class="field-odd"><p><a class="reference internal" href="#trtoolbox.globalanalysis.RateConstants" title="trtoolbox.globalanalysis.RateConstants">RateConstants</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="trtoolbox.globalanalysis.Results.var">
-<code class="sig-name descname">var</code><a class="headerlink" href="#trtoolbox.globalanalysis.Results.var" title="Permalink to this definition">¶</a></dt>
-<dd><p>Variance of the rate constants.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>np.array</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt id="trtoolbox.globalanalysis.Results.tcs">
-<code class="sig-name descname">tcs</code><a class="headerlink" href="#trtoolbox.globalanalysis.Results.tcs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Time constants obtained by fitting.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>np.array</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt id="trtoolbox.globalanalysis.Results.das">
-<code class="sig-name descname">das</code><a class="headerlink" href="#trtoolbox.globalanalysis.Results.das" title="Permalink to this definition">¶</a></dt>
-<dd><p>Decay associated spectra.</p>
+<dt id="trtoolbox.globalanalysis.Results.xas">
+<code class="sig-name descname">xas</code><a class="headerlink" href="#trtoolbox.globalanalysis.Results.xas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decay/Evolution/Species associated spectra.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>np.array</p>
@@ -291,6 +383,17 @@
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="trtoolbox.globalanalysis.Results.artefact">
+<code class="sig-name descname">artefact</code><a class="headerlink" href="#trtoolbox.globalanalysis.Results.artefact" title="Permalink to this definition">¶</a></dt>
+<dd><p>If True, the first two species are merged</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
 </dd>
 </dl>
 </dd></dl>
@@ -329,12 +432,67 @@
 </dd></dl>
 
 <dl class="py attribute">
+<dt id="trtoolbox.globalanalysis.Results.svdtraces">
+<code class="sig-name descname">svdtraces</code><a class="headerlink" href="#trtoolbox.globalanalysis.Results.svdtraces" title="Permalink to this definition">¶</a></dt>
+<dd><p>SVD abstract time traces.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
 <dt id="trtoolbox.globalanalysis.Results.r2">
 <code class="sig-name descname">r2</code><a class="headerlink" href="#trtoolbox.globalanalysis.Results.r2" title="Permalink to this definition">¶</a></dt>
 <dd><p>R^2 of fit.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="trtoolbox.globalanalysis.Results.wn_name">
+<code class="sig-name descname">wn_name</code><a class="headerlink" href="#trtoolbox.globalanalysis.Results.wn_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of the frequency unit (default: wavenumber).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="trtoolbox.globalanalysis.Results.wn_unit">
+<code class="sig-name descname">wn_unit</code><a class="headerlink" href="#trtoolbox.globalanalysis.Results.wn_unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Frequency unit (default cm^{-1}).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="trtoolbox.globalanalysis.Results.time_name">
+<code class="sig-name descname">time_name</code><a class="headerlink" href="#trtoolbox.globalanalysis.Results.time_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time name (default: time).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="trtoolbox.globalanalysis.Results.time_unit">
+<code class="sig-name descname">time_unit</code><a class="headerlink" href="#trtoolbox.globalanalysis.Results.time_unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time uni (default: s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
@@ -351,12 +509,6 @@ Running this method fixes this.</p>
 <dt id="trtoolbox.globalanalysis.Results.init_phelper">
 <code class="sig-name descname">init_phelper</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#Results.init_phelper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.Results.init_phelper" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initiliazes phelper after clean().</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="trtoolbox.globalanalysis.Results.plot_das">
-<code class="sig-name descname">plot_das</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#Results.plot_das"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.Results.plot_das" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plots decay associated spectra.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -397,6 +549,12 @@ abstract time traces if method=’svd’ was chosen.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="trtoolbox.globalanalysis.Results.plot_xas">
+<code class="sig-name descname">plot_xas</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#Results.plot_xas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.Results.plot_xas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots decay associated spectra.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="trtoolbox.globalanalysis.Results.print_results">
 <code class="sig-name descname">print_results</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#Results.print_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.Results.print_results" title="Permalink to this definition">¶</a></dt>
 <dd><p>Prints time constants.</p>
@@ -404,14 +562,22 @@ abstract time traces if method=’svd’ was chosen.</p>
 
 <dl class="py method">
 <dt id="trtoolbox.globalanalysis.Results.save_to_files">
-<code class="sig-name descname">save_to_files</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#Results.save_to_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.Results.save_to_files" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">save_to_files</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#Results.save_to_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.Results.save_to_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Saving results to .dat files.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – Path for saving.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – Path for saving.</p></li>
+<li><p><strong>comment</strong> (<em>str</em>) – Personal comment.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py method">
+<dt id="trtoolbox.globalanalysis.Results.tcs">
+<em class="property">property </em><code class="sig-name descname">tcs</code><a class="headerlink" href="#trtoolbox.globalanalysis.Results.tcs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -457,15 +623,14 @@ abstract time traces if method=’svd’ was chosen.</p>
 
 <dl class="py function">
 <dt id="trtoolbox.globalanalysis.calculate_fitdata">
-<code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">calculate_fitdata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ks</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">back</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#calculate_fitdata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.calculate_fitdata" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">calculate_fitdata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">rate_constants</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#calculate_fitdata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.calculate_fitdata" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the final fitted dataset.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ks</strong> (<em>np.array</em>) – Rate constants</p></li>
+<li><p><strong>rate_constants</strong> (<a class="reference internal" href="#trtoolbox.globalanalysis.RateConstants" title="trtoolbox.globalanalysis.RateConstants"><em>RateConstants</em></a>) – RateConstants object.</p></li>
 <li><p><strong>time</strong> (<em>np.array</em>) – Time array.</p></li>
 <li><p><strong>data</strong> (<em>np.array</em>) – Data matrix.</p></li>
-<li><p><strong>back</strong> (<em>boolean</em>) – Determines if a model with back-reactions is used.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -505,14 +670,14 @@ abstract time traces if method=’svd’ was chosen.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> (<em>np.array</em>) – Data matrix.</p></li>
-<li><p><strong>time</strong> (<em>np.array</em>) – TIme array.</p></li>
+<li><p><strong>time</strong> (<em>np.array</em>) – Time array.</p></li>
 <li><p><strong>wn</strong> (<em>np.array</em>) – Frequency array.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><strong>data</strong> (<em>np.array</em>) – Data matrix.</p></li>
-<li><p><strong>time</strong> (<em>np.array</em>) – TIme array.</p></li>
+<li><p><strong>time</strong> (<em>np.array</em>) – Time array.</p></li>
 <li><p><strong>wn</strong> (<em>np.array</em>) – Frequency array.</p></li>
 </ul>
 </p>
@@ -521,18 +686,15 @@ abstract time traces if method=’svd’ was chosen.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="trtoolbox.globalanalysis.create_das">
-<code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">create_das</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">profile</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#create_das"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.create_das" title="Permalink to this definition">¶</a></dt>
-<dd><p>Obtains decay associated spectra.</p>
+<dt id="trtoolbox.globalanalysis.convert_tcs">
+<code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">convert_tcs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">arr</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#convert_tcs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.convert_tcs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts time to rate constants and vice versa. Necessary due to zeros.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>profile</strong> (<em>np.array</em>) – Concentration profile matrix</p></li>
-<li><p><strong>data</strong> (<em>np.array</em>) – Data matrix.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>arr</strong> (<em>np.array</em>) – </p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>das</strong> – Decay associated spectra</p>
+<dd class="field-even"><p></p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>np.array</p>
@@ -542,14 +704,13 @@ abstract time traces if method=’svd’ was chosen.</p>
 
 <dl class="py function">
 <dt id="trtoolbox.globalanalysis.create_profile">
-<code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">create_profile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">ks</span></em>, <em class="sig-param"><span class="n">back</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#create_profile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.create_profile" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">create_profile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">rate_constants</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#create_profile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.create_profile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes a concentration profile according to the <em>model()</em> function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>time</strong> (<em>np.array</em>) – Time array.</p></li>
-<li><p><strong>ks</strong> (<em>np.array</em>) – Decay rate constants for each species.</p></li>
-<li><p><strong>back</strong> (<em>boolean</em>) – Determines if a model with back-reactions is used.</p></li>
+<li><p><strong>rate_constants</strong> (<a class="reference internal" href="#trtoolbox.globalanalysis.RateConstants" title="trtoolbox.globalanalysis.RateConstants"><em>RateConstants</em></a>) – RateConstants object.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -563,13 +724,13 @@ abstract time traces if method=’svd’ was chosen.</p>
 
 <dl class="py function">
 <dt id="trtoolbox.globalanalysis.create_tr">
-<code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">create_tr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">par</span></em>, <em class="sig-param"><span class="n">time</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#create_tr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.create_tr" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">create_tr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">rate_constants</span></em>, <em class="sig-param"><span class="n">pre</span></em>, <em class="sig-param"><span class="n">time</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#create_tr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.create_tr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function returning exponential time traces for a given set of parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>par</strong> (<em>np.array</em>) – Parameter matrix. Last column contains rate constants. Remaining
-columns are prefactors (rate constants x SVD components)</p></li>
+<li><p><strong>rate_constants</strong> (<a class="reference internal" href="#trtoolbox.globalanalysis.RateConstants" title="trtoolbox.globalanalysis.RateConstants"><em>RateConstants</em></a>) – RateConstants object.</p></li>
+<li><p><strong>pre</strong> (<em>np.array</em>) – Exponential pre-factors.</p></li>
 <li><p><strong>time</strong> (<em>np.array</em>) – Time array.</p></li>
 </ul>
 </dd>
@@ -583,12 +744,29 @@ columns are prefactors (rate constants x SVD components)</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt id="trtoolbox.globalanalysis.doglobalanalysis">
-<code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">doglobalanalysis</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">wn</span></em>, <em class="sig-param"><span class="n">tcs</span></em>, <em class="sig-param"><span class="n">method</span><span class="o">=</span><span class="default_value">'svd'</span></em>, <em class="sig-param"><span class="n">svds</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">offset</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">offindex</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">back</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#doglobalanalysis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.doglobalanalysis" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>Wrapper for global fit routine. Implementation of back reactions</dt><dd><p>is still experimental and just available for the svd method.</p>
+<dt id="trtoolbox.globalanalysis.create_xas">
+<code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">create_xas</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">profile</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#create_xas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.create_xas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtains decay associated spectra.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>profile</strong> (<em>np.array</em>) – Concentration profile matrix</p></li>
+<li><p><strong>data</strong> (<em>np.array</em>) – Data matrix.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>xas</strong> – Decay/Evolution/Species associated spectra</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.array</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="trtoolbox.globalanalysis.doglobalanalysis">
+<code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">doglobalanalysis</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">wn</span></em>, <em class="sig-param"><span class="n">tcs</span></em>, <em class="sig-param"><span class="n">method</span><span class="o">=</span><span class="default_value">'svd'</span></em>, <em class="sig-param"><span class="n">svds</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">offset</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">offindex</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">style</span><span class="o">=</span><span class="default_value">'seq'</span></em>, <em class="sig-param"><span class="n">kmatrix</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">alphas</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">artefact</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#doglobalanalysis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.doglobalanalysis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper for global fit routine.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -604,32 +782,51 @@ and contributions of DAS,
 <li><p><strong>svds</strong> (<em>int</em>) – Number of SVD components to be fitted. Default: 5.</p></li>
 <li><p><strong>offset</strong> (<em>boolean</em>) – Considering the last spectrum to be an offset. Default: False.</p></li>
 <li><p><strong>offindex</strong> (<em>int</em>) – Index of spectral offset.</p></li>
-<li><p><strong>back</strong> (<em>boolean</em>) – Determines if a model with back-reactions is used. If yes,
-ks has to be a matrix with 1st column forward and
-2nd column backward rate constants.
-A -&gt; B with ks[i, 0]
-A &lt;- B with ks[i, 1]
-Therefore ks[-1] is not used.</p></li>
+<li><p><strong>style</strong> (<em>str</em>) – Which style of K-matrix to use.
+‘dec’: parallel decaying processes
+‘seq’: sequential model
+‘back’: sequential model with back reactions. tcs-matrix should have forward time constants in the first
+column and backward in the second.
+‘custom’: custom k-matrix</p></li>
+<li><p><strong>kmatrix</strong> (<em>np.array</em>) – K-matrix. Providing an 3D K-matrix is interpreted as parallel reaction pathways. This also useful if
+branching occurs due to heterogeneity. Starting populations can be set with the alpha attribute.
+For more info please see the documentation.</p></li>
+<li><p><strong>alphas</strong> (<em>np.array</em>) – Sets starting population of the first species.</p></li>
+<li><p><strong>artefact</strong> (<em>bool</em>) – If True, the first two species are merged</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><strong>gf_res</strong> – Results objects.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><em>globalanalysis.results</em></p>
+<dd class="field-odd"><p>globalanalysis.results</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="trtoolbox.globalanalysis.is_square">
+<code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">is_square</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mat</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#is_square"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.is_square" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if a matrix is square.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>mat</strong> (<em>np.array</em>) – Matrix</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt id="trtoolbox.globalanalysis.model">
-<code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">model</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">s</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">ks</span></em>, <em class="sig-param"><span class="n">back</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.model" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">model</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">s</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">rate_constants</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.model" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
-<dt>Creates an array of differential equations according</dt><dd><p>to an unidirectional sequential exponential model.
-S[0]/dt = -k0*S[0]
-S[1]/dt = k0*S[0] - k1*S[1]
-S[2]/dt = k1*S[1] - k2*S[2]
-and so on</p>
+<dt>Creates an array of differential equations according to</dt><dd><p>(kmatrix * ks).dot(s)
+with ks as rate constants and s as species concentration.</p>
 </dd>
 </dl>
 <dl class="field-list simple">
@@ -637,13 +834,7 @@ and so on</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>s</strong> (<em>np.array</em>) – Starting concentrations for each species.</p></li>
 <li><p><strong>time</strong> (<em>np.array</em>) – Time array.</p></li>
-<li><p><strong>ks</strong> (<em>np.array</em>) – Decay rate constants for each species.</p></li>
-<li><p><strong>back</strong> (<em>boolean</em>) – Determines if a model with back-reactions is used. If yes,
-ks has to be a matrix with 1st column forward and
-2nd column backward rate constants.
-A -&gt; B with ks[i, 0]
-A &lt;- B with ks[i, 1]
-Therefore ks[-1] is not used.</p></li>
+<li><p><strong>rate_constants</strong> (<a class="reference internal" href="#trtoolbox.globalanalysis.RateConstants" title="trtoolbox.globalanalysis.RateConstants"><em>RateConstants</em></a>) – RateConstants object.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -657,7 +848,7 @@ Therefore ks[-1] is not used.</p></li>
 
 <dl class="py function">
 <dt id="trtoolbox.globalanalysis.opt_func_est">
-<code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">opt_func_est</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ks</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">back</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#opt_func_est"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.opt_func_est" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">opt_func_est</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ks</span></em>, <em class="sig-param"><span class="n">rate_constants</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#opt_func_est"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.opt_func_est" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Optimization function for residuals of concentration profile</dt><dd><p>and estimated contributions of DAS</p>
 </dd>
@@ -666,9 +857,9 @@ Therefore ks[-1] is not used.</p></li>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ks</strong> (<em>np.array</em>) – Rate constants</p></li>
+<li><p><strong>rate_constants</strong> (<a class="reference internal" href="#trtoolbox.globalanalysis.RateConstants" title="trtoolbox.globalanalysis.RateConstants"><em>RateConstants</em></a>) – RateConstants object.</p></li>
 <li><p><strong>time</strong> (<em>np.array</em>) – Time array.</p></li>
 <li><p><strong>data</strong> (<em>np.array</em>) – Data matrix.</p></li>
-<li><p><strong>back</strong> (<em>boolean</em>) – Determines if a model with back-reactions is used.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -682,15 +873,15 @@ Therefore ks[-1] is not used.</p></li>
 
 <dl class="py function">
 <dt id="trtoolbox.globalanalysis.opt_func_raw">
-<code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">opt_func_raw</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ks</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">back</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#opt_func_raw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.opt_func_raw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">opt_func_raw</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ks</span></em>, <em class="sig-param"><span class="n">rate_constants</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#opt_func_raw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.opt_func_raw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Optimization function for residuals of fitted data - input data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ks</strong> (<em>np.array</em>) – Rate constants</p></li>
+<li><p><strong>rate_constants</strong> (<a class="reference internal" href="#trtoolbox.globalanalysis.RateConstants" title="trtoolbox.globalanalysis.RateConstants"><em>RateConstants</em></a>) – RateConstants object.</p></li>
 <li><p><strong>time</strong> (<em>np.array</em>) – Time array.</p></li>
 <li><p><strong>data</strong> (<em>np.array</em>) – Data matrix.</p></li>
-<li><p><strong>back</strong> (<em>boolean</em>) – Determines if a model with back-reactions is used.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -704,7 +895,7 @@ Therefore ks[-1] is not used.</p></li>
 
 <dl class="py function">
 <dt id="trtoolbox.globalanalysis.opt_func_svd">
-<code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">opt_func_svd</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">par</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">svdtraces</span></em>, <em class="sig-param"><span class="n">nb_exps</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#opt_func_svd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.opt_func_svd" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">opt_func_svd</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pars</span></em>, <em class="sig-param"><span class="n">rate_constants</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">svdtraces</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#opt_func_svd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.opt_func_svd" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Optimization function for residuals of SVD</dt><dd><p>abstract time traces - fitted traces.</p>
 </dd>
@@ -712,12 +903,10 @@ Therefore ks[-1] is not used.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>par</strong> (<em>np.array</em>) – Flattened parameter array</p></li>
+<li><p><strong>pars</strong> (<em>np.array</em>) – Flattened parameter array</p></li>
+<li><p><strong>rate_constants</strong> (<a class="reference internal" href="#trtoolbox.globalanalysis.RateConstants" title="trtoolbox.globalanalysis.RateConstants"><em>RateConstants</em></a>) – RateConstants object.</p></li>
 <li><p><strong>time</strong> (<em>np.array</em>) – Time array.</p></li>
-<li><p><strong>data</strong> (<em>np.array</em>) – Data matrix.</p></li>
 <li><p><strong>svdtraces</strong> (<em>np.array</em>) – SVD traces</p></li>
-<li><p><strong>nb_exps</strong> (<em>int</em>) – Number of exponential decay processes. Needed for reshaping the
-flattened paramater array.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1062,7 +1251,7 @@ Running this method fixes this.</p>
 
 <dl class="py method">
 <dt id="trtoolbox.lda.Results.save_to_files">
-<code class="sig-name descname">save_to_files</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/lda.html#Results.save_to_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.lda.Results.save_to_files" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">save_to_files</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">index_alpha</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/lda.html#Results.save_to_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.lda.Results.save_to_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Saving results to .dat files.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1070,6 +1259,7 @@ Running this method fixes this.</p>
 <li><p><strong>path</strong> (<em>str</em>) – Path for saving.</p></li>
 <li><p><strong>alpha</strong> (<em>float</em>) – Plot for the closest alpha as specified.</p></li>
 <li><p><strong>index_alpha</strong> (<em>int</em>) – Plot for specified alpha at index.</p></li>
+<li><p><strong>comment</strong> (<em>str</em>) – Personal comment.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2091,6 +2281,13 @@ and n as time. But it is actually not important.</p>
            
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="modules.html" class="btn btn-neutral float-left" title="trtoolbox" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>

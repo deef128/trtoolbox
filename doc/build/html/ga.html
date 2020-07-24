@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Global target analysis &mdash; Time-Resolved Toolbox  documentation</title>
+  <title>Global analysis &mdash; Time-Resolved Toolbox  documentation</title>
   
 
   
@@ -85,10 +85,11 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="svd.html">Singular value decomposition</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Global target analysis</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Global analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lda.html">Lifetime density analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gui.html">Using the GUI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dgen.html">Data generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">trtoolbox</a></li>
 </ul>
 
             
@@ -134,7 +135,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Global target analysis</li>
+      <li>Global analysis</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -153,12 +154,30 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="global-target-analysis">
-<h1>Global target analysis<a class="headerlink" href="#global-target-analysis" title="Permalink to this headline">¶</a></h1>
-<p>In contrast to SVD, global target analysis requires a model as fitting instruction. With this, models can be tested and parameters determined. Sticking to time-resolved spectral data, a model contains how spectral components evolve over time. This results in a system ordinary differential equations which can be (analytically) solved resulting in a concentration profile as shown in the image below.</p>
+  <div class="section" id="global-analysis">
+<h1>Global analysis<a class="headerlink" href="#global-analysis" title="Permalink to this headline">¶</a></h1>
+<p>In contrast to SVD, global target analysis requires a model as fitting instruction. With this, models can be tested and parameters determined. Sticking to time-resolved spectral data, a model contains how spectral components evolve over time. This results in a system of ordinary differential equations which can be (analytically) solved resulting in a concentration profile as shown for a sequential model in the image below.</p>
 <a class="reference internal image-reference" href="_images/gf.png"><img alt="_images/gf.png" src="_images/gf.png" style="width: 600px;" /></a>
-<p>In this toolbox, a model of sequential reactions is implemented (e.g. A -&gt; B -&gt; C -&gt; …). Back reactions are also implemented but are still experimental. The spectral components are also called <em>Evolution/Species associated spectra (EAS, SAS)</em> and both, the concentration profile and the EAS are obtained by global analysis.</p>
-<p>The preferred method is to fit a specified number of abstract time traces which reduces drastically dimensionality and proved to be analytically very stable. The routine can be called via <a class="reference internal" href="trtoolbox.html#trtoolbox.globalanalysis.doglobalanalysis" title="trtoolbox.globalanalysis.doglobalanalysis"><code class="xref py py-meth docutils literal notranslate"><span class="pre">trtoolbox.globalanalysis.doglobalanalysis()</span></code></a>. Here, important parameters are <code class="docutils literal notranslate"><span class="pre">tcs</span></code> as a list with initial time constants and <code class="docutils literal notranslate"><span class="pre">svds</span></code> defining how many abstract time traces shall be fitted.</p>
+<p>In this toolbox, the differential equations are generated via a K-matrix <span class="math notranslate nohighlight">\(\mathbf{K}\)</span> and two vectors, one for the rate constants <span class="math notranslate nohighlight">\(\vec{r}\)</span> and another for the concentrations of the species <span class="math notranslate nohighlight">\(\vec{c}\)</span></p>
+<div class="math notranslate nohighlight">
+\[\left(\mathbf{K}\circ\vec{r}\right) \cdot \vec{c} \quad .\]</div>
+<p>For a model of three parallel decaying reactions it reads as follows</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\left(\begin{bmatrix}-1 &amp; 0 &amp; 0\\0 &amp; -1 &amp; 0\\0 &amp; 0 &amp; -1\end{bmatrix} \circ \begin{bmatrix}k_1\\k_2\\k_3\end{bmatrix}\right) \cdot \begin{bmatrix}c_1 &amp; c_2 &amp; c_3\end{bmatrix}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{bmatrix}-k_1 &amp; 0 &amp; 0\\0 &amp; -k_2 &amp; 0\\0 &amp; 0 &amp; -k_3\end{bmatrix} \cdot \begin{bmatrix}c_1 &amp; c_2 &amp; c_3\end{bmatrix}\end{split}\]</div>
+<p>with <span class="math notranslate nohighlight">\(\circ\)</span> denoting the elementwise Hadamard product. Interpreting each element of the result of the matrix multiplication as differential equations leads to</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}\frac{dc_1}{dt} &amp;= -k_1 c_1 \\ \frac{dc_2}{dt} &amp;= -k_2 c_2 \\ \frac{dc_3}{dt} &amp;= -k_3 c_3 \end{align} \quad .\end{split}\]</div>
+<p>It is obvious that the K-matrix defines the model. By choosing a slightly different matrix a sequential model can be implemented:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\left(\begin{bmatrix}-1 &amp; 0 &amp; 0\\1 &amp; -1 &amp; 0\\0 &amp; 1 &amp; -1\end{bmatrix} \circ \begin{bmatrix}k_1\\k_2\\k_3\end{bmatrix}\right) \cdot \begin{bmatrix}c_1 &amp; c_2 &amp; c_3\end{bmatrix}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{bmatrix}-k_1 &amp; 0 &amp; 0\\k_1 &amp; -k_2 &amp; 0\\0 &amp; k_3 &amp; -k_3\end{bmatrix} \cdot \begin{bmatrix}c_1 &amp; c_2 &amp; c_3\end{bmatrix}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}\frac{dc_1}{dt} &amp;= -k_1 c_1 \\ \frac{dc_2}{dt} &amp;= k_1 c_1 - k_2 c_2 \\ \frac{dc_3}{dt} &amp;= k_2 c_2 - k_3 c_3 \end{align}\end{split}\]</div>
+<p>By global analysis, time constants and spectral comonents associated with the transitions are obtained. Using parallel reactions, these are called <em>Decay associated spectra (DAS)</em> while they are termed <em>Evolution associated spectra (EAS)</em> if a sequential model is used. If the reaction is known and the right model was chosen one will obtain the so-called <em>Species associated spectra</em>.</p>
+<p>The preferred method for the fitting procedure is to fit the concentration profile to a specified number of abstract time traces which reduces drastically dimensionality and proved to be analytically very stable. The routine can be called via <a class="reference internal" href="trtoolbox.html#trtoolbox.globalanalysis.doglobalanalysis" title="trtoolbox.globalanalysis.doglobalanalysis"><code class="xref py py-meth docutils literal notranslate"><span class="pre">trtoolbox.globalanalysis.doglobalanalysis()</span></code></a>. Here, important parameters are <code class="docutils literal notranslate"><span class="pre">tcs</span></code> as a list with initial time constants and <code class="docutils literal notranslate"><span class="pre">svds</span></code> defining how many abstract time traces shall be fitted. the <code class="docutils literal notranslate"><span class="pre">style</span></code> flag defines the model (<em>dec</em>: parallel reactions, <em>seq</em>: sequential model, <em>back</em>: sequential model with back reactions). It is also possible to provide an own K-matrix for creating custom models (like branching; example in <code class="file docutils literal notranslate"><span class="pre">example_ga.py</span></code>)</p>
 <p>The returned objext is <a class="reference internal" href="trtoolbox.html#trtoolbox.globalanalysis.Results" title="trtoolbox.globalanalysis.Results"><code class="xref py py-class docutils literal notranslate"><span class="pre">trtoolbox.globalanalysis.Results</span></code></a>.</p>
 <div class="line-block">
 <div class="line">References:</div>

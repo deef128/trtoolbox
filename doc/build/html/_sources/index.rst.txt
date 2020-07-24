@@ -20,6 +20,7 @@ This project was inspired by OPTIMUS written by Dr. Chavdar Slavov (https://opti
    lda.rst
    gui.rst
    dgen.rst
+   modules.rst
 
 
 

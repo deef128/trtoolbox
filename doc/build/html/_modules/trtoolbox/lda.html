@@ -83,10 +83,11 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../svd.html">Singular value decomposition</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../ga.html">Global target analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ga.html">Global analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../lda.html">Lifetime density analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../gui.html">Using the GUI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../dgen.html">Data generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">trtoolbox</a></li>
 </ul>
 
             
@@ -422,7 +423,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_phelper</span> <span class="o">=</span> <span class="p">[]</span></div>
 
-<div class="viewcode-block" id="Results.save_to_files"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.lda.Results.save_to_files">[docs]</a>    <span class="k">def</span> <span class="nf">save_to_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">index_alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="Results.save_to_files"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.lda.Results.save_to_files">[docs]</a>    <span class="k">def</span> <span class="nf">save_to_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">index_alpha</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Saving results to .dat files.</span>
 
 <span class="sd">        Parameters</span>
@@ -433,6 +434,8 @@
 <span class="sd">            Plot for the closest alpha as specified.</span>
 <span class="sd">        index_alpha : int</span>
 <span class="sd">            Plot for specified alpha at index.</span>
+<span class="sd">        comment : str</span>
+<span class="sd">            Personal comment.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
@@ -442,7 +445,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span>
 
-        <span class="n">to_save</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;alphas&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;lcruve&#39;</span><span class="p">,</span> <span class="s1">&#39;taus&#39;</span><span class="p">]</span>
+        <span class="n">to_save</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;alphas&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;lcurve&#39;</span><span class="p">,</span> <span class="s1">&#39;taus&#39;</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">to_save</span><span class="p">:</span>
                 <span class="n">fname</span> <span class="o">=</span> <span class="n">k</span> <span class="o">+</span> <span class="s1">&#39;.dat&#39;</span>
@@ -475,6 +478,9 @@
                     <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%.4e</span><span class="s1">&#39;</span>
                 <span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">comment</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="n">comment</span> <span class="o">=</span> <span class="s1">&#39;----------------------</span><span class="se">\n\n</span><span class="s1">Comment:</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">comment</span>
+
         <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;00_comments.txt&#39;</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Writing 00_comments.txt&#39;</span><span class="p">)</span>
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Created with trtoolbox</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span>
@@ -490,7 +496,8 @@
                 <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">- data.dat (Raw data)</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span>
                 <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">- fitdata.dat (Fitted data)</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span>
                 <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">- lcurve.dat (L-curve)</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span>
-                <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">- taus.dat (Used time constants)&#39;</span>
+                <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">- taus.dat (Used time constants)&#39;</span> <span class="o">+</span>
+                <span class="n">comment</span>
                 <span class="p">)</span>
         <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div></div>
 
