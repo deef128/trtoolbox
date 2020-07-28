@@ -99,23 +99,48 @@ class DataGenerator:
 
         self.sas = np.zeros((self.wn.shape[0], num_das))
 
-        for i in range(num_das):
-            das = np.zeros(self.wn.shape[0])
-            for _ in range(num_peaks):
-                sc = 1.5 * nrand.random() + 0.5
-                width = int(avg_width * sc)
-                gaus = signal.gaussian(
-                    width,
-                    std=avg_std,
-                    sym=False)
-                pos = nrand.randint(0, high=self.wn.shape[0]-width)
-                if diff is True:
-                    pre = nrand.choice([-1, 1])
-                else:
-                    pre = 1
-                sc = 1.5 * nrand.random() + 0.5
-                das[pos:pos+width] = das[pos:pos+width] + pre*gaus*sc
-            self.sas[:, i] = das.T
+        # if no peak positions were given
+        if type(num_peaks) == int:
+            for i in range(num_das):
+                das = np.zeros(self.wn.shape[0])
+                for _ in range(num_peaks):
+                    sc = 1.5 * nrand.random() + 0.5
+                    width = int(avg_width * sc)
+                    gaus = signal.gaussian(
+                        width,
+                        std=avg_std,
+                        sym=False)
+                    pos = nrand.randint(0, high=self.wn.shape[0]-width)
+                    if diff is True:
+                        pre = nrand.choice([-1, 1])
+                    else:
+                        pre = 1
+                    sc = 1.5 * nrand.random() + 0.5
+                    das[pos:pos+width] = das[pos:pos+width] + pre*gaus*sc
+                self.sas[:, i] = das.T
+        elif isinstance(num_peaks, np.ndarray):         # if positions are given
+            if num_peaks.shape[1] != num_das:
+                raise ValueError("Dimensions mismatch")
+            for i in range(num_das):
+                das = np.zeros(self.wn.shape[0])
+                for p in range(num_peaks.shape[0]):
+                    sc = 1
+                    width = int(avg_width)
+                    gaus = signal.gaussian(
+                        width,
+                        std=avg_std,
+                        sym=False)
+                    pos = abs(num_peaks[p, i])
+                    if pos < np.min(self.wn) or pos > np.max(self.wn):
+                        raise ValueError("Peak position not covered by wn!")
+                    if num_peaks[p, i] < 0:
+                        pre = -1
+                    else:
+                        pre = 1
+                    sc = 1
+                    index_pos = np.argmin(abs(self.wn - pos))
+                    das[index_pos-width//2:index_pos+width//2] = das[index_pos-width//2:index_pos+width//2] + pre*gaus*sc
+                self.sas[:, i] = das.T
 
     def gen_tcs(self, tcs=[-1, -1, -1], style='seq'):
         """ Generates time constants
