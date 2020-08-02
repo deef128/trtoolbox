@@ -124,13 +124,15 @@ class DataGenerator:
             for i in range(num_das):
                 das = np.zeros(self.wn.shape[0])
                 for p in range(num_peaks.shape[0]):
+                    pos = abs(num_peaks[p, i])
+                    if pos == 0:
+                        continue
                     sc = 1
                     width = int(avg_width)
                     gaus = signal.gaussian(
                         width,
                         std=avg_std,
                         sym=False)
-                    pos = abs(num_peaks[p, i])
                     if pos < np.min(self.wn) or pos > np.max(self.wn):
                         raise ValueError("Peak position not covered by wn!")
                     if num_peaks[p, i] < 0:
@@ -188,11 +190,14 @@ class DataGenerator:
         self.rate_constants = RateConstants(ks)
         self.rate_constants.style = style
 
-    def gen_data_sas(self):
+    def gen_data_sas(self, kmatrix=None):
         """ Generates data.
         """
 
-        self.rate_constants.create_kmatrix()
+        if kmatrix is None:
+            self.rate_constants.create_kmatrix()
+        else:
+            self.rate_constants.kmatrix = kmatrix
         self.profile = create_profile(self.time, self.rate_constants)
         self.data = self.sas.dot(self.profile.T)
 
@@ -203,6 +208,7 @@ class DataGenerator:
             wnlimit=[1500, 1700],
             wnstep=-1,
             tcs=[-1, -1, -1],
+            kamtrix=None,
             num_peaks=1,
             avg_width=float(30),
             avg_std=float(5),
@@ -250,7 +256,7 @@ class DataGenerator:
         self.gen_wn(wnlimit, wnstep)
         self.gen_sas(num_das, num_peaks, avg_width, avg_std, diff=diff)
         self.gen_tcs(tcs, style)
-        self.gen_data_sas()
+        self.gen_data_sas(kamtrix)
         if noise is True:
             self.data = self.data + \
                 nrand.normal(0, scale=noise_scale, size=self.data.shape)
