@@ -290,7 +290,7 @@ class DgenDialog(QtWidgets.QDialog, Ui_Dialog):
             txt_std = self.txt_std.text()
             cb_diff = self.cb_diff.isChecked()
             cb_back = self.cb_back.isChecked()
-            if cb_back == True:
+            if cb_back is True:
                 cb_back = 'back'
             else:
                 cb_back = 'seq'

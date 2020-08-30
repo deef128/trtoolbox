@@ -91,6 +91,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">trtoolbox</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">trtoolbox package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-trtoolbox.expfit">trtoolbox.expfit module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-trtoolbox.globalanalysis">trtoolbox.globalanalysis module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-trtoolbox.lda">trtoolbox.lda module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-trtoolbox.plothelper">trtoolbox.plothelper module</a></li>
@@ -170,6 +171,191 @@
 <h1>trtoolbox package<a class="headerlink" href="#trtoolbox-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-trtoolbox.expfit">
+<span id="trtoolbox-expfit-module"></span><h2>trtoolbox.expfit module<a class="headerlink" href="#module-trtoolbox.expfit" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="trtoolbox.expfit.Results">
+<em class="property">class </em><code class="sig-prename descclassname">trtoolbox.expfit.</code><code class="sig-name descname">Results</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pre</span></em>, <em class="sig-param"><span class="n">tcs</span></em>, <em class="sig-param"><span class="n">time</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/expfit.html#Results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.expfit.Results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Object containing fit results</p>
+<dl class="py attribute">
+<dt id="trtoolbox.expfit.Results.data">
+<code class="sig-name descname">data</code><a class="headerlink" href="#trtoolbox.expfit.Results.data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time trace subjected to fitting.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="trtoolbox.expfit.Results.time">
+<code class="sig-name descname">time</code><a class="headerlink" href="#trtoolbox.expfit.Results.time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time array</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="trtoolbox.expfit.Results.tcs">
+<code class="sig-name descname">tcs</code><a class="headerlink" href="#trtoolbox.expfit.Results.tcs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time constants</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="trtoolbox.expfit.Results.pre">
+<code class="sig-name descname">pre</code><a class="headerlink" href="#trtoolbox.expfit.Results.pre" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prefactors</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="trtoolbox.expfit.Results.var">
+<code class="sig-name descname">var</code><a class="headerlink" href="#trtoolbox.expfit.Results.var" title="Permalink to this definition">¶</a></dt>
+<dd><p>Variance of tcs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="trtoolbox.expfit.Results.traces">
+<code class="sig-name descname">traces</code><a class="headerlink" href="#trtoolbox.expfit.Results.traces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Individual expontential fit traces</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="trtoolbox.expfit.Results.fit">
+<code class="sig-name descname">fit</code><a class="headerlink" href="#trtoolbox.expfit.Results.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fitted time trace</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="trtoolbox.expfit.Results.create_traces">
+<code class="sig-name descname">create_traces</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/expfit.html#Results.create_traces"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.expfit.Results.create_traces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates individual exponential traces</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="trtoolbox.expfit.Results.plot_result">
+<code class="sig-name descname">plot_result</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/expfit.html#Results.plot_result"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.expfit.Results.plot_result" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots result.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="trtoolbox.expfit.Results.plot_result_traces">
+<code class="sig-name descname">plot_result_traces</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/expfit.html#Results.plot_result_traces"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.expfit.Results.plot_result_traces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots individual exponential traces.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="trtoolbox.expfit.calculate_sigma">
+<code class="sig-prename descclassname">trtoolbox.expfit.</code><code class="sig-name descname">calculate_sigma</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">res</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/expfit.html#calculate_sigma"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.expfit.calculate_sigma" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the variance of the optimized parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>res</strong> (<em>scipy.optimize.OptimizeResult</em>) – Results object obtained with least squares.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>var</strong> – Variance of the parameters.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="trtoolbox.expfit.create_tr">
+<code class="sig-prename descclassname">trtoolbox.expfit.</code><code class="sig-name descname">create_tr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pre</span></em>, <em class="sig-param"><span class="n">tcs</span></em>, <em class="sig-param"><span class="n">time</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/expfit.html#create_tr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.expfit.create_tr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates fitted time trace</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pre</strong> (<em>np.array</em>) – Prefactors</p></li>
+<li><p><strong>tcs</strong> (<em>np.array</em>) – Time constants</p></li>
+<li><p><strong>time</strong> (<em>np.array</em>) – Time array</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>tr</strong> – Fitted time trace</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="trtoolbox.expfit.dofit">
+<code class="sig-prename descclassname">trtoolbox.expfit.</code><code class="sig-name descname">dofit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">init</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/expfit.html#dofit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.expfit.dofit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do exponential fitting</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>np.array</em>) – Time trace subjected to fitting</p></li>
+<li><p><strong>time</strong> (<em>np.array</em>) – Time array</p></li>
+<li><p><strong>init</strong> (<em>np.array</em>) – Initial guesses. Prefactors first column, time constants second</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>res</strong> – Results object</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>self.Results()</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="trtoolbox.expfit.opt_func">
+<code class="sig-prename descclassname">trtoolbox.expfit.</code><code class="sig-name descname">opt_func</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pre_plus_tcs</span></em>, <em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">time</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/expfit.html#opt_func"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.expfit.opt_func" title="Permalink to this definition">¶</a></dt>
+<dd><p>Optimization function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pre_plus_tcs</strong> (<em>np.array</em>) – Prefactors first column, time constants second</p></li>
+<li><p><strong>data</strong> (<em>np.array</em>) – Time trace subjected to fitting</p></li>
+<li><p><strong>time</strong> (<em>np.array</em>) – Time array</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>r</strong> – Residuals</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 <div class="section" id="module-trtoolbox.globalanalysis">
 <span id="trtoolbox-globalanalysis-module"></span><h2>trtoolbox.globalanalysis module<a class="headerlink" href="#module-trtoolbox.globalanalysis" title="Permalink to this headline">¶</a></h2>

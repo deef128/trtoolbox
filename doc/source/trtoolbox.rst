@@ -4,6 +4,14 @@ trtoolbox package
 Submodules
 ----------
 
+trtoolbox.expfit module
+-----------------------
+
+.. automodule:: trtoolbox.expfit
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 trtoolbox.globalanalysis module
 -------------------------------
 

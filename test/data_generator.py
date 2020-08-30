@@ -127,7 +127,6 @@ class DataGenerator:
                     pos = abs(num_peaks[p, i])
                     if pos == 0:
                         continue
-                    sc = 1
                     width = int(avg_width)
                     gaus = signal.gaussian(
                         width,
@@ -141,7 +140,8 @@ class DataGenerator:
                         pre = 1
                     sc = 1
                     index_pos = np.argmin(abs(self.wn - pos))
-                    das[index_pos-width//2:index_pos+width//2] = das[index_pos-width//2:index_pos+width//2] + pre*gaus*sc
+                    das[index_pos-width//2:index_pos+width//2] \
+                    = das[index_pos-width//2:index_pos+width//2] + pre*gaus*sc
                 self.sas[:, i] = das.T
 
     def gen_tcs(self, tcs=[-1, -1, -1], style='seq'):
@@ -208,7 +208,7 @@ class DataGenerator:
             wnlimit=[1500, 1700],
             wnstep=-1,
             tcs=[-1, -1, -1],
-            kamtrix=None,
+            kmatrix=None,
             num_peaks=1,
             avg_width=float(30),
             avg_std=float(5),
@@ -240,6 +240,8 @@ class DataGenerator:
         tcs : list or int
             List of tcs. -1 is placeholder for random tcs. Number of
             generated tcs can be specified if tcs is an integer.
+        kmatrix : np.array
+            K-matrix
         style : str
             Determines the conctruction of the model ('dec', 'seq, 'back')
         noise : bool
@@ -256,7 +258,7 @@ class DataGenerator:
         self.gen_wn(wnlimit, wnstep)
         self.gen_sas(num_das, num_peaks, avg_width, avg_std, diff=diff)
         self.gen_tcs(tcs, style)
-        self.gen_data_sas(kamtrix)
+        self.gen_data_sas(kmatrix)
         if noise is True:
             self.data = self.data + \
                 nrand.normal(0, scale=noise_scale, size=self.data.shape)
