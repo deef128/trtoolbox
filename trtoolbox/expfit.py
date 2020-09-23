@@ -1,3 +1,5 @@
+# TODO: check variance
+
 import numpy as np
 from scipy.optimize import least_squares
 import matplotlib.pyplot as plt
@@ -34,6 +36,13 @@ class Results:
         self.create_traces()
         self.fit = create_tr(self.pre, self.tcs, self.time)
 
+    def print_results(self):
+        """ Prints time constants.
+        """
+        print('Obtained time constants:')
+        for i, tc in enumerate(self.tcs):
+            print('%i. %e' % (i+1, tc))
+
     def create_traces(self):
         """ Creates individual exponential traces
         """
@@ -41,23 +50,23 @@ class Results:
         for i, tc in enumerate(self.tcs):
             self.traces[i, :] = self.pre[i] * np.exp(-1/tc * self.time)
 
-    # TODO: markersize
-    def plot_result_traces(self):
+    def plot_results_traces(self):
         """ Plots individual exponential traces.
         """
 
         plt.figure()
-        plt.plot(self.time, self.data, 'o-')
+        plt.plot(self.time, self.data, 'o-', markersize=0.5)
         for tr in self.traces:
             plt.plot(self.time, tr)
         plt.xscale('log')
 
-    def plot_result(self):
+    def plot_results(self):
         """ Plots result.
         """
 
+        self.print_results()
         plt.figure()
-        plt.plot(self.time, self.data, 'o-')
+        plt.plot(self.time, self.data, 'o', markersize=2)
         plt.plot(self.time, self.fit)
         plt.xscale('log')
 

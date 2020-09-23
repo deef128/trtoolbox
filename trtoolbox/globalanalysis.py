@@ -1,6 +1,7 @@
 # TODO: fix ks in case of species branching
 # TODO: rate branching
 # TODO: still overflow --> laplace transforms
+# TODO: check variance
 
 import os
 import scipy.special as scsp
@@ -351,7 +352,7 @@ class RateConstants:
     alphas : np.array
         Defines starting population ratio of 'custom' is choosen
     var : np.array
-        Variance of the fit.
+        Variance of the fit (time constants).
     """
 
     def __init__(self, ks):
@@ -954,7 +955,7 @@ def doglobalanalysis(
     if rate_constants.style in ['dec', 'seq']:
         var = calculate_sigma(res)
         if method == 'svd':
-            var = var[svds::svds + 1]
+            var = var[0::svds + 1]
         gf_res.rate_constants.var = 1/var
     else:
         gf_res.rate_constants.var = []
