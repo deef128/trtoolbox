@@ -1,4 +1,4 @@
-# TODO: check variance
+# TODO: overflow
 
 import numpy as np
 from scipy.optimize import least_squares
@@ -31,7 +31,7 @@ class Results:
         self.time = time
         self.tcs = tcs
         self.pre = pre
-        self.var = None
+        self.err = None
         self.traces = np.zeros((self.tcs.size, self.time.size))
         self.create_traces()
         self.fit = create_tr(self.pre, self.tcs, self.time)
@@ -41,7 +41,7 @@ class Results:
         """
         print('Obtained time constants:')
         for i, tc in enumerate(self.tcs):
-            print('%i. %e' % (i+1, tc))
+            print('%i. %e with a standard error of %e' % (i+1, tc, self.err[i]))
 
     def create_traces(self):
         """ Creates individual exponential traces
@@ -71,7 +71,6 @@ class Results:
         plt.xscale('log')
 
 
-# TODO: overflow
 def create_tr(pre, tcs, time):
     """ Creates fitted time trace
 
@@ -90,9 +89,14 @@ def create_tr(pre, tcs, time):
         Fitted time trace
     """
 
+    old_settings = np.seterr(all='ignore')
+
     tr = np.zeros(time.size)
     for ele in zip(pre, tcs):
         tr = tr + ele[0]*np.exp(-1/ele[1] * time)
+
+    np.seterr(**old_settings)
+
     return tr
 
 
@@ -122,24 +126,31 @@ def opt_func(pre_plus_tcs, data, time):
     return r.flatten()
 
 
-def calculate_sigma(res):
-    """ Returns the variance of the optimized parameters.
+def calculate_error(res, data):
+    """ Returns the standard error of the optimized parameters.
 
     Parameters
     ----------
     res : scipy.optimize.OptimizeResult
         Results object obtained with least squares.
+    data : np.array
+        Data matrix.
 
     Returns
     -------
-    var : np.array
-        Variance of the parameters.
+    perr : np.array
+        Standard error of the parameters.
     """
 
     j = res.jac
+    cost = 2 * res.cost  # res.cost is half sum of squares!
+    s_sq = cost / (data.size - res.x.size)
+
     cov = np.linalg.inv(j.T.dot(j))
-    var = np.sqrt(np.diagonal(cov))
-    return var
+    cov = cov * s_sq
+    perr = np.sqrt(np.diag(cov))
+
+    return perr
 
 
 def dofit(data, time, init):
@@ -163,7 +174,7 @@ def dofit(data, time, init):
     fitres = least_squares(opt_func, init.flatten(), args=(data, time))
     x = fitres.x.reshape(init.shape)
     res = Results(x[:, 0], x[:, 1], time)
-    var = calculate_sigma(fitres)
-    res.var = var.reshape(init.shape)[:, 1]
+    err = calculate_error(fitres, data)
+    res.err = err.reshape(init.shape)[:, 1]
     res.data = data
     return res

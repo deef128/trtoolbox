@@ -1,7 +1,7 @@
 # TODO: fix ks in case of species branching
 # TODO: rate branching
 # TODO: still overflow --> laplace transforms
-# TODO: check variance
+# TODO: different results on desktop & laptop (nmr3)
 
 import os
 import scipy.special as scsp
@@ -102,8 +102,8 @@ class Results:
         print('Obtained time constants:')
         if self.rate_constants.style in ['dec', 'seq']:
             for i in range(tcs.shape[0]):
-                print('%i. %e with variance of %e'
-                      % (i+1, tcs[i, 0], self.rate_constants.var[i]))
+                print('%i. %e with a standard error of %e'
+                      % (i+1, tcs[i, 0], self.rate_constants.tcs_err[i]))
         elif self.rate_constants.style == 'back':
             for i in range(tcs.shape[0]):
                 print('%i. forward: %e, backward: %e'
@@ -351,8 +351,10 @@ class RateConstants:
         'custom': custom k-matrix
     alphas : np.array
         Defines starting population ratio of 'custom' is choosen
-    var : np.array
-        Variance of the fit (time constants).
+    ks_err : np.array
+        Standard error of the fit (rate constants).
+    tcs_err : np.array
+        Standard error of the fit (time constants).
     """
 
     def __init__(self, ks):
@@ -364,7 +366,8 @@ class RateConstants:
         self.kmatrix = None
         self.style = None
         self.alphas = None
-        self.var = np.array([])
+        self.ks_err = np.array([])
+        self.tcs_err = np.array([])
 
     def set_ks(self, ks):
         """ Sets ks and also tcs accordingly.
@@ -770,24 +773,41 @@ def opt_func_svd(pars, rate_constants, time, svdtraces):
     return r.flatten()
 
 
-def calculate_sigma(res):
-    """ Returns the variance of the optimized parameters.
+def calculate_error(res, data):
+    """ Returns the standard error of the optimized parameters.
 
     Parameters
     ----------
     res : scipy.optimize.OptimizeResult
         Results object obtained with least squares.
+    data : np.array
+        Data matrix.
 
     Returns
     -------
-    var : np.array
-        Variance of the parameters.
+    perr : np.array
+        Standard error of the parameters.
     """
 
     j = res.jac
+    cost = 2 * res.cost  # res.cost is half sum of squares!
+    s_sq = cost / (data.size - res.x.size)
+    # s_sq = np.var(data - fitdata)
+
     cov = np.linalg.inv(j.T.dot(j))
-    var = np.sqrt(np.diagonal(cov))
-    return var
+    cov = cov * s_sq
+    perr = np.sqrt(np.diag(cov))
+
+    # Do Moore-Penrose inverse discarding zero singular values.
+    # _, s, VT = svd(res.jac, full_matrices=False)
+    # threshold = np.finfo(float).eps * max(res.jac.shape) * s[0]
+    # s = s[s > threshold]
+    # VT = VT[:s.size]
+    # pcov = np.dot(VT.T / s ** 2, VT)
+    # pcov = pcov * s_sq
+    # perr = np.sqrt(np.diag(pcov))
+
+    return perr
 
 
 def calc_r2(data, res):
@@ -952,14 +972,16 @@ def doglobalanalysis(
     gf_res.time = time
     gf_res.wn = wn
     gf_res.rate_constants = rate_constants
-    if rate_constants.style in ['dec', 'seq']:
-        var = calculate_sigma(res)
-        if method == 'svd':
-            var = var[0::svds + 1]
-        gf_res.rate_constants.var = 1/var
-    else:
-        gf_res.rate_constants.var = []
     gf_res.fitdata = calculate_fitdata(rate_constants, time, data)
+    if rate_constants.style in ['dec', 'seq']:
+        perr = calculate_error(res, data)
+        if method == 'svd':
+            perr = perr[0::svds + 1]
+        gf_res.rate_constants.ks_err = perr
+        gf_res.rate_constants.tcs_err = np.abs(1/(rate_constants.ks[:, 0] + perr) - 1/rate_constants.ks[:, 0])
+    else:
+        gf_res.rate_constants.ks_err = []
+        gf_res.rate_constants.tcs_err = []
     gf_res.method = method
     gf_res.profile = create_profile(time, rate_constants)
     gf_res.artefact = artefact
