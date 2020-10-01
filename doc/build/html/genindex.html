@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,12 +11,18 @@
   
 
   
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -30,10 +35,6 @@
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="#" />
     <link rel="search" title="Search" href="search.html" /> 
 </head>
@@ -49,7 +50,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> Time-Resolved Toolbox
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> Time-Resolved Toolbox
           
 
           
@@ -72,6 +73,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -93,6 +95,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -131,7 +134,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>Index</li>
     
@@ -224,16 +227,16 @@
 </li>
       <li><a href="trtoolbox.html#trtoolbox.globalanalysis.calc_r2">calc_r2() (in module trtoolbox.globalanalysis)</a>
 </li>
+      <li><a href="trtoolbox.html#trtoolbox.expfit.calculate_error">calculate_error() (in module trtoolbox.expfit)</a>
+
+      <ul>
+        <li><a href="trtoolbox.html#trtoolbox.globalanalysis.calculate_error">(in module trtoolbox.globalanalysis)</a>
+</li>
+      </ul></li>
       <li><a href="trtoolbox.html#trtoolbox.globalanalysis.calculate_estimate">calculate_estimate() (in module trtoolbox.globalanalysis)</a>
 </li>
       <li><a href="trtoolbox.html#trtoolbox.globalanalysis.calculate_fitdata">calculate_fitdata() (in module trtoolbox.globalanalysis)</a>
 </li>
-      <li><a href="trtoolbox.html#trtoolbox.expfit.calculate_sigma">calculate_sigma() (in module trtoolbox.expfit)</a>
-
-      <ul>
-        <li><a href="trtoolbox.html#trtoolbox.globalanalysis.calculate_sigma">(in module trtoolbox.globalanalysis)</a>
-</li>
-      </ul></li>
       <li><a href="trtoolbox.html#trtoolbox.globalanalysis.check_input">check_input() (in module trtoolbox.globalanalysis)</a>
 
       <ul>
@@ -242,8 +245,6 @@
         <li><a href="trtoolbox.html#trtoolbox.svd.check_input">(in module trtoolbox.svd)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="trtoolbox.html#trtoolbox.globalanalysis.Results.clean">clean() (trtoolbox.globalanalysis.Results method)</a>
 
       <ul>
@@ -252,6 +253,8 @@
         <li><a href="trtoolbox.html#trtoolbox.svd.Results.clean">(trtoolbox.svd.Results method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="trtoolbox.html#trtoolbox.globalanalysis.convert_tcs">convert_tcs() (in module trtoolbox.globalanalysis)</a>
 </li>
       <li><a href="trtoolbox.html#trtoolbox.globalanalysis.RateConstants.create_kmatrix">create_kmatrix() (trtoolbox.globalanalysis.RateConstants method)</a>
@@ -259,11 +262,11 @@
       <li><a href="trtoolbox.html#trtoolbox.globalanalysis.create_profile">create_profile() (in module trtoolbox.globalanalysis)</a>
 </li>
       <li><a href="trtoolbox.html#trtoolbox.expfit.create_tr">create_tr() (in module trtoolbox.expfit)</a>
-
-      <ul>
-        <li><a href="trtoolbox.html#trtoolbox.globalanalysis.create_tr">(in module trtoolbox.globalanalysis)</a>
 </li>
-      </ul></li>
+      <li><a href="trtoolbox.html#trtoolbox.globalanalysis.create_tr_expfit">create_tr_expfit() (in module trtoolbox.globalanalysis)</a>
+</li>
+      <li><a href="trtoolbox.html#trtoolbox.globalanalysis.create_tr_odeint">create_tr_odeint() (in module trtoolbox.globalanalysis)</a>
+</li>
       <li><a href="trtoolbox.html#trtoolbox.expfit.Results.create_traces">create_traces() (trtoolbox.expfit.Results method)</a>
 </li>
       <li><a href="trtoolbox.html#trtoolbox.globalanalysis.create_xas">create_xas() (in module trtoolbox.globalanalysis)</a>
@@ -376,11 +379,13 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="trtoolbox.html#trtoolbox.lda.Results.k">k (trtoolbox.lda.Results attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="trtoolbox.html#trtoolbox.globalanalysis.RateConstants.kmatrix">kmatrix (trtoolbox.globalanalysis.RateConstants attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="trtoolbox.html#trtoolbox.globalanalysis.RateConstants.ks">ks (trtoolbox.globalanalysis.RateConstants attribute)</a>
+</li>
+      <li><a href="trtoolbox.html#trtoolbox.globalanalysis.RateConstants.ks_err">ks_err (trtoolbox.globalanalysis.RateConstants attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -511,18 +516,18 @@
 </li>
       <li><a href="trtoolbox.html#trtoolbox.globalanalysis.Results.plot_profile">plot_profile() (trtoolbox.globalanalysis.Results method)</a>
 </li>
-      <li><a href="trtoolbox.html#trtoolbox.expfit.Results.plot_result">plot_result() (trtoolbox.expfit.Results method)</a>
-</li>
-      <li><a href="trtoolbox.html#trtoolbox.expfit.Results.plot_result_traces">plot_result_traces() (trtoolbox.expfit.Results method)</a>
-</li>
-      <li><a href="trtoolbox.html#trtoolbox.globalanalysis.Results.plot_results">plot_results() (trtoolbox.globalanalysis.Results method)</a>
+      <li><a href="trtoolbox.html#trtoolbox.expfit.Results.plot_results">plot_results() (trtoolbox.expfit.Results method)</a>
 
       <ul>
+        <li><a href="trtoolbox.html#trtoolbox.globalanalysis.Results.plot_results">(trtoolbox.globalanalysis.Results method)</a>
+</li>
         <li><a href="trtoolbox.html#trtoolbox.lda.Results.plot_results">(trtoolbox.lda.Results method)</a>
 </li>
         <li><a href="trtoolbox.html#trtoolbox.svd.Results.plot_results">(trtoolbox.svd.Results method)</a>
 </li>
       </ul></li>
+      <li><a href="trtoolbox.html#trtoolbox.expfit.Results.plot_results_traces">plot_results_traces() (trtoolbox.expfit.Results method)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="trtoolbox.html#trtoolbox.lda.Results.plot_solutionvector">plot_solutionvector() (trtoolbox.lda.Results method)</a>
@@ -563,8 +568,12 @@
 </li>
       <li><a href="trtoolbox.html#trtoolbox.expfit.Results.pre">pre (trtoolbox.expfit.Results attribute)</a>
 </li>
-      <li><a href="trtoolbox.html#trtoolbox.globalanalysis.Results.print_results">print_results() (trtoolbox.globalanalysis.Results method)</a>
+      <li><a href="trtoolbox.html#trtoolbox.expfit.Results.print_results">print_results() (trtoolbox.expfit.Results method)</a>
+
+      <ul>
+        <li><a href="trtoolbox.html#trtoolbox.globalanalysis.Results.print_results">(trtoolbox.globalanalysis.Results method)</a>
 </li>
+      </ul></li>
       <li><a href="trtoolbox.html#trtoolbox.globalanalysis.Results.profile">profile (trtoolbox.globalanalysis.Results attribute)</a>
 </li>
   </ul></td>
@@ -644,6 +653,8 @@
 </li>
       </ul></li>
       <li><a href="trtoolbox.html#trtoolbox.globalanalysis.Results.tcs">tcs() (trtoolbox.globalanalysis.Results property)</a>
+</li>
+      <li><a href="trtoolbox.html#trtoolbox.globalanalysis.RateConstants.tcs_err">tcs_err (trtoolbox.globalanalysis.RateConstants attribute)</a>
 </li>
       <li><a href="trtoolbox.html#trtoolbox.lda.tik">tik() (in module trtoolbox.lda)</a>
 </li>
@@ -746,11 +757,7 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="trtoolbox.html#trtoolbox.expfit.Results.var">var (trtoolbox.expfit.Results attribute)</a>
-
-      <ul>
-        <li><a href="trtoolbox.html#trtoolbox.globalanalysis.RateConstants.var">(trtoolbox.globalanalysis.RateConstants attribute)</a>
 </li>
-      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="trtoolbox.html#trtoolbox.svd.Results.vt">vt (trtoolbox.svd.Results attribute)</a>
@@ -816,11 +823,19 @@
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2020, David Ehrenberg
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -831,7 +846,6 @@
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

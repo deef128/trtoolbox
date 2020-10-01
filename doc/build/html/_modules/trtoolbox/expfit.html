@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,12 +11,18 @@
   
 
   
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -30,10 +35,6 @@
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
@@ -49,7 +50,7 @@
           
 
           
-            <a href="../../index.html" class="icon icon-home"> Time-Resolved Toolbox
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> Time-Resolved Toolbox
           
 
           
@@ -72,6 +73,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -93,6 +95,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -131,7 +134,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
@@ -151,7 +154,9 @@
            <div itemprop="articleBody">
             
   <h1>Source code for trtoolbox.expfit</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span></span><span class="c1"># TODO: overflow</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">least_squares</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
@@ -182,10 +187,17 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">time</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tcs</span> <span class="o">=</span> <span class="n">tcs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pre</span> <span class="o">=</span> <span class="n">pre</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">var</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">err</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">traces</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">tcs</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">size</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">create_traces</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fit</span> <span class="o">=</span> <span class="n">create_tr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pre</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tcs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Results.print_results"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.expfit.Results.print_results">[docs]</a>    <span class="k">def</span> <span class="nf">print_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Prints time constants.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Obtained time constants:&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">tc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tcs</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%i</span><span class="s1">. </span><span class="si">%e</span><span class="s1"> with a standard error of </span><span class="si">%e</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">tc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">err</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span></div>
 
 <div class="viewcode-block" id="Results.create_traces"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.expfit.Results.create_traces">[docs]</a>    <span class="k">def</span> <span class="nf">create_traces</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Creates individual exponential traces</span>
@@ -194,28 +206,27 @@
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">tc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tcs</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">traces</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pre</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="n">tc</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">)</span></div>
 
-    <span class="c1"># TODO: markersize</span>
-<div class="viewcode-block" id="Results.plot_result_traces"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.expfit.Results.plot_result_traces">[docs]</a>    <span class="k">def</span> <span class="nf">plot_result_traces</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Results.plot_results_traces"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.expfit.Results.plot_results_traces">[docs]</a>    <span class="k">def</span> <span class="nf">plot_results_traces</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Plots individual exponential traces.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;o-&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;o-&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">tr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">traces</span><span class="p">:</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="n">tr</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Results.plot_result"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.expfit.Results.plot_result">[docs]</a>    <span class="k">def</span> <span class="nf">plot_result</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Results.plot_results"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.expfit.Results.plot_results">[docs]</a>    <span class="k">def</span> <span class="nf">plot_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Plots result.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_results</span><span class="p">()</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;o-&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span></div></div>
 
 
-<span class="c1"># TODO: overflow</span>
 <div class="viewcode-block" id="create_tr"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.expfit.create_tr">[docs]</a><span class="k">def</span> <span class="nf">create_tr</span><span class="p">(</span><span class="n">pre</span><span class="p">,</span> <span class="n">tcs</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Creates fitted time trace</span>
 
@@ -234,9 +245,14 @@
 <span class="sd">        Fitted time trace</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="n">old_settings</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">seterr</span><span class="p">(</span><span class="nb">all</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+
     <span class="n">tr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">ele</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">pre</span><span class="p">,</span> <span class="n">tcs</span><span class="p">):</span>
         <span class="n">tr</span> <span class="o">=</span> <span class="n">tr</span> <span class="o">+</span> <span class="n">ele</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="n">ele</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">time</span><span class="p">)</span>
+
+    <span class="n">np</span><span class="o">.</span><span class="n">seterr</span><span class="p">(</span><span class="o">**</span><span class="n">old_settings</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">tr</span></div>
 
 
@@ -266,24 +282,31 @@
     <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="calculate_sigma"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.expfit.calculate_sigma">[docs]</a><span class="k">def</span> <span class="nf">calculate_sigma</span><span class="p">(</span><span class="n">res</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Returns the variance of the optimized parameters.</span>
+<div class="viewcode-block" id="calculate_error"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.expfit.calculate_error">[docs]</a><span class="k">def</span> <span class="nf">calculate_error</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Returns the standard error of the optimized parameters.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    res : scipy.optimize.OptimizeResult</span>
 <span class="sd">        Results object obtained with least squares.</span>
+<span class="sd">    data : np.array</span>
+<span class="sd">        Data matrix.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    var : np.array</span>
-<span class="sd">        Variance of the parameters.</span>
+<span class="sd">    perr : np.array</span>
+<span class="sd">        Standard error of the parameters.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">j</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">jac</span>
+    <span class="n">cost</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">res</span><span class="o">.</span><span class="n">cost</span>  <span class="c1"># res.cost is half sum of squares!</span>
+    <span class="n">s_sq</span> <span class="o">=</span> <span class="n">cost</span> <span class="o">/</span> <span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+
     <span class="n">cov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">j</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">j</span><span class="p">))</span>
-    <span class="n">var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diagonal</span><span class="p">(</span><span class="n">cov</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">var</span></div>
+    <span class="n">cov</span> <span class="o">=</span> <span class="n">cov</span> <span class="o">*</span> <span class="n">s_sq</span>
+    <span class="n">perr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">cov</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">perr</span></div>
 
 
 <div class="viewcode-block" id="dofit"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.expfit.dofit">[docs]</a><span class="k">def</span> <span class="nf">dofit</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">init</span><span class="p">):</span>
@@ -307,8 +330,8 @@
     <span class="n">fitres</span> <span class="o">=</span> <span class="n">least_squares</span><span class="p">(</span><span class="n">opt_func</span><span class="p">,</span> <span class="n">init</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">time</span><span class="p">))</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">fitres</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">init</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
     <span class="n">res</span> <span class="o">=</span> <span class="n">Results</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">time</span><span class="p">)</span>
-    <span class="n">var</span> <span class="o">=</span> <span class="n">calculate_sigma</span><span class="p">(</span><span class="n">fitres</span><span class="p">)</span>
-    <span class="n">res</span><span class="o">.</span><span class="n">var</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">init</span><span class="o">.</span><span class="n">shape</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">err</span> <span class="o">=</span> <span class="n">calculate_error</span><span class="p">(</span><span class="n">fitres</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">err</span> <span class="o">=</span> <span class="n">err</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">init</span><span class="o">.</span><span class="n">shape</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span>
     <span class="n">res</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
     <span class="k">return</span> <span class="n">res</span></div>
 </pre></div>
@@ -323,11 +346,19 @@
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2020, David Ehrenberg
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -338,7 +369,6 @@
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

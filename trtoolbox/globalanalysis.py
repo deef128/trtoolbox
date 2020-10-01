@@ -1,7 +1,5 @@
 # TODO: fix ks in case of species branching
 # TODO: rate branching
-# TODO: still overflow --> laplace transforms
-# TODO: different results on desktop & laptop (nmr3)
 
 import os
 import scipy.special as scsp
@@ -205,7 +203,7 @@ class Results:
         self.plot_xas()
         self.plot_fitdata()
 
-        if self.method == 'svd':
+        if 'svd' in self.method:
             title = 'Abstract time traces'
             nb_svds = np.shape(self.svdtraces)[0]
             nb_plots = nb_svds
@@ -868,7 +866,7 @@ def doglobalanalysis(
         time,
         wn,
         tcs,
-        method='svd',
+        method='svd_expfit',
         svds=5,
         offset=False,
         offindex=-1,
@@ -894,7 +892,8 @@ def doglobalanalysis(
         *raw* for fitting the residuals of fitted data and input data,
         *est* for fitting the residuals between concentration profile
         and contributions of DAS,
-        *svd* for fitting the SVD time traces (default).
+        *svd_odeint* for fitting the SVD time traces with odeint function.
+        *svd_expfit for fitting the SVD time traces with expfit module (default).
     svds : int
         Number of SVD components to be fitted. Default: 5.
     offset : boolean
@@ -973,14 +972,30 @@ def doglobalanalysis(
             )
 
     elif 'svd' in method:
-        if method == 'svd_expfit':
+        if method == 'svd_odeint':
             pass
         else:
-            method = 'svd_odeint'
+            method = 'svd_expfit'  # standard method with expfit
+
+        svdlist = []
+        if type(svds) == int:
+            svdlist = list(range(svds))
+        elif type(svds) == list:
+            svds = np.array(svds)
+            svdlist = svds - 1
+        elif type(svds) == np.ndarray:
+            svdlist = svds - 1
+        svds = len(svdlist)
+
+        if any(i < 0 for i in svdlist) is True:
+            raise ValueError('Please chose just positive singular values')
+        if len(set(svdlist)) != len(svdlist):
+            raise ValueError('Please choose different singular values.')
+
         u, s, vt = mysvd.wrapper_svd(data)
         sigma = np.zeros((u.shape[0], vt.shape[0]))
         sigma[:s.shape[0], :s.shape[0]] = np.diag(s)
-        svdtraces = sigma[0:svds, :].dot(vt)
+        svdtraces = sigma[svdlist, :].dot(vt)
 
         pars = np.empty((rate_constants.nb_exps[0], svds))
         pars[:, 0:svds] = np.ones((svds,)) * np.max(svdtraces)/2
@@ -1026,10 +1041,13 @@ def doglobalanalysis(
     gf_res.xas = create_xas(gf_res.profile, data)
     gf_res.estimates = calculate_estimate(gf_res.xas, data)
     gf_res.r2 = calc_r2(data, res)
-    if method == 'svd':
+    if 'svd' in method:
         gf_res.svdtraces = svdtraces
         gf_res.pre = pars[:, nb_exps[1]:]
-        gf_res.fittraces = create_tr_odeint(rate_constants, gf_res.pre, time).T
+        if method == 'svd_odeint':
+            gf_res.fittraces = create_tr_odeint(rate_constants, gf_res.pre, time).T
+        elif method == 'svd_expfit':
+            gf_res.fittraces = create_tr_expfit(rate_constants, gf_res.pre, time).T
 
     gf_res.print_results()
     print('With a R^2 of %.2f%%' % gf_res.r2)

@@ -1,4 +1,4 @@
-# TODO: overflow
+# TODO: sometimes overflow --> laplace transforms?
 
 import numpy as np
 from scipy.optimize import least_squares

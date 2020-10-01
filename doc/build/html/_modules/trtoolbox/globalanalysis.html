@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,12 +11,18 @@
   
 
   
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -30,10 +35,6 @@
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
@@ -49,7 +50,7 @@
           
 
           
-            <a href="../../index.html" class="icon icon-home"> Time-Resolved Toolbox
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> Time-Resolved Toolbox
           
 
           
@@ -72,6 +73,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -93,6 +95,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -131,7 +134,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
@@ -154,6 +157,7 @@
 <span></span><span class="c1"># TODO: fix ks in case of species branching</span>
 <span class="c1"># TODO: rate branching</span>
 <span class="c1"># TODO: still overflow --&gt; laplace transforms</span>
+<span class="c1"># TODO: different results on desktop &amp; laptop (nmr3)</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">scipy.special</span> <span class="k">as</span> <span class="nn">scsp</span>
@@ -164,6 +168,7 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">trtoolbox.svd</span> <span class="k">as</span> <span class="nn">mysvd</span>
+<span class="kn">import</span> <span class="nn">trtoolbox.expfit</span> <span class="k">as</span> <span class="nn">myexpfit</span>
 <span class="kn">from</span> <span class="nn">trtoolbox.plothelper</span> <span class="kn">import</span> <span class="n">PlotHelper</span>
 
 
@@ -254,8 +259,8 @@
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Obtained time constants:&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rate_constants</span><span class="o">.</span><span class="n">style</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;dec&#39;</span><span class="p">,</span> <span class="s1">&#39;seq&#39;</span><span class="p">]:</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">tcs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%i</span><span class="s1">. </span><span class="si">%e</span><span class="s1"> with variance of </span><span class="si">%e</span><span class="s1">&#39;</span>
-                      <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">tcs</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">rate_constants</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%i</span><span class="s1">. </span><span class="si">%e</span><span class="s1"> with a standard error of </span><span class="si">%e</span><span class="s1">&#39;</span>
+                      <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">tcs</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">rate_constants</span><span class="o">.</span><span class="n">tcs_err</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">rate_constants</span><span class="o">.</span><span class="n">style</span> <span class="o">==</span> <span class="s1">&#39;back&#39;</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">tcs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%i</span><span class="s1">. forward: </span><span class="si">%e</span><span class="s1">, backward: </span><span class="si">%e</span><span class="s1">&#39;</span>
@@ -356,7 +361,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">plot_xas</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">plot_fitdata</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;svd&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">&#39;svd&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span><span class="p">:</span>
             <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Abstract time traces&#39;</span>
             <span class="n">nb_svds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">svdtraces</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">nb_plots</span> <span class="o">=</span> <span class="n">nb_svds</span>
@@ -503,8 +508,10 @@
 <span class="sd">        &#39;custom&#39;: custom k-matrix</span>
 <span class="sd">    alphas : np.array</span>
 <span class="sd">        Defines starting population ratio of &#39;custom&#39; is choosen</span>
-<span class="sd">    var : np.array</span>
-<span class="sd">        Variance of the fit.</span>
+<span class="sd">    ks_err : np.array</span>
+<span class="sd">        Standard error of the fit (rate constants).</span>
+<span class="sd">    tcs_err : np.array</span>
+<span class="sd">        Standard error of the fit (time constants).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ks</span><span class="p">):</span>
@@ -516,7 +523,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">kmatrix</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">style</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">alphas</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ks_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tcs_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
 
 <div class="viewcode-block" id="RateConstants.set_ks"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.globalanalysis.RateConstants.set_ks">[docs]</a>    <span class="k">def</span> <span class="nf">set_ks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ks</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Sets ks and also tcs accordingly.</span>
@@ -744,8 +752,9 @@
     <span class="k">return</span> <span class="n">profile</span></div>
 
 
-<div class="viewcode-block" id="create_tr"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.globalanalysis.create_tr">[docs]</a><span class="k">def</span> <span class="nf">create_tr</span><span class="p">(</span><span class="n">rate_constants</span><span class="p">,</span> <span class="n">pre</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
+<div class="viewcode-block" id="create_tr_odeint"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.globalanalysis.create_tr_odeint">[docs]</a><span class="k">def</span> <span class="nf">create_tr_odeint</span><span class="p">(</span><span class="n">rate_constants</span><span class="p">,</span> <span class="n">pre</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Function returning exponential time traces for a given set of parameters.</span>
+<span class="sd">        Uses odeint function.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -765,6 +774,31 @@
     <span class="n">profile</span> <span class="o">=</span> <span class="n">create_profile</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">rate_constants</span><span class="p">)</span>
     <span class="n">fit_tr</span> <span class="o">=</span> <span class="n">profile</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">pre</span><span class="p">)</span>
 
+    <span class="k">return</span> <span class="n">fit_tr</span></div>
+
+
+<div class="viewcode-block" id="create_tr_expfit"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.globalanalysis.create_tr_expfit">[docs]</a><span class="k">def</span> <span class="nf">create_tr_expfit</span><span class="p">(</span><span class="n">rate_constants</span><span class="p">,</span> <span class="n">pre</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Function returning exponential time traces for a given set of parameters.</span>
+<span class="sd">        Uses expfit module.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        rate_constants : RateConstants</span>
+<span class="sd">            RateConstants object.</span>
+<span class="sd">        pre : np.array</span>
+<span class="sd">            Exponential pre-factors.</span>
+<span class="sd">        time : np.array</span>
+<span class="sd">            Time array.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        profile : np.array</span>
+<span class="sd">            Concentration profile matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+    <span class="n">fit_tr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">time</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">pre</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">pre</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="n">fit_tr</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">myexpfit</span><span class="o">.</span><span class="n">create_tr</span><span class="p">(</span><span class="n">pre</span><span class="p">[:,</span> <span class="n">i</span><span class="p">],</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">rate_constants</span><span class="o">.</span><span class="n">ks</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">fit_tr</span></div>
 
 
@@ -891,7 +925,7 @@
     <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="opt_func_svd"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.globalanalysis.opt_func_svd">[docs]</a><span class="k">def</span> <span class="nf">opt_func_svd</span><span class="p">(</span><span class="n">pars</span><span class="p">,</span> <span class="n">rate_constants</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">svdtraces</span><span class="p">):</span>
+<div class="viewcode-block" id="opt_func_svd"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.globalanalysis.opt_func_svd">[docs]</a><span class="k">def</span> <span class="nf">opt_func_svd</span><span class="p">(</span><span class="n">pars</span><span class="p">,</span> <span class="n">rate_constants</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">svdtraces</span><span class="p">,</span> <span class="n">method</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Optimization function for residuals of SVD</span>
 <span class="sd">        abstract time traces - fitted traces.</span>
 
@@ -918,28 +952,48 @@
     <span class="n">rate_constants</span><span class="o">.</span><span class="n">set_ks</span><span class="p">(</span><span class="n">pars</span><span class="p">[:,</span> <span class="p">:</span><span class="n">nb_exps</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
     <span class="n">pre</span> <span class="o">=</span> <span class="n">pars</span><span class="p">[:,</span> <span class="n">nb_exps</span><span class="p">[</span><span class="mi">1</span><span class="p">]:]</span>
 
-    <span class="n">r</span> <span class="o">=</span> <span class="n">svdtraces</span><span class="o">.</span><span class="n">T</span> <span class="o">-</span> <span class="n">create_tr</span><span class="p">(</span><span class="n">rate_constants</span><span class="p">,</span> <span class="n">pre</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;svd_odeint&#39;</span><span class="p">:</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">svdtraces</span><span class="o">.</span><span class="n">T</span> <span class="o">-</span> <span class="n">create_tr_odeint</span><span class="p">(</span><span class="n">rate_constants</span><span class="p">,</span> <span class="n">pre</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;svd_expfit&#39;</span><span class="p">:</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">svdtraces</span><span class="o">.</span><span class="n">T</span> <span class="o">-</span> <span class="n">create_tr_expfit</span><span class="p">(</span><span class="n">rate_constants</span><span class="p">,</span> <span class="n">pre</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="calculate_sigma"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.globalanalysis.calculate_sigma">[docs]</a><span class="k">def</span> <span class="nf">calculate_sigma</span><span class="p">(</span><span class="n">res</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Returns the variance of the optimized parameters.</span>
+<div class="viewcode-block" id="calculate_error"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.globalanalysis.calculate_error">[docs]</a><span class="k">def</span> <span class="nf">calculate_error</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Returns the standard error of the optimized parameters.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    res : scipy.optimize.OptimizeResult</span>
 <span class="sd">        Results object obtained with least squares.</span>
+<span class="sd">    data : np.array</span>
+<span class="sd">        Data matrix.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    var : np.array</span>
-<span class="sd">        Variance of the parameters.</span>
+<span class="sd">    perr : np.array</span>
+<span class="sd">        Standard error of the parameters.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">j</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">jac</span>
+    <span class="n">cost</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">res</span><span class="o">.</span><span class="n">cost</span>  <span class="c1"># res.cost is half sum of squares!</span>
+    <span class="n">s_sq</span> <span class="o">=</span> <span class="n">cost</span> <span class="o">/</span> <span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+    <span class="c1"># s_sq = np.var(data - fitdata)</span>
+
     <span class="n">cov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">j</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">j</span><span class="p">))</span>
-    <span class="n">var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diagonal</span><span class="p">(</span><span class="n">cov</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">var</span></div>
+    <span class="n">cov</span> <span class="o">=</span> <span class="n">cov</span> <span class="o">*</span> <span class="n">s_sq</span>
+    <span class="n">perr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">cov</span><span class="p">))</span>
+
+    <span class="c1"># Do Moore-Penrose inverse discarding zero singular values.</span>
+    <span class="c1"># _, s, VT = svd(res.jac, full_matrices=False)</span>
+    <span class="c1"># threshold = np.finfo(float).eps * max(res.jac.shape) * s[0]</span>
+    <span class="c1"># s = s[s &gt; threshold]</span>
+    <span class="c1"># VT = VT[:s.size]</span>
+    <span class="c1"># pcov = np.dot(VT.T / s ** 2, VT)</span>
+    <span class="c1"># pcov = pcov * s_sq</span>
+    <span class="c1"># perr = np.sqrt(np.diag(pcov))</span>
+
+    <span class="k">return</span> <span class="n">perr</span></div>
 
 
 <div class="viewcode-block" id="calc_r2"><a class="viewcode-back" href="../../trtoolbox.html#trtoolbox.globalanalysis.calc_r2">[docs]</a><span class="k">def</span> <span class="nf">calc_r2</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">res</span><span class="p">):</span>
@@ -970,7 +1024,7 @@
         <span class="n">time</span><span class="p">,</span>
         <span class="n">wn</span><span class="p">,</span>
         <span class="n">tcs</span><span class="p">,</span>
-        <span class="n">method</span><span class="o">=</span><span class="s1">&#39;svd&#39;</span><span class="p">,</span>
+        <span class="n">method</span><span class="o">=</span><span class="s1">&#39;svd_expfit&#39;</span><span class="p">,</span>
         <span class="n">svds</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
         <span class="n">offset</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">offindex</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
@@ -996,7 +1050,8 @@
 <span class="sd">        *raw* for fitting the residuals of fitted data and input data,</span>
 <span class="sd">        *est* for fitting the residuals between concentration profile</span>
 <span class="sd">        and contributions of DAS,</span>
-<span class="sd">        *svd* for fitting the SVD time traces (default).</span>
+<span class="sd">        *svd_odeint* for fitting the SVD time traces with odeint function.</span>
+<span class="sd">        *svd_expfit for fitting the SVD time traces with expfit module (default).</span>
 <span class="sd">    svds : int</span>
 <span class="sd">        Number of SVD components to be fitted. Default: 5.</span>
 <span class="sd">    offset : boolean</span>
@@ -1074,11 +1129,31 @@
             <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">rate_constants</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
             <span class="p">)</span>
 
-    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;svd&#39;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="s1">&#39;svd&#39;</span> <span class="ow">in</span> <span class="n">method</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;svd_odeint&#39;</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">method</span> <span class="o">=</span> <span class="s1">&#39;svd_expfit&#39;</span>  <span class="c1"># standard method with expfit</span>
+
+        <span class="n">svdlist</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">svds</span><span class="p">)</span> <span class="o">==</span> <span class="nb">int</span><span class="p">:</span>
+            <span class="n">svdlist</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">svds</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">svds</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span><span class="p">:</span>
+            <span class="n">svds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">svds</span><span class="p">)</span>
+            <span class="n">svdlist</span> <span class="o">=</span> <span class="n">svds</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">svds</span><span class="p">)</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+            <span class="n">svdlist</span> <span class="o">=</span> <span class="n">svds</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">svds</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">svdlist</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">svdlist</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Please chose just positive singular values&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">svdlist</span><span class="p">))</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">svdlist</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Please choose different singular values.&#39;</span><span class="p">)</span>
+
         <span class="n">u</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">vt</span> <span class="o">=</span> <span class="n">mysvd</span><span class="o">.</span><span class="n">wrapper_svd</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">u</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vt</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
         <span class="n">sigma</span><span class="p">[:</span><span class="n">s</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">:</span><span class="n">s</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-        <span class="n">svdtraces</span> <span class="o">=</span> <span class="n">sigma</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">svds</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">vt</span><span class="p">)</span>
+        <span class="n">svdtraces</span> <span class="o">=</span> <span class="n">sigma</span><span class="p">[</span><span class="n">svdlist</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">vt</span><span class="p">)</span>
 
         <span class="n">pars</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">rate_constants</span><span class="o">.</span><span class="n">nb_exps</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">svds</span><span class="p">))</span>
         <span class="n">pars</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="n">svds</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">svds</span><span class="p">,))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">svdtraces</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>
@@ -1087,7 +1162,7 @@
         <span class="n">res</span> <span class="o">=</span> <span class="n">least_squares</span><span class="p">(</span>
             <span class="n">opt_func_svd</span><span class="p">,</span>
             <span class="n">pars</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
-            <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">rate_constants</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">svdtraces</span><span class="p">)</span>
+            <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">rate_constants</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">svdtraces</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
         <span class="p">)</span>
 
         <span class="n">nb_exps</span> <span class="o">=</span> <span class="n">rate_constants</span><span class="o">.</span><span class="n">nb_exps</span>
@@ -1104,14 +1179,16 @@
     <span class="n">gf_res</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">time</span>
     <span class="n">gf_res</span><span class="o">.</span><span class="n">wn</span> <span class="o">=</span> <span class="n">wn</span>
     <span class="n">gf_res</span><span class="o">.</span><span class="n">rate_constants</span> <span class="o">=</span> <span class="n">rate_constants</span>
-    <span class="k">if</span> <span class="n">rate_constants</span><span class="o">.</span><span class="n">style</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;dec&#39;</span><span class="p">,</span> <span class="s1">&#39;seq&#39;</span><span class="p">]:</span>
-        <span class="n">var</span> <span class="o">=</span> <span class="n">calculate_sigma</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;svd&#39;</span><span class="p">:</span>
-            <span class="n">var</span> <span class="o">=</span> <span class="n">var</span><span class="p">[</span><span class="n">svds</span><span class="p">::</span><span class="n">svds</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
-        <span class="n">gf_res</span><span class="o">.</span><span class="n">rate_constants</span><span class="o">.</span><span class="n">var</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">var</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">gf_res</span><span class="o">.</span><span class="n">rate_constants</span><span class="o">.</span><span class="n">var</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">gf_res</span><span class="o">.</span><span class="n">fitdata</span> <span class="o">=</span> <span class="n">calculate_fitdata</span><span class="p">(</span><span class="n">rate_constants</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">rate_constants</span><span class="o">.</span><span class="n">style</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;dec&#39;</span><span class="p">,</span> <span class="s1">&#39;seq&#39;</span><span class="p">]:</span>
+        <span class="n">perr</span> <span class="o">=</span> <span class="n">calculate_error</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;svd&#39;</span> <span class="ow">in</span> <span class="n">method</span><span class="p">:</span>
+            <span class="n">perr</span> <span class="o">=</span> <span class="n">perr</span><span class="p">[</span><span class="mi">0</span><span class="p">::</span><span class="n">svds</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">gf_res</span><span class="o">.</span><span class="n">rate_constants</span><span class="o">.</span><span class="n">ks_err</span> <span class="o">=</span> <span class="n">perr</span>
+        <span class="n">gf_res</span><span class="o">.</span><span class="n">rate_constants</span><span class="o">.</span><span class="n">tcs_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="n">rate_constants</span><span class="o">.</span><span class="n">ks</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">perr</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="o">/</span><span class="n">rate_constants</span><span class="o">.</span><span class="n">ks</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">gf_res</span><span class="o">.</span><span class="n">rate_constants</span><span class="o">.</span><span class="n">ks_err</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">gf_res</span><span class="o">.</span><span class="n">rate_constants</span><span class="o">.</span><span class="n">tcs_err</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">gf_res</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="n">method</span>
     <span class="n">gf_res</span><span class="o">.</span><span class="n">profile</span> <span class="o">=</span> <span class="n">create_profile</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">rate_constants</span><span class="p">)</span>
     <span class="n">gf_res</span><span class="o">.</span><span class="n">artefact</span> <span class="o">=</span> <span class="n">artefact</span>
@@ -1122,10 +1199,13 @@
     <span class="n">gf_res</span><span class="o">.</span><span class="n">xas</span> <span class="o">=</span> <span class="n">create_xas</span><span class="p">(</span><span class="n">gf_res</span><span class="o">.</span><span class="n">profile</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
     <span class="n">gf_res</span><span class="o">.</span><span class="n">estimates</span> <span class="o">=</span> <span class="n">calculate_estimate</span><span class="p">(</span><span class="n">gf_res</span><span class="o">.</span><span class="n">xas</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
     <span class="n">gf_res</span><span class="o">.</span><span class="n">r2</span> <span class="o">=</span> <span class="n">calc_r2</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;svd&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s1">&#39;svd&#39;</span> <span class="ow">in</span> <span class="n">method</span><span class="p">:</span>
         <span class="n">gf_res</span><span class="o">.</span><span class="n">svdtraces</span> <span class="o">=</span> <span class="n">svdtraces</span>
         <span class="n">gf_res</span><span class="o">.</span><span class="n">pre</span> <span class="o">=</span> <span class="n">pars</span><span class="p">[:,</span> <span class="n">nb_exps</span><span class="p">[</span><span class="mi">1</span><span class="p">]:]</span>
-        <span class="n">gf_res</span><span class="o">.</span><span class="n">fittraces</span> <span class="o">=</span> <span class="n">create_tr</span><span class="p">(</span><span class="n">rate_constants</span><span class="p">,</span> <span class="n">gf_res</span><span class="o">.</span><span class="n">pre</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;svd_odeint&#39;</span><span class="p">:</span>
+            <span class="n">gf_res</span><span class="o">.</span><span class="n">fittraces</span> <span class="o">=</span> <span class="n">create_tr_odeint</span><span class="p">(</span><span class="n">rate_constants</span><span class="p">,</span> <span class="n">gf_res</span><span class="o">.</span><span class="n">pre</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;svd_expfit&#39;</span><span class="p">:</span>
+            <span class="n">gf_res</span><span class="o">.</span><span class="n">fittraces</span> <span class="o">=</span> <span class="n">create_tr_expfit</span><span class="p">(</span><span class="n">rate_constants</span><span class="p">,</span> <span class="n">gf_res</span><span class="o">.</span><span class="n">pre</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
 
     <span class="n">gf_res</span><span class="o">.</span><span class="n">print_results</span><span class="p">()</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;With a R^2 of </span><span class="si">%.2f%%</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">gf_res</span><span class="o">.</span><span class="n">r2</span><span class="p">)</span>
@@ -1142,11 +1222,19 @@
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2020, David Ehrenberg
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -1157,7 +1245,6 @@
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

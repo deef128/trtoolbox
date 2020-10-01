@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,12 +11,18 @@
   
 
   
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -30,10 +35,6 @@
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="prev" title="trtoolbox" href="modules.html" /> 
@@ -50,7 +51,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> Time-Resolved Toolbox
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> Time-Resolved Toolbox
           
 
           
@@ -73,6 +74,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -106,6 +108,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -144,7 +147,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="modules.html">trtoolbox</a> &raquo;</li>
         
@@ -263,29 +266,38 @@
 </dd></dl>
 
 <dl class="py method">
-<dt id="trtoolbox.expfit.Results.plot_result">
-<code class="sig-name descname">plot_result</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/expfit.html#Results.plot_result"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.expfit.Results.plot_result" title="Permalink to this definition">¶</a></dt>
+<dt id="trtoolbox.expfit.Results.plot_results">
+<code class="sig-name descname">plot_results</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/expfit.html#Results.plot_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.expfit.Results.plot_results" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots result.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="trtoolbox.expfit.Results.plot_result_traces">
-<code class="sig-name descname">plot_result_traces</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/expfit.html#Results.plot_result_traces"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.expfit.Results.plot_result_traces" title="Permalink to this definition">¶</a></dt>
+<dt id="trtoolbox.expfit.Results.plot_results_traces">
+<code class="sig-name descname">plot_results_traces</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/expfit.html#Results.plot_results_traces"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.expfit.Results.plot_results_traces" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots individual exponential traces.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="trtoolbox.expfit.Results.print_results">
+<code class="sig-name descname">print_results</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/expfit.html#Results.print_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.expfit.Results.print_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints time constants.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
-<dt id="trtoolbox.expfit.calculate_sigma">
-<code class="sig-prename descclassname">trtoolbox.expfit.</code><code class="sig-name descname">calculate_sigma</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">res</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/expfit.html#calculate_sigma"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.expfit.calculate_sigma" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the variance of the optimized parameters.</p>
+<dt id="trtoolbox.expfit.calculate_error">
+<code class="sig-prename descclassname">trtoolbox.expfit.</code><code class="sig-name descname">calculate_error</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">res</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/expfit.html#calculate_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.expfit.calculate_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the standard error of the optimized parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>res</strong> (<em>scipy.optimize.OptimizeResult</em>) – Results object obtained with least squares.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>res</strong> (<em>scipy.optimize.OptimizeResult</em>) – Results object obtained with least squares.</p></li>
+<li><p><strong>data</strong> (<em>np.array</em>) – Data matrix.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>var</strong> – Variance of the parameters.</p>
+<dd class="field-even"><p><strong>perr</strong> – Standard error of the parameters.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>np.array</p>
@@ -435,9 +447,20 @@
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="trtoolbox.globalanalysis.RateConstants.var">
-<code class="sig-name descname">var</code><a class="headerlink" href="#trtoolbox.globalanalysis.RateConstants.var" title="Permalink to this definition">¶</a></dt>
-<dd><p>Variance of the fit.</p>
+<dt id="trtoolbox.globalanalysis.RateConstants.ks_err">
+<code class="sig-name descname">ks_err</code><a class="headerlink" href="#trtoolbox.globalanalysis.RateConstants.ks_err" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard error of the fit (rate constants).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="trtoolbox.globalanalysis.RateConstants.tcs_err">
+<code class="sig-name descname">tcs_err</code><a class="headerlink" href="#trtoolbox.globalanalysis.RateConstants.tcs_err" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard error of the fit (time constants).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>np.array</p>
@@ -788,6 +811,26 @@ abstract time traces if method=’svd’ was chosen.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt id="trtoolbox.globalanalysis.calculate_error">
+<code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">calculate_error</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">res</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#calculate_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.calculate_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the standard error of the optimized parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>res</strong> (<em>scipy.optimize.OptimizeResult</em>) – Results object obtained with least squares.</p></li>
+<li><p><strong>data</strong> (<em>np.array</em>) – Data matrix.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>perr</strong> – Standard error of the parameters.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="trtoolbox.globalanalysis.calculate_estimate">
 <code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">calculate_estimate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">das</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#calculate_estimate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.calculate_estimate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes contributions of DAS in the raw data.</p>
@@ -821,23 +864,6 @@ abstract time traces if method=’svd’ was chosen.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><strong>fitdata</strong> – Fitted dataset.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>np.array</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="trtoolbox.globalanalysis.calculate_sigma">
-<code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">calculate_sigma</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">res</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#calculate_sigma"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.calculate_sigma" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the variance of the optimized parameters.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>res</strong> (<em>scipy.optimize.OptimizeResult</em>) – Results object obtained with least squares.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>var</strong> – Variance of the parameters.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>np.array</p>
@@ -909,9 +935,34 @@ abstract time traces if method=’svd’ was chosen.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="trtoolbox.globalanalysis.create_tr">
-<code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">create_tr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">rate_constants</span></em>, <em class="sig-param"><span class="n">pre</span></em>, <em class="sig-param"><span class="n">time</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#create_tr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.create_tr" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function returning exponential time traces for a given set of parameters.</p>
+<dt id="trtoolbox.globalanalysis.create_tr_expfit">
+<code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">create_tr_expfit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">rate_constants</span></em>, <em class="sig-param"><span class="n">pre</span></em>, <em class="sig-param"><span class="n">time</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#create_tr_expfit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.create_tr_expfit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function returning exponential time traces for a given set of parameters.
+Uses expfit module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rate_constants</strong> (<a class="reference internal" href="#trtoolbox.globalanalysis.RateConstants" title="trtoolbox.globalanalysis.RateConstants"><em>RateConstants</em></a>) – RateConstants object.</p></li>
+<li><p><strong>pre</strong> (<em>np.array</em>) – Exponential pre-factors.</p></li>
+<li><p><strong>time</strong> (<em>np.array</em>) – Time array.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>profile</strong> – Concentration profile matrix.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="trtoolbox.globalanalysis.create_tr_odeint">
+<code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">create_tr_odeint</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">rate_constants</span></em>, <em class="sig-param"><span class="n">pre</span></em>, <em class="sig-param"><span class="n">time</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#create_tr_odeint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.create_tr_odeint" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Function returning exponential time traces for a given set of parameters.</dt><dd><p>Uses odeint function.</p>
+</dd>
+</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -951,7 +1002,7 @@ abstract time traces if method=’svd’ was chosen.</p>
 
 <dl class="py function">
 <dt id="trtoolbox.globalanalysis.doglobalanalysis">
-<code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">doglobalanalysis</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">wn</span></em>, <em class="sig-param"><span class="n">tcs</span></em>, <em class="sig-param"><span class="n">method</span><span class="o">=</span><span class="default_value">'svd'</span></em>, <em class="sig-param"><span class="n">svds</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">offset</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">offindex</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">style</span><span class="o">=</span><span class="default_value">'seq'</span></em>, <em class="sig-param"><span class="n">kmatrix</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">alphas</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">artefact</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#doglobalanalysis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.doglobalanalysis" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">doglobalanalysis</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">wn</span></em>, <em class="sig-param"><span class="n">tcs</span></em>, <em class="sig-param"><span class="n">method</span><span class="o">=</span><span class="default_value">'svd_expfit'</span></em>, <em class="sig-param"><span class="n">svds</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">offset</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">offindex</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">style</span><span class="o">=</span><span class="default_value">'seq'</span></em>, <em class="sig-param"><span class="n">kmatrix</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">alphas</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">artefact</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#doglobalanalysis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.doglobalanalysis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wrapper for global fit routine.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -964,7 +1015,8 @@ abstract time traces if method=’svd’ was chosen.</p>
 <em>raw</em> for fitting the residuals of fitted data and input data,
 <em>est</em> for fitting the residuals between concentration profile
 and contributions of DAS,
-<em>svd</em> for fitting the SVD time traces (default).</p></li>
+<em>svd_odeint</em> for fitting the SVD time traces with odeint function.
+<a href="#id1"><span class="problematic" id="id2">*</span></a>svd_expfit for fitting the SVD time traces with expfit module (default).</p></li>
 <li><p><strong>svds</strong> (<em>int</em>) – Number of SVD components to be fitted. Default: 5.</p></li>
 <li><p><strong>offset</strong> (<em>boolean</em>) – Considering the last spectrum to be an offset. Default: False.</p></li>
 <li><p><strong>offindex</strong> (<em>int</em>) – Index of spectral offset.</p></li>
@@ -1081,7 +1133,7 @@ with ks as rate constants and s as species concentration.</p>
 
 <dl class="py function">
 <dt id="trtoolbox.globalanalysis.opt_func_svd">
-<code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">opt_func_svd</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pars</span></em>, <em class="sig-param"><span class="n">rate_constants</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">svdtraces</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#opt_func_svd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.opt_func_svd" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">trtoolbox.globalanalysis.</code><code class="sig-name descname">opt_func_svd</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pars</span></em>, <em class="sig-param"><span class="n">rate_constants</span></em>, <em class="sig-param"><span class="n">time</span></em>, <em class="sig-param"><span class="n">svdtraces</span></em>, <em class="sig-param"><span class="n">method</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trtoolbox/globalanalysis.html#opt_func_svd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trtoolbox.globalanalysis.opt_func_svd" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Optimization function for residuals of SVD</dt><dd><p>abstract time traces - fitted traces.</p>
 </dd>
@@ -2480,11 +2532,19 @@ and n as time. But it is actually not important.</p>
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2020, David Ehrenberg
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -2495,7 +2555,6 @@ and n as time. But it is actually not important.</p>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

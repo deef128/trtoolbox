@@ -17,6 +17,6 @@ dgen.gen_data(
 init = np.array([[-1, 1e-6], [1, 1e-2]])
 res = expfit.dofit(dgen.data[50, :], dgen.time[0, :], init)
 
-res.plot_result_traces()
-res.plot_result()
+res.plot_results_traces()
+res.plot_results()
 plt.show()
