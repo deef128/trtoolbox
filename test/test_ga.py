@@ -122,7 +122,7 @@ class TestGF(unittest.TestCase):
 
     def test_create_tr(self):
         pre = np.ones((self.tcs.size, 4))
-        traces = mygf.create_tr(self.rate_constants, pre, self.time)
+        traces = mygf.create_tr_odeint(self.rate_constants, pre, self.time)
         self.assertEqual(
             traces.shape,
             (self.time.size, pre.shape[1])

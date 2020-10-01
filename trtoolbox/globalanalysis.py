@@ -12,6 +12,7 @@ from scipy.linalg import lstsq
 import numpy as np
 import matplotlib.pyplot as plt
 import trtoolbox.svd as mysvd
+import trtoolbox.expfit as myexpfit
 from trtoolbox.plothelper import PlotHelper
 
 
@@ -595,8 +596,9 @@ def create_profile(time, rate_constants):
     return profile
 
 
-def create_tr(rate_constants, pre, time):
+def create_tr_odeint(rate_constants, pre, time):
     """ Function returning exponential time traces for a given set of parameters.
+        Uses odeint function.
 
     Parameters
     ----------
@@ -616,6 +618,31 @@ def create_tr(rate_constants, pre, time):
     profile = create_profile(time, rate_constants)
     fit_tr = profile.dot(pre)
 
+    return fit_tr
+
+
+def create_tr_expfit(rate_constants, pre, time):
+    """ Function returning exponential time traces for a given set of parameters.
+        Uses expfit module.
+
+        Parameters
+        ----------
+        rate_constants : RateConstants
+            RateConstants object.
+        pre : np.array
+            Exponential pre-factors.
+        time : np.array
+            Time array.
+
+        Returns
+        -------
+        profile : np.array
+            Concentration profile matrix.
+        """
+
+    fit_tr = np.zeros((time.size, pre.shape[1]))
+    for i in range(pre.shape[1]):
+        fit_tr[:, i] = myexpfit.create_tr(pre[:, i], 1 / rate_constants.ks, time)
     return fit_tr
 
 
@@ -742,7 +769,7 @@ def opt_func_est(ks, rate_constants, time, data):
     return r.flatten()
 
 
-def opt_func_svd(pars, rate_constants, time, svdtraces):
+def opt_func_svd(pars, rate_constants, time, svdtraces, method):
     """ Optimization function for residuals of SVD
         abstract time traces - fitted traces.
 
@@ -769,7 +796,10 @@ def opt_func_svd(pars, rate_constants, time, svdtraces):
     rate_constants.set_ks(pars[:, :nb_exps[1]])
     pre = pars[:, nb_exps[1]:]
 
-    r = svdtraces.T - create_tr(rate_constants, pre, time)
+    if method == 'svd_odeint':
+        r = svdtraces.T - create_tr_odeint(rate_constants, pre, time)
+    elif method == 'svd_expfit':
+        r = svdtraces.T - create_tr_expfit(rate_constants, pre, time)
     return r.flatten()
 
 
@@ -942,7 +972,11 @@ def doglobalanalysis(
             args=(rate_constants, time, data)
             )
 
-    elif method == 'svd':
+    elif 'svd' in method:
+        if method == 'svd_expfit':
+            pass
+        else:
+            method = 'svd_odeint'
         u, s, vt = mysvd.wrapper_svd(data)
         sigma = np.zeros((u.shape[0], vt.shape[0]))
         sigma[:s.shape[0], :s.shape[0]] = np.diag(s)
@@ -955,7 +989,7 @@ def doglobalanalysis(
         res = least_squares(
             opt_func_svd,
             pars.flatten(),
-            args=(rate_constants, time, svdtraces)
+            args=(rate_constants, time, svdtraces, method)
         )
 
         nb_exps = rate_constants.nb_exps
@@ -975,7 +1009,7 @@ def doglobalanalysis(
     gf_res.fitdata = calculate_fitdata(rate_constants, time, data)
     if rate_constants.style in ['dec', 'seq']:
         perr = calculate_error(res, data)
-        if method == 'svd':
+        if 'svd' in method:
             perr = perr[0::svds + 1]
         gf_res.rate_constants.ks_err = perr
         gf_res.rate_constants.tcs_err = np.abs(1/(rate_constants.ks[:, 0] + perr) - 1/rate_constants.ks[:, 0])
@@ -995,7 +1029,7 @@ def doglobalanalysis(
     if method == 'svd':
         gf_res.svdtraces = svdtraces
         gf_res.pre = pars[:, nb_exps[1]:]
-        gf_res.fittraces = create_tr(rate_constants, gf_res.pre, time).T
+        gf_res.fittraces = create_tr_odeint(rate_constants, gf_res.pre, time).T
 
     gf_res.print_results()
     print('With a R^2 of %.2f%%' % gf_res.r2)
