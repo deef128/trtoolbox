@@ -74,18 +74,29 @@ class Results:
         if type(self._phelper) == list:
             self._phelper = PlotHelper()
 
-    def plot_data(self, newfig=True):
+    def plot_data(self, newfig=True, interpolate=False, step=.5):
         """ Plots a nice looking heatmap of the raw data.
+
+        Parameters
+        ----------
+        newfig : boolean
+            True for own figure.
+        interpolate : boolean
+            True for interpolation
+        step : float
+            Step size for frequency interpolation.
         """
 
         self.init_phelper()
         self._phelper.plot_heatmap(
             self.data, self.time, self.wn,
-            title='Original Data', newfig=newfig)
+            title='Original Data', newfig=newfig,
+            interpolate=interpolate, step=step
+        )
         plt.ylabel('%s / %s' % (self.wn_name, self.wn_unit))
         plt.xlabel('%s / %s' % (self.time_name, self.time_unit))
 
-    def plot_svddata(self, newfig=False):
+    def plot_svddata(self, newfig=False, interpolate=False, step=.5):
         """ Plots a nice looking heatmap of the reconstructed data.
         """
 
@@ -94,12 +105,21 @@ class Results:
         title = 'Reconstructed data using ' + nstr + ' components'
         self._phelper.plot_heatmap(
             self.svddata, self.time, self.wn,
-            title=title, newfig=newfig)
+            title=title, newfig=newfig,
+            interpolate=interpolate, step=step
+        )
         plt.ylabel('%s / %s' % (self.wn_name, self.wn_unit))
         plt.xlabel('%s / %s' % (self.time_name, self.time_unit))
 
-    def plot_svddata_3d(self):
+    def plot_svddata_3d(self, interpolate=False, step=.5):
         """ Plots 3D surface of the reconstructed data.
+
+        Parameters
+        ----------
+        interpolate : boolean
+            True for interpolation
+        step : float
+            Step size for frequency interpolation.
         """
 
         self.init_phelper()
@@ -107,7 +127,9 @@ class Results:
         title = 'Reconstructed data using ' + nstr + ' components'
         self._phelper.plot_surface(
             self.svddata, self.time, self.wn,
-            title=title)
+            title=title,
+            interpolate=interpolate, step=step
+        )
         plt.ylabel('%s / %s' % (self.wn_name, self.wn_unit))
         plt.xlabel('%s / %s' % (self.time_name, self.time_unit))
 

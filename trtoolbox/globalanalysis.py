@@ -170,27 +170,45 @@ class Results:
         plt.title('Model Associated Spectra')
         plt.legend([str(i+1) for i in range(self.xas.shape[0])])
 
-    def plot_fitdata(self):
+    def plot_fitdata(self, interpolate=False, step=.5):
         """ Plots fitted data.
+
+        Parameters
+        ----------
+        interpolate : boolean
+            True for interpolation
+        step : float
+            Step size for frequency interpolation.
         """
 
         self.init_phelper()
         title = 'Globally fitted data'
         self._phelper.plot_heatmap(
             self.fitdata, self.time, self.wn,
-            title=title, newfig=True)
+            title=title, newfig=True,
+            interpolate=interpolate, step=step
+        )
         plt.ylabel('%s / %s' % (self.wn_name, self.wn_unit))
         plt.xlabel('%s / %s' % (self.time_name, self.time_unit))
 
-    def plot_fitdata_3d(self):
+    def plot_fitdata_3d(self, interpolate=False, step=.5):
         """ 3D plot fitted data.
+
+        Parameters
+        ----------
+        interpolate : boolean
+            True for interpolation
+        step : float
+            Step size for frequency interpolation.
         """
 
         self.init_phelper()
         title = 'Globally fitted data'
         self._phelper.plot_surface(
             self.fitdata, self.time, self.wn,
-            title=title)
+            title=title,
+            interpolate=interpolate, step=step
+        )
         plt.ylabel('%s / %s' % (self.wn_name, self.wn_unit))
         plt.xlabel('%s / %s' % (self.time_name, self.time_unit))
 

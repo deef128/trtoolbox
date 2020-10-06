@@ -132,7 +132,7 @@ class Results:
 
         return x_k, title
 
-    def plot_fitdata(self, alpha=-1, index_alpha=-1):
+    def plot_fitdata(self, alpha=-1, index_alpha=-1, interpolate=False, step=.5):
         """ Plots a nice looking heatmap of fitted data.
 
         Parameters
@@ -141,6 +141,10 @@ class Results:
             Plot for the closest alpha as specified.
         index_alpha : int
             Plot for specified alpha at index.
+        interpolate : boolean
+            True for interpolation
+        step : float
+            Step size for frequency interpolation.
         """
 
         self.init_phelper()
@@ -158,12 +162,14 @@ class Results:
 
         self._phelper.plot_heatmap(
             fitdata, self.time, self.wn,
-            title=title, newfig=True)
+            title=title, newfig=True,
+            interpolate=interpolate, step=step
+        )
         plt.ylabel('%s / %s' % (self.wn_name, self.wn_unit))
         plt.xlabel('%s / %s' % (self.time_name, self.time_unit))
         plt.title(title)
 
-    def plot_fitdata_3d(self, alpha=-1, index_alpha=-1):
+    def plot_fitdata_3d(self, alpha=-1, index_alpha=-1, interpolate=False, step=.5):
         """ Plots a 3D surface of fitted data.
 
         Parameters
@@ -172,6 +178,10 @@ class Results:
             Plot for the closest alpha as specified.
         index_alpha : int
             Plot for specified alpha at index.
+        interpolate : boolean
+            True for interpolation
+        step : float
+            Step size for frequency interpolation.
         """
 
         self.init_phelper()
@@ -182,14 +192,16 @@ class Results:
         if len(self.fitdata.shape) == 3:
             _, index_alpha = self.get_alpha(alpha, index_alpha)
             fitdata = self.fitdata[:, :, index_alpha]
-            title = 'Fitted data at alpha = %f' % (self.alphas[index_alpha])
+            title = 'Fitted data at alpha = %f' % (self.alphas[index_alpha],)
         else:
             fitdata = self.fitdata
             title = 'Fitted data using TSVD'
 
         self._phelper.plot_surface(
             fitdata, self.time, self.wn,
-            title=title)
+            title=title,
+            interpolate=interpolate, step=step
+        )
         plt.ylabel('%s / %s' % (self.wn_name, self.wn_unit))
         plt.xlabel('%s / %s' % (self.time_name, self.time_unit))
         plt.title(title)

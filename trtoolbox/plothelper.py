@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider
 from matplotlib.widgets import CheckButtons
 import matplotlib.colors as colors
+from scipy.interpolate import interp2d
 from mpl_toolkits import mplot3d
 
 
@@ -66,7 +67,15 @@ class PlotHelper:
         self.axcolor = 'lightgoldenrodyellow'
 
     @staticmethod
-    def plot_heatmap(data, time, wn, title='data', newfig=True):
+    def do_interpolate(data, time, wn, step=0.5):
+        f = interp2d(time, wn, data, kind='cubic')
+        time_new = time[0, :]
+        wn_new = np.arange(wn[0, 0], wn[-1, 0], step)
+        data_new = f(time_new, wn_new)
+        time_mesh, wn_mesh = np.meshgrid(time_new, wn_new)
+        return data_new, time_mesh, wn_mesh
+
+    def plot_heatmap(self, data, time, wn, title='data', newfig=True, interpolate=False, step=.5):
         """ Plots a nice looking heatmap.
 
         Parameters
@@ -82,6 +91,10 @@ class PlotHelper:
             Title of plot. Default *data*.
         newfig : boolean
             Setting to False prevents the creation of a new figure.
+        interpolate : boolean
+            True for interpolation
+        step : float
+            Step size for frequency interpolation.
         """
 
         if newfig is True:
@@ -92,6 +105,8 @@ class PlotHelper:
         if time.size == 0 or wn.size == 0:
             pc = plt.pcolormesh(data, cmap='jet', shading='gouraud')
         else:
+            if interpolate is True:
+                data, time, wn = self.do_interpolate(data, time, wn, step)
             pc = plt.pcolormesh(
                 time,
                 wn,
@@ -164,9 +179,7 @@ class PlotHelper:
         plt.title(title)
         return pc
 
-    # TODO: better 3D plot
-    @staticmethod
-    def plot_surface(data, time, wn, title='data'):
+    def plot_surface(self, data, time, wn, title='data', interpolate=False, step=.5):
         """ Plots a nice looking heatmap.
 
         Parameters
@@ -180,6 +193,10 @@ class PlotHelper:
             Frequency array.
         title : np.array
             Title of plot. Default *data*.
+        interpolate : boolean
+            True for interpolation
+        step : float
+            Step size for frequency interpolation.
         """
 
         plt.figure()
@@ -193,7 +210,11 @@ class PlotHelper:
             surf = plt.pcolormesh(data, cmap='jet', shading='gouraud')
             plt.xscale('log')
         else:
-            x, y = np.meshgrid(np.log10(time), wn)
+            if interpolate is True:
+                data, x, y = self.do_interpolate(data, time, wn, step)
+                x = np.log10(x)
+            else:
+                x, y = np.meshgrid(np.log10(time), wn)
             surf = ax.plot_surface(
                 x,
                 y,
