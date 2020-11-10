@@ -254,7 +254,7 @@ class Results:
         plt.ylabel('smooth norm (||Lx||)')
 
     def plot_solutionvector(self, alpha=-1, index_alpha=-1):
-        """ Plots the sum of amplituted over time constants.
+        """ Plots the sum of amplitudes over time constants.
 
         Parameters
         ----------
@@ -833,7 +833,6 @@ def dolda(
 
     res.x_k = np.swapaxes(x_k, 0, 1)
     return res
-
 
 #############################################
 # Functions for lcurve curverature

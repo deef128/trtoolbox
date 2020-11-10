@@ -992,6 +992,8 @@ def doglobalanalysis(
     elif 'svd' in method:
         if method == 'svd_odeint':
             pass
+        elif style == 'back':
+            method = 'svd_odeint'
         else:
             method = 'svd_expfit'  # standard method with expfit
 
