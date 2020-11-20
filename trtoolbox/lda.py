@@ -570,7 +570,6 @@ def inversesvd(dmatrix, k=-1):
     return v.dot(sigma).dot(ut)
 
 
-# TODO: option for truncation
 def tik(data, dmatrix, alpha):
     """ Function for Tikhonov regularization:
         min_x ||Dx - A|| + alpha*||Lx||

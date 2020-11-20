@@ -1,4 +1,3 @@
-# TODO: fix ks in case of species branching
 # TODO: rate branching
 
 import os
@@ -631,6 +630,12 @@ def create_tr_odeint(rate_constants, pre, time):
         Concentration profile matrix.
     """
 
+    if hasattr(rate_constants, 'duplicates'):
+        for c in range(rate_constants.duplicates.shape[1]):
+            for r in range(rate_constants.duplicates.shape[0]):
+                if rate_constants.duplicates[r, c]:
+                    rate_constants.ks[r, c+1] = rate_constants.ks[r, 0]
+
     profile = create_profile(time, rate_constants)
     fit_tr = profile.dot(pre)
 
@@ -799,6 +804,8 @@ def opt_func_svd(pars, rate_constants, time, svdtraces, method):
         Time array.
     svdtraces : np.array
         SVD traces
+    method : basestring
+        Chosen method
 
     Returns
     -------
@@ -814,7 +821,7 @@ def opt_func_svd(pars, rate_constants, time, svdtraces, method):
 
     if method == 'svd_odeint':
         r = svdtraces.T - create_tr_odeint(rate_constants, pre, time)
-    elif method == 'svd_expfit':
+    else:   # svd_expfit
         r = svdtraces.T - create_tr_expfit(rate_constants, pre, time)
     return r.flatten()
 
@@ -974,6 +981,8 @@ def doglobalanalysis(
         rate_constants.kmatrix = kmatrix
         rate_constants.alphas = alphas
         rate_constants.style = 'custom'
+        method = 'svd_odeint'
+        rate_constants.duplicates = np.diff(start_ks, axis=1) == 0
 
     if method == 'raw':
         res = least_squares(
