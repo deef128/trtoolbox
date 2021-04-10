@@ -2,18 +2,16 @@ import os
 from scipy.linalg import svd as scipy_svd
 import numpy as np
 import matplotlib.pyplot as plt
-from trtoolbox.plothelper import PlotHelper
+import trtoolbox.pclasses as pclasses
 
 
-class Results:
+class Results(pclasses.Data):
     """ Object containing fit results.
 
     Attributes
     ----------
     type : str
         Results object type.
-    data : np.array
-        Data matrix subjected to fitting.
     u : np.array
         U matrix. Represents abstract spectra
     s : np.array
@@ -24,37 +22,16 @@ class Results:
         Number of singular components used for data reconstruction.
     svddata : np.array
         Reconstructed data.
-    wn : np.array
-        Frequency array.
-    wn_name : str
-        Name of the frequency unit (default: wavenumber).
-    wn_unit : str
-        Frequency unit (default cm^{-1}).
-    time : np.array
-        Time array.
-    time_name : str
-        Time name (default: time).
-    time_unit : str
-        Time uni (default: s).
-    _phelper : mysvd.PlotHelper
-        Plot helper class for interactive plots.
     """
 
     def __init__(self):
+        super().__init__()
         self.type = 'svd'
-        self.data = np.array([])
         self.u = np.array([])
         self.s = np.array([])
         self.vt = np.array([])
         self.n = 0
         self.svddata = np.array([])
-        self.time = np.array([])
-        self.time_name = 'time'
-        self.time_unit = 's'
-        self.wn = np.array([])
-        self.wn_name = 'wavenumber'
-        self.wn_unit = 'cm^{-1}'
-        self._phelper = PlotHelper()
 
     # if using this rename self.wn to self._wn in init()
     # @property
@@ -66,13 +43,6 @@ class Results:
     #     if val.dtype != 'float':
     #         val = val.astype('float64')
     #     self._wn = val.reshape((val.size, 1))
-
-    def init_phelper(self):
-        """ Initiliazes phelper after clean().
-        """
-
-        if type(self._phelper) == list:
-            self._phelper = PlotHelper()
 
     def plot_data(self, newfig=True, interpolate=False, step=.5):
         """ Plots a nice looking heatmap of the raw data.
@@ -212,13 +182,6 @@ class Results:
         self._phelper.plot_traces(self)
         self._phelper.plot_spectra(self)
 
-    def clean(self):
-        """ Unfortunetaly, spyder messes up when the results
-            object is invesitgated via the variable explorer.
-            Running this method fixes this.
-        """
-        self._phelper = []
-
     def save_to_files(self, path):
         """ Saving results to .dat files.
 
@@ -260,51 +223,6 @@ class Results:
         f.close()
 
 
-def check_input(data, time, wn):
-    """ Ensures that all np.arrays have float dtype and that
-        time spans over columns, frequency over rows.
-
-    Parameters
-    ----------
-    data : np.array
-        Data matrix.
-    time : np.array
-        TIme array.
-    wn : np.array
-        Frequency array.
-
-    Returns
-    ----------
-    data : np.array
-        Data matrix.
-    time : np.array
-        TIme array.
-    wn : np.array
-        Frequency array.
-    """
-
-    # check for right dtype
-    if data.dtype != 'float':
-        data = data.astype('float64')
-    if time.dtype != 'float':
-        time = time.astype('float64')
-    if wn.dtype != 'float':
-        wn = wn.astype('float64')
-
-    # ensure time over columns and
-    # frequency over rows
-    if data.shape[1] != time.size:
-        data = np.transpose(data)
-    time = time.reshape((1, time.size))
-    wn = wn.reshape((wn.size, 1))
-
-    if data.shape[0] != wn.shape[0] or \
-       data.shape[1] != time.shape[1]:
-        raise ValueError('Dimensions mismatch!')
-
-    return data, time, wn
-
-
 def wrapper_svd(data):
     """ Simple wrapper for the *scipy.linalg.svd()* function.
 
@@ -343,7 +261,7 @@ def show_svs(data, time, wn):
         Frequency array.
     """
 
-    data, time, wn = check_input(data, time, wn)
+    data, time, wn = pclasses.check_input(data, time, wn)
 
     # noinspection PyTupleAssignmentBalance
     u, s, vt = scipy_svd(data)
@@ -471,7 +389,7 @@ def dosvd(data, time, wn, n=-1):
         Results object.
     """
 
-    data, time, wn = check_input(data, time, wn)
+    data, time, wn = pclasses.check_input(data, time, wn)
 
     # prevents plt.show() from blocking execution
     # plt.ion()

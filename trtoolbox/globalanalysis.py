@@ -10,20 +10,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 import trtoolbox.svd as mysvd
 import trtoolbox.expfit as myexpfit
-from trtoolbox.plothelper import PlotHelper
+import trtoolbox.pclasses as pclasses
 
 
-class Results:
+class Results(pclasses.Data):
     """ Object containing fit results.
 
     Attributes
     ----------
-    data : np.array
-        Data matrix subjected to fitting.
-    time : np.array
-        Time array.
-    wn : np.array
-        Wavenumber array.
     offset : bool
         True if an offset was used.
     spectral_offset : np.array
@@ -48,21 +42,11 @@ class Results:
         SVD abstract time traces.
     r2 : float
         R^2 of fit.
-    wn_name : str
-        Name of the frequency unit (default: wavenumber).
-    wn_unit : str
-        Frequency unit (default cm^{-1}).
-    time_name : str
-        Time name (default: time).
-    time_unit : str
-        Time uni (default: s).
     """
 
     def __init__(self):
+        super().__init__()
         self.type = 'gf'
-        self.data = np.array([])
-        self.time = np.array([])
-        self.wn = np.array([])
         self.offset = str()
         self.spectral_offset = np.array([])
         self.method = str()
@@ -75,22 +59,10 @@ class Results:
         self.fittraces = np.array([])
         self.svdtraces = np.array([])
         self.r2 = 0
-        self.wn_name = 'wavenumber'
-        self.wn_unit = 'cm^{-1}'
-        self.time_name = 'time'
-        self.time_unit = 's'
-        self._phelper = PlotHelper()
 
     @property
     def tcs(self):
         return self.rate_constants.tcs
-
-    def init_phelper(self):
-        """ Initiliazes phelper after clean().
-        """
-
-        if type(self._phelper) == list:
-            self._phelper = PlotHelper()
 
     def print_results(self):
         """ Prints time constants.
@@ -279,16 +251,6 @@ class Results:
                         axs[r, i - offset].set_xscale('log')
                         iv = iv + 1
 
-    def clean(self):
-        """ Unfortunetaly, spyder messes up when the results
-            object is invesitgated via the variable explorer.
-            Running this method fixes this.
-        """
-
-        # self._phelper = PlotHelper()
-        # delattr(self, '_phelper')
-        self._phelper = []
-
     def save_to_files(self, path, comment=''):
         """ Saving results to .dat files.
 
@@ -453,51 +415,6 @@ def is_square(mat):
     """
 
     return all([len(i) == len(mat) for i in mat])
-
-
-def check_input(data, time, wn):
-    """ Ensures that all np.arrays have float dtype and that
-        time spans over columns, frequency over rows.
-
-    Parameters
-    ----------
-    data : np.array
-        Data matrix.
-    time : np.array
-        Time array.
-    wn : np.array
-        Frequency array.
-
-    Returns
-    ----------
-    data : np.array
-        Data matrix.
-    time : np.array
-        Time array.
-    wn : np.array
-        Frequency array.
-    """
-
-    # check for right dtype
-    if data.dtype != 'float':
-        data = data.astype('float64')
-    if time.dtype != 'float':
-        time = time.astype('float64')
-    if wn.dtype != 'float':
-        wn = wn.astype('float64')
-
-    # ensure time over columns and
-    # frequency over rows
-    if data.shape[1] != time.size:
-        data = np.transpose(data)
-    time = time.reshape((1, time.size))
-    wn = wn.reshape((wn.size, 1))
-
-    if data.shape[0] != wn.shape[0] or \
-       data.shape[1] != time.shape[1]:
-        raise ValueError('Dimensions mismatch!')
-
-    return data, time, wn
 
 
 def convert_tcs(arr):
@@ -947,7 +864,7 @@ def doglobalanalysis(
         Results objects.
     """
 
-    data, time, wn = check_input(data, time, wn)
+    data, time, wn = pclasses.check_input(data, time, wn)
     tcs = np.array(tcs)
 
     # if len(tcs) < 1:

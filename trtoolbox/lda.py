@@ -5,22 +5,16 @@ import numpy as np
 from scipy.linalg import svd
 from scipy.integrate import odeint
 import matplotlib.pyplot as plt
-from trtoolbox.plothelper import PlotHelper
+import trtoolbox.pclasses as pclasses
 
 
-class Results:
+class Results(pclasses.Data):
     """ Object containing fit results.
 
     Attributes
     ----------
     type : str
         Results object type.
-    data : np.array
-        Data matrix subjected to LDA.
-    time : np.array
-        Time array
-    wn : np.array
-        Frequency array.
     taus: np.array
         Time constants used for constructing D-matrix.
     dmatrix : np.array
@@ -39,21 +33,11 @@ class Results:
         Resulting exponential pre-factors.
     fitdata : np.array
         Constructed data (dmatrix.dot(x_k))
-    wn_name : str
-        Name of the frequency unit (default: wavenumber).
-    wn_unit : str
-        Frequency unit (default cm^{-1}).
-    time_name : str
-        Time name (default: time).
-    time_unit : str
-        Time uni (default: s).
     """
 
     def __init__(self):
+        super().__init__()
         self.type = 'lda'
-        self.data = np.array([])
-        self.time = np.array([])
-        self.wn = np.array([])
         self.taus = np.array([])
         self.dmatrix = np.array([])
         self.alphas = np.array([])
@@ -63,18 +47,6 @@ class Results:
         self.method = ''
         self.x_k = np.array([])
         self.fitdata = np.array([])
-        self.wn_name = 'wavenumber'
-        self.wn_unit = 'cm^{-1}'
-        self.time_name = 'time'
-        self.time_unit = 's'
-        self._phelper = PlotHelper()
-
-    def init_phelper(self):
-        """ Initiliazes phelper after clean().
-        """
-
-        if type(self._phelper) == list:
-            self._phelper = PlotHelper()
 
     def get_alpha(self, alpha=-1, index_alpha=-1):
         """ Gets alpha value and index.
@@ -274,14 +246,6 @@ class Results:
         self.init_phelper()
         self._phelper.plot_ldaresults(self)
 
-    def clean(self):
-        """ Unfortunetaly, spyder messes up when the results
-            object is investigated via the variable explorer.
-            Running this method fixes this.
-        """
-
-        self._phelper = []
-
     def save_to_files(self, path, alpha=-1, index_alpha=-1, comment=''):
         """ Saving results to .dat files.
 
@@ -359,51 +323,6 @@ class Results:
                 comment
                 )
         f.close()
-
-
-def check_input(data, time, wn):
-    """ Ensures that all np.arrays have float dtype and that
-        time spans over columns, frequency over rows.
-
-    Parameters
-    ----------
-    data : np.array
-        Data matrix.
-    time : np.array
-        TIme array.
-    wn : np.array
-        Frequency array.
-
-    Returns
-    ----------
-    data : np.array
-        Data matrix.
-    time : np.array
-        TIme array.
-    wn : np.array
-        Frequency array.
-    """
-
-    # check for right dtype
-    if data.dtype != 'float':
-        data = data.astype('float64')
-    if time.dtype != 'float':
-        time = time.astype('float64')
-    if wn.dtype != 'float':
-        wn = wn.astype('float64')
-
-    # ensure time over columns and
-    # frequency over rows
-    if data.shape[1] != time.size:
-        data = np.transpose(data)
-    time = time.reshape((1, time.size))
-    wn = wn.reshape((wn.size, 1))
-
-    if data.shape[0] != wn.shape[0] or \
-       data.shape[1] != time.shape[1]:
-        raise ValueError('Dimensions mismatch!')
-
-    return data, time, wn
 
 
 def gen_taus(t1, t2, n):
@@ -785,7 +704,7 @@ def dolda(
         Results object.
     """
 
-    data, time, wn = check_input(data, time, wn)
+    data, time, wn = pclasses.check_input(data, time, wn)
 
     if prompt is False:
         if not tlimits:
