@@ -88,12 +88,12 @@ class Results(pclasses.Data):
         self.init_phelper()
         self._phelper.plot_traces(self)
 
-    def plot_spectra(self, index_alpha=-1, alpha=-1):
+    def plot_spectra(self):
         """ Plots interactive spectra.
         """
 
         self.init_phelper()
-        self._phelper.plot_spectra(self, index_alpha, alpha)
+        self._phelper.plot_spectra(self)
 
     def plot_profile(self):
         """ Plots concentration profile.

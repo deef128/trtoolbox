@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 from trtoolbox.plothelper import PlotHelper
 
 
@@ -71,6 +72,7 @@ class Data:
     """
 
     def __init__(self):
+        self.type = 'raw'
         self.data = np.array([])
         self.time = np.array([])
         self.time_name = 'time'
@@ -96,3 +98,59 @@ class Data:
 
         if type(self._phelper) == list:
             self._phelper = PlotHelper()
+
+    def plot_rawdata(self, interpolate=False, step=.5):
+        """ Plots raw data.
+
+        Parameters
+        ----------
+        interpolate : boolean
+            True for interpolation
+        step : float
+            Step size for frequency interpolation.
+        """
+
+        self.init_phelper()
+        title = 'Raw data'
+        self._phelper.plot_heatmap(
+            self.data, self.time, self.wn,
+            title=title, newfig=True,
+            interpolate=interpolate, step=step
+        )
+        plt.ylabel('%s / %s' % (self.wn_name, self.wn_unit))
+        plt.xlabel('%s / %s' % (self.time_name, self.time_unit))
+
+    def plot_rawdata_3d(self, interpolate=False, step=.5):
+        """ 3D plot raw data.
+
+        Parameters
+        ----------
+        interpolate : boolean
+            True for interpolation
+        step : float
+            Step size for frequency interpolation.
+        """
+
+        self.init_phelper()
+        title = 'Raw data'
+        self._phelper.plot_surface(
+            self.data, self.time, self.wn,
+            title=title,
+            interpolate=interpolate, step=step
+        )
+        plt.ylabel('%s / %s' % (self.wn_name, self.wn_unit))
+        plt.xlabel('%s / %s' % (self.time_name, self.time_unit))
+
+    def plot_traces(self):
+        """ Plots interactive time traces.
+        """
+
+        self.init_phelper()
+        self._phelper.plot_traces(self)
+
+    def plot_spectra(self):
+        """ Plots interactive spectra.
+        """
+
+        self.init_phelper()
+        self._phelper.plot_spectra(self)
