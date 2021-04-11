@@ -815,7 +815,8 @@ def doglobalanalysis(
         style='seq',
         kmatrix=None,
         alphas=None,
-        artefact=False
+        artefact=False,
+        silent=False
 ):
     """ Wrapper for global fit routine.
 
@@ -857,6 +858,8 @@ def doglobalanalysis(
         Sets starting population of the first species.
     artefact : bool
         If True, the first two species are merged
+    silent : bool
+        Supresses print output
 
     Returns
     -------
@@ -995,6 +998,7 @@ def doglobalanalysis(
         elif method == 'svd_expfit':
             gf_res.fittraces = create_tr_expfit(rate_constants, gf_res.pre, time).T
 
-    gf_res.print_results()
-    print('With a R^2 of %.2f%%' % gf_res.r2)
+    if not silent:
+        gf_res.print_results()
+        print('With a R^2 of %.2f%%' % gf_res.r2)
     return gf_res

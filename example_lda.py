@@ -1,7 +1,6 @@
 # %% import stuff
 import trtoolbox.lda as mylda
 from test.data_generator import DataGenerator
-import numpy as np
 import matplotlib.pyplot as plt
 plt.close('all')
 
